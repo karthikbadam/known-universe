@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
+import { CMBPowerSpectrum } from "./plots/CMBPowerSpectrum";
 import { HubbleDiagram } from "./plots/HubbleDiagram";
 
 function Header(): JSX.Element {
@@ -93,9 +94,10 @@ function Hero(): JSX.Element {
             you change the six ΛCDM numbers.
           </Text>
           <Text fontSize="sm" color="navy.300">
-            Gate 1 preview — only the Hubble 1929 plot is wired up so far. The
-            shared template, parameter binding, and data status badges are
-            production-ready; the remaining nine plots ship in Gates 2 and 3.
+            Gate 2 preview — the Hubble 1929 plot and the CMB angular
+            power spectrum are wired up. The shared template, parameter
+            binding, and data status badges are production-ready; the
+            remaining eight plots ship in Gate 3.
           </Text>
         </VStack>
       </Container>
@@ -177,6 +179,7 @@ export function App(): JSX.Element {
       <Header />
       <Hero />
       <HubbleDiagram />
+      <CMBPowerSpectrum />
       <SynthesisStub />
       <Footer />
     </Box>

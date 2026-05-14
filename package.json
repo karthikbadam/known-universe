@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "fetch:hubble": "tsx scripts/fetch-or-simulate/hubble1929.ts",
-    "simulate:hubble": "tsx scripts/simulate/hubble1929.ts"
+    "simulate:hubble": "tsx scripts/simulate/hubble1929.ts",
+    "simulate:cmb": "tsx scripts/simulate/cmb_powerspectrum.ts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",

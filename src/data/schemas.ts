@@ -11,3 +11,12 @@ export const Hubble1929Row = z.object({
   velocity_km_s: z.number(),
 });
 export type Hubble1929Row = z.infer<typeof Hubble1929Row>;
+
+export const PlanckDlRow = z.object({
+  ell: z.number(),
+  Dl: z.number(),
+  Dl_lower: z.number(),
+  Dl_upper: z.number(),
+  sigma: z.number(),
+});
+export type PlanckDlRow = z.infer<typeof PlanckDlRow>;

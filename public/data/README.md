@@ -12,11 +12,12 @@ Every dataset bundled with this app declares its provenance in a 6-line
 
 Replacement instructions for every file live under `/scripts/fetch/`.
 
-## File index — Gate 1
+## File index — Gates 1 + 2
 
-| File              | Status | Size  | Source                                            |
-|-------------------|--------|-------|---------------------------------------------------|
-| `hubble1929.csv`  | real   | <2 kB | Hubble 1929 PNAS, Tables I+II (public domain)     |
+| File              | Status     | Size  | Source                                            |
+|-------------------|------------|-------|---------------------------------------------------|
+| `hubble1929.csv`  | real       | <2 kB | Hubble 1929 PNAS, Tables I+II (public domain)     |
+| `planck_dl.csv`   | simulated  | <4 kB | Planck-like binned TT Dℓ from analytical model    |
 
-Later gates will add the remaining 9 datasets. Bundle total stays under
+Gate 3 will add the remaining 8 datasets. Bundle total stays under
 20 MB per the spec.

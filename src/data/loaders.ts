@@ -13,3 +13,12 @@ export function loadHubble1929(): Promise<void> {
     skipHeaderLines: HUBBLE_1929_HEADER_LINES,
   });
 }
+
+export const PLANCK_DL_TABLE = "planck_dl";
+export const PLANCK_DL_HEADER_LINES = 6;
+
+export function loadPlanckDl(): Promise<void> {
+  return loadTable(PLANCK_DL_TABLE, "/data/planck_dl.csv", {
+    skipHeaderLines: PLANCK_DL_HEADER_LINES,
+  });
+}
