@@ -24,7 +24,7 @@ const MAX_DISTANCE_MPC = 2.2;
 const MODEL_GRID_TABLE = "hubble_model_grid";
 const MODEL_GRID_POINTS = 45;
 
-export function HubbleDiagram(): JSX.Element {
+export function HubbleDiagram() {
   const { ready, error } = useDataTable(
     TABLES.hubble1929.name,
     TABLES.hubble1929.url,
@@ -33,10 +33,6 @@ export function HubbleDiagram(): JSX.Element {
   const [gridReady, setGridReady] = useState<boolean>(false);
   const { param: h0, value: h0Value, setValue: setH0 } = useParam(70);
 
-  // Build a small `hubble_model_grid` table inside DuckDB once the
-  // coordinator is up. The model line is rendered by interpolating
-  // H₀ × d across these grid points; doing it in SQL lets Mosaic's
-  // Param machinery handle reactive updates without rebuilding the plot.
   useEffect(() => {
     if (!ready) return;
     let cancelled = false;
@@ -133,11 +129,7 @@ export function HubbleDiagram(): JSX.Element {
         )
       }
       controls={
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          spacing={6}
-          align="stretch"
-        >
+        <Stack direction={{ base: "column", md: "row" }} gap={6} align="stretch">
           <Box flex="1">
             <ParamSlider
               label="Hubble constant H₀"
@@ -182,7 +174,8 @@ export function HubbleDiagram(): JSX.Element {
             See{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/hubble1929.md"
-              isExternal
+              target="_blank"
+              rel="noopener noreferrer"
             >
               /scripts/fetch/hubble1929.md
             </Link>{" "}

@@ -1,17 +1,17 @@
 import {
   Box,
   Container,
-  Divider,
-  HStack,
   Heading,
+  HStack,
   IconButton,
   Link,
-  Select,
+  NativeSelect,
+  Separator,
   Text,
   VStack,
-  useColorMode,
 } from "@chakra-ui/react";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { BAOFeature } from "./plots/BAOFeature";
 import { BBNAbundances } from "./plots/BBNAbundances";
@@ -24,12 +24,16 @@ import { LCDMSynthesis } from "./plots/LCDMSynthesis";
 import { RotationCurves } from "./plots/RotationCurves";
 import { SupernovaHubble } from "./plots/SupernovaHubble";
 
-function Header(): JSX.Element {
-  const { colorMode, toggleColorMode } = useColorMode();
+function Header() {
+  // next-themes drives color mode; resolvedTheme avoids the SSR-flash flicker
+  // even though we're CSR-only (forward-compatible).
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   return (
     <Box
       as="header"
-      borderBottom="1px solid"
+      borderBottomWidth="1px"
       borderColor="navy.700"
       bg="navy.900"
       position="sticky"
@@ -39,36 +43,42 @@ function Header(): JSX.Element {
     >
       <Container maxW="6xl" py={3}>
         <HStack justify="space-between" align="center">
-          <HStack spacing={3} align="baseline">
+          <HStack gap={3} align="baseline">
             <Heading as="h1" size="md" color="gold.300">
               Cosmology Visualization Lab
             </Heading>
-            <Text color="navy.300" fontSize="sm" display={{ base: "none", md: "block" }}>
+            <Text
+              color="navy.300"
+              fontSize="sm"
+              display={{ base: "none", md: "block" }}
+            >
               Module 1 of an interactive journal
             </Text>
           </HStack>
-          <HStack spacing={2}>
-            <Select
+          <HStack gap={2}>
+            <NativeSelect.Root
               size="sm"
               w="auto"
-              variant="filled"
               bg="navy.800"
               borderColor="navy.600"
-              defaultValue="cosmology"
-              isDisabled
+              disabled
               title="More fields coming in later modules"
             >
-              <option value="cosmology">Cosmology</option>
-              <option value="particle">Particle Physics (coming)</option>
-              <option value="cmt">Condensed Matter (coming)</option>
-            </Select>
+              <NativeSelect.Field defaultValue="cosmology">
+                <option value="cosmology">Cosmology</option>
+                <option value="particle">Particle Physics (coming)</option>
+                <option value="cmt">Condensed Matter (coming)</option>
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
             <IconButton
               size="sm"
               variant="ghost"
               aria-label="Toggle color mode"
-              icon={colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
-              onClick={toggleColorMode}
-            />
+              onClick={() => setTheme(isDark ? "light" : "dark")}
+            >
+              {isDark ? <Sun /> : <Moon />}
+            </IconButton>
           </HStack>
         </HStack>
       </Container>
@@ -76,11 +86,11 @@ function Header(): JSX.Element {
   );
 }
 
-function Hero(): JSX.Element {
+function Hero() {
   return (
     <Box as="section" py={{ base: 12, md: 20 }} px={{ base: 4, md: 6 }}>
       <Container maxW="3xl">
-        <VStack align="stretch" spacing={5}>
+        <VStack align="stretch" gap={5}>
           <Text
             color="gold.400"
             fontSize="sm"
@@ -90,7 +100,7 @@ function Hero(): JSX.Element {
           >
             Module 01 · Cosmology
           </Text>
-          <Heading as="h2" size="2xl" lineHeight="short">
+          <Heading as="h2" size="2xl" lineHeight="short" color="gold.300">
             Ten plots built ΛCDM. Tune the parameters yourself.
           </Heading>
           <Text fontSize="lg" color="navy.100" lineHeight="tall">
@@ -107,32 +117,35 @@ function Hero(): JSX.Element {
   );
 }
 
-function Footer(): JSX.Element {
+function Footer() {
   return (
-    <Box as="footer" borderTop="1px solid" borderColor="navy.700" py={8}>
+    <Box as="footer" borderTopWidth="1px" borderColor="navy.700" py={8}>
       <Container maxW="6xl">
-        <VStack align="stretch" spacing={3} fontSize="sm" color="navy.300">
+        <VStack align="stretch" gap={3} fontSize="sm" color="navy.300">
           <Heading as="h3" size="sm" color="navy.100">
             Data provenance
           </Heading>
           <Text>
             All datasets ship in <code>/public/data</code> with a six-line
-            provenance header. Replacement instructions for every file live
-            in <code>/scripts/fetch/</code>. Simulated fallbacks live in{" "}
+            provenance header. Replacement instructions for every file live in{" "}
+            <code>/scripts/fetch/</code>. Simulated fallbacks live in{" "}
             <code>/scripts/simulate/</code>.
           </Text>
           <Text>
             Source:{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe"
-              isExternal
+              color="gold.400"
+              _hover={{ color: "gold.200", textDecoration: "underline" }}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               github.com/karthikbadam/known-universe
             </Link>
           </Text>
-          <Divider borderColor="navy.700" my={2} />
+          <Separator borderColor="navy.700" my={2} />
           <Text fontSize="xs" color="navy.400">
-            Built with React, Chakra UI, Mosaic, DuckDB-WASM, and KaTeX.
+            Built with React 19, Chakra UI v3, Mosaic, DuckDB-WASM, and KaTeX.
           </Text>
         </VStack>
       </Container>
@@ -140,7 +153,7 @@ function Footer(): JSX.Element {
   );
 }
 
-export function App(): JSX.Element {
+export function App() {
   return (
     <Box minH="100vh" bg="navy.900" color="navy.50">
       <Header />
