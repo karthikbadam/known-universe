@@ -1,75 +1,67 @@
-import { Box, Code, Link, Stack, Text } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Code, Link, Stack, Text } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
 import { Citation } from "../components/Citation";
 import { MathBlock, MathInline } from "../components/MathBlock";
+import { MosaicPlot } from "../components/MosaicPlot";
 import { ParamSlider } from "../components/ParamSlider";
+import { PlotError } from "../components/PlotError";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
 import { type DataStatus } from "../components/DataStatusBadge";
 
-import { ensureCoordinator, loadTable } from "../mosaic/coordinator";
-import {
-  SOUND_HORIZON_FIDUCIAL_MPC,
-  baoCurve,
-} from "../physics/bao";
+import { TABLES } from "../data/loaders";
+import { useDataTable } from "../mosaic/useDataTable";
+import { SOUND_HORIZON_FIDUCIAL_MPC, baoCurve } from "../physics/bao";
+import { chartPalette } from "../theme/palette";
 
 const dataStatus: DataStatus = "simulated";
-const BOSS_TABLE = "boss_xi";
 
 export function BAOFeature(): JSX.Element {
-  const plotRef = useRef<HTMLDivElement | null>(null);
-  const [ready, setReady] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const { ready, error } = useDataTable(
+    TABLES.bossXi.name,
+    TABLES.bossXi.url,
+    { skipHeaderLines: TABLES.bossXi.skipHeaderLines },
+  );
   const [rd, setRd] = useState<number>(SOUND_HORIZON_FIDUCIAL_MPC);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        ensureCoordinator();
-        await loadTable(BOSS_TABLE, "/data/boss_xi.csv", { skipHeaderLines: 6 });
-        if (!cancelled) setReady(true);
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : String(e));
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const modelCurve = useMemo(
+    () => baoCurve(rd, { sMinMpc: 50, sMaxMpc: 200, samples: 400 }),
+    [rd],
+  );
 
-  const modelCurve = useMemo(() => baoCurve(rd, { sMinMpc: 50, sMaxMpc: 200, samples: 400 }), [rd]);
-
-  useEffect(() => {
-    if (!ready || plotRef.current === null) return;
-    const modelData = modelCurve.map((row) => ({ s: row.s, xi: row.xi }));
-    const element = vg.plot(
-      vg.ruleX(vg.from(BOSS_TABLE), {
+  const spec = useMemo(
+    () => [
+      vg.ruleX(vg.from(TABLES.bossXi.name), {
         x: "s_mpc",
         y1: "xi_lower",
         y2: "xi_upper",
-        stroke: "#a3b3d2",
+        stroke: chartPalette.errorStroke,
         strokeWidth: 1.2,
         strokeOpacity: 0.7,
       }),
-      vg.dot(vg.from(BOSS_TABLE), {
+      vg.dot(vg.from(TABLES.bossXi.name), {
         x: "s_mpc",
         y: "xi",
         r: 4,
-        fill: "#f1c156",
-        stroke: "#e8ad2a",
+        fill: chartPalette.dataFill,
+        stroke: chartPalette.dataStroke,
       }),
-      vg.line(modelData, { x: "s", y: "xi", stroke: "#e9eef7", strokeWidth: 2 }),
+      vg.line(modelCurve.map((row) => ({ s: row.s, xi: row.xi })), {
+        x: "s",
+        y: "xi",
+        stroke: chartPalette.modelStroke,
+        strokeWidth: 2,
+      }),
       vg.ruleX([{ x: rd }], {
         x: "x",
-        stroke: "#e8ad2a",
+        stroke: chartPalette.highlightStroke,
         strokeWidth: 1.2,
         strokeDasharray: "4,3",
         strokeOpacity: 0.7,
       }),
-      vg.ruleY([0], { stroke: "#5a72ac", strokeOpacity: 0.4 }),
+      vg.ruleY([0], { stroke: chartPalette.axisStroke, strokeOpacity: 0.4 }),
       vg.xLabel("Separation s (Mpc) →"),
       vg.yLabel("↑ ξ(s)"),
       vg.xDomain([50, 200]),
@@ -78,13 +70,9 @@ export function BAOFeature(): JSX.Element {
       vg.height(440),
       vg.marginLeft(75),
       vg.marginBottom(50),
-    );
-    const host = plotRef.current;
-    host.replaceChildren(element as Node);
-    return () => {
-      host.replaceChildren();
-    };
-  }, [ready, modelCurve, rd]);
+    ],
+    [modelCurve, rd],
+  );
 
   return (
     <PlotSection
@@ -118,38 +106,28 @@ export function BAOFeature(): JSX.Element {
       }
       plot={
         error !== null ? (
-          <Box color="red.300" p={4}>
-            <Text fontWeight="bold">Plot failed to initialize</Text>
-            <Code mt={2} display="block" whiteSpace="pre-wrap" bg="navy.800">
-              {error}
-            </Code>
-          </Box>
+          <PlotError message={error} />
         ) : (
-          <Box
-            ref={plotRef}
-            w="100%"
-            overflowX="auto"
-            sx={{ "& > .plot": { mx: "auto" } }}
-            minH="440px"
-            aria-label="BAO correlation function with a bump near 150 Mpc"
-            role="img"
+          <MosaicPlot
+            spec={spec}
+            enabled={ready}
+            ariaLabel="BAO correlation function with a bump near 150 Mpc"
+            minHeight="440px"
           />
         )
       }
       controls={
         <Stack direction={{ base: "column", md: "row" }} spacing={6}>
-          <Box flex="1">
-            <ParamSlider
-              label="Sound horizon r_d"
-              unit="Mpc"
-              description="Where the BAO bump sits. Planck prefers ~147.8 Mpc; varying it slides the dashed guide and theory curve."
-              min={120}
-              max={180}
-              step={0.5}
-              value={rd}
-              onChange={setRd}
-            />
-          </Box>
+          <ParamSlider
+            label="Sound horizon r_d"
+            unit="Mpc"
+            description="Where the BAO bump sits. Planck prefers ~147.8 Mpc; varying it slides the dashed guide and theory curve."
+            min={120}
+            max={180}
+            step={0.5}
+            value={rd}
+            onChange={setRd}
+          />
         </Stack>
       }
       rules={
@@ -168,9 +146,9 @@ export function BAOFeature(): JSX.Element {
         <Citation title="Data source & provenance">
           <Text>
             Simulated BOSS DR12-like ξ(s) (30 bins, s ∈ [50, 200] Mpc),
-            generated by <Code>scripts/simulate/bao.ts</Code> from the model
-            in <Code>src/physics/bao.ts</Code>. Real source: Alam et al.
-            (2017) MNRAS 470, 2617; doi:10.1093/mnras/stx721.{" "}
+            generated by <Code>scripts/simulate/bao.ts</Code> from the model in{" "}
+            <Code>src/physics/bao.ts</Code>. Real source: Alam et al. (2017)
+            MNRAS 470, 2617; doi:10.1093/mnras/stx721.{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/bao.md"
               isExternal

@@ -1,9 +1,10 @@
-import { Box, Code, Link, SimpleGrid, Text } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Code, Link, SimpleGrid, Text } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
 import { Citation } from "../components/Citation";
 import { MathBlock, MathInline } from "../components/MathBlock";
+import { MosaicPlot } from "../components/MosaicPlot";
 import { ParamSlider } from "../components/ParamSlider";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
@@ -16,13 +17,13 @@ import {
   bbnLi7overH,
   bbnYp,
 } from "../physics/bbn";
+import { chartPalette } from "../theme/palette";
 
 const dataStatus: DataStatus = "simulated";
 
 const N_SAMPLES = 240;
 const OMEGA_BH2_MIN = 0.005;
 const OMEGA_BH2_MAX = 0.05;
-
 const YP_SCALE = 1e-4;
 
 interface CurveRow {
@@ -31,15 +32,13 @@ interface CurveRow {
   species: string;
 }
 
-interface ObservedBand {
+interface ObservedMarker {
+  x: number;
+  y: number;
   species: string;
-  lower: number;
-  upper: number;
-  center: number;
 }
 
 export function BBNAbundances(): JSX.Element {
-  const plotRef = useRef<HTMLDivElement | null>(null);
   const [omegaBh2, setOmegaBh2] = useState<number>(0.022);
   const [nEff, setNEff] = useState<number>(N_EFF_STANDARD);
 
@@ -57,28 +56,14 @@ export function BBNAbundances(): JSX.Element {
     return rows;
   }, [nEff]);
 
-  const observedBands = useMemo<ObservedBand[]>(() => {
-    return [
-      {
-        species: "D/H",
-        center: BBN_OBSERVED.dH.value,
-        lower: BBN_OBSERVED.dH.value - BBN_OBSERVED.dH.sigma,
-        upper: BBN_OBSERVED.dH.value + BBN_OBSERVED.dH.sigma,
-      },
-      {
-        species: "Y_p (×10⁻⁴)",
-        center: BBN_OBSERVED.yp.value * YP_SCALE,
-        lower: (BBN_OBSERVED.yp.value - BBN_OBSERVED.yp.sigma) * YP_SCALE,
-        upper: (BBN_OBSERVED.yp.value + BBN_OBSERVED.yp.sigma) * YP_SCALE,
-      },
-      {
-        species: "⁷Li/H",
-        center: BBN_OBSERVED.li7H.value,
-        lower: BBN_OBSERVED.li7H.value - BBN_OBSERVED.li7H.sigma,
-        upper: BBN_OBSERVED.li7H.value + BBN_OBSERVED.li7H.sigma,
-      },
-    ];
-  }, []);
+  const observedMarkers = useMemo<ObservedMarker[]>(
+    () => [
+      { x: omegaBh2, y: BBN_OBSERVED.dH.value, species: "D/H" },
+      { x: omegaBh2, y: BBN_OBSERVED.yp.value * YP_SCALE, species: "Y_p (×10⁻⁴)" },
+      { x: omegaBh2, y: BBN_OBSERVED.li7H.value, species: "⁷Li/H" },
+    ],
+    [omegaBh2],
+  );
 
   const verticalGuide = useMemo(
     () => [
@@ -88,14 +73,8 @@ export function BBNAbundances(): JSX.Element {
     [omegaBh2],
   );
 
-  const observedMarkers = useMemo(
-    () => observedBands.map((b) => ({ x: omegaBh2, y: b.center, species: b.species })),
-    [observedBands, omegaBh2],
-  );
-
-  useEffect(() => {
-    if (plotRef.current === null) return;
-    const element = vg.plot(
+  const spec = useMemo(
+    () => [
       vg.line(curves, {
         x: "omegaBh2",
         y: "value",
@@ -108,13 +87,13 @@ export function BBNAbundances(): JSX.Element {
         y: "y",
         r: 6,
         fill: "species",
-        stroke: "#e9eef7",
+        stroke: chartPalette.modelStroke,
         strokeWidth: 1.5,
       }),
       vg.line(verticalGuide, {
         x: "x",
         y: "y",
-        stroke: "#f1c156",
+        stroke: chartPalette.highlightStroke,
         strokeOpacity: 0.6,
         strokeWidth: 1.5,
         strokeDasharray: "4,3",
@@ -127,13 +106,9 @@ export function BBNAbundances(): JSX.Element {
       vg.height(460),
       vg.marginLeft(80),
       vg.marginBottom(50),
-    );
-    const host = plotRef.current;
-    host.replaceChildren(element as Node);
-    return () => {
-      host.replaceChildren();
-    };
-  }, [curves, observedMarkers, verticalGuide]);
+    ],
+    [curves, observedMarkers, verticalGuide],
+  );
 
   return (
     <PlotSection
@@ -159,23 +134,19 @@ export function BBNAbundances(): JSX.Element {
           </MathBlock>
           <Text fontSize="sm" color="navy.200">
             More baryons (larger η) → less deuterium survives (it photoionises
-            into helium), more <MathInline>{`Y_p`}</MathInline>, more
-            lithium. The abundances are computed by solving Boltzmann/coupled
-            rate equations for the freeze-out of a dozen nuclear species. We
-            ship calibrated analytical fits in <Code>src/physics/bbn.ts</Code>;
-            full PArthENoPE grids can be swapped in (see fetch.md).
+            into helium), more <MathInline>{`Y_p`}</MathInline>, more lithium.
+            The abundances come from solving Boltzmann/coupled rate equations
+            for the freeze-out of a dozen nuclear species. We ship calibrated
+            analytical fits in <Code>src/physics/bbn.ts</Code>; full PArthENoPE
+            grids can be swapped in (see fetch.md).
           </Text>
         </>
       }
       plot={
-        <Box
-          ref={plotRef}
-          w="100%"
-          overflowX="auto"
-          sx={{ "& > .plot": { mx: "auto" } }}
-          minH="460px"
-          aria-label="BBN light element abundances vs baryon density"
-          role="img"
+        <MosaicPlot
+          spec={spec}
+          ariaLabel="BBN light element abundances vs baryon density"
+          minHeight="460px"
         />
       }
       controls={
@@ -218,11 +189,11 @@ export function BBNAbundances(): JSX.Element {
         <Citation title="Data source & provenance">
           <Text>
             Theory curves from analytical fits (Cyburt et al. 2016) in{" "}
-            <Code>src/physics/bbn.ts</Code>; ~2-5% accuracy vs PArthENoPE
-            under fiducial conditions. Observed values are real published
-            measurements: Cooke et al. (2018) ApJ 855, 102 for D/H; Aver
-            et al. (2015) JCAP 07, 011 for Y_p; Sbordone et al. (2010) A&A
-            522, A26 for ⁷Li/H.
+            <Code>src/physics/bbn.ts</Code>; ~2-5% accuracy vs PArthENoPE under
+            fiducial conditions. Observed values are real published
+            measurements: Cooke et al. (2018) ApJ 855, 102 for D/H; Aver et al.
+            (2015) JCAP 07, 011 for Y_p; Sbordone et al. (2010) A&A 522, A26
+            for ⁷Li/H.
           </Text>
           <Text mt={2}>
             See{" "}
