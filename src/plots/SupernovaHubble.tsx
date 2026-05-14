@@ -1,25 +1,31 @@
 import { Box, Code, Link, SimpleGrid, Switch, Text } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
 import { Citation } from "../components/Citation";
 import { MathBlock, MathInline } from "../components/MathBlock";
+import { MosaicPlot } from "../components/MosaicPlot";
 import { ParamSlider } from "../components/ParamSlider";
+import { PlotError } from "../components/PlotError";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
 import { type DataStatus } from "../components/DataStatusBadge";
 
-import { ensureCoordinator, loadTable } from "../mosaic/coordinator";
+import { TABLES } from "../data/loaders";
+import { useDataTable } from "../mosaic/useDataTable";
 import { muCurve } from "../physics/luminosity";
+import { chartPalette } from "../theme/palette";
 
 const dataStatus: DataStatus = "simulated";
-const PANTHEON_TABLE = "pantheon_plus";
 const SAMPLES = 240;
 
 export function SupernovaHubble(): JSX.Element {
-  const plotRef = useRef<HTMLDivElement | null>(null);
-  const [ready, setReady] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const { ready, error } = useDataTable(
+    TABLES.pantheonPlus.name,
+    TABLES.pantheonPlus.url,
+    { skipHeaderLines: TABLES.pantheonPlus.skipHeaderLines },
+  );
+
   const [H0, setH0] = useState<number>(70);
   const [omegaM, setOmegaM] = useState<number>(0.3);
   const [omegaLambda, setOmegaLambda] = useState<number>(0.7);
@@ -30,39 +36,26 @@ export function SupernovaHubble(): JSX.Element {
     return { H0, omegaM, omegaLambda: ol };
   }, [H0, omegaM, omegaLambda, flat]);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        ensureCoordinator();
-        await loadTable(PANTHEON_TABLE, "/data/pantheon_plus.csv", { skipHeaderLines: 6 });
-        if (!cancelled) setReady(true);
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : String(e));
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   const modelCurve = useMemo(
     () => muCurve(params, { zMin: 0.005, zMax: 2.3, samples: SAMPLES }),
     [params],
   );
 
-  useEffect(() => {
-    if (!ready || plotRef.current === null) return;
-    const modelData = modelCurve.map((row) => ({ z: row.z, mu: row.mu }));
-    const element = vg.plot(
-      vg.dot(vg.from(PANTHEON_TABLE), {
+  const spec = useMemo(
+    () => [
+      vg.dot(vg.from(TABLES.pantheonPlus.name), {
         x: "z",
         y: "mu",
         r: 2,
-        fill: "#f1c156",
+        fill: chartPalette.dataFill,
         fillOpacity: 0.55,
       }),
-      vg.line(modelData, { x: "z", y: "mu", stroke: "#e9eef7", strokeWidth: 2 }),
+      vg.line(modelCurve.map((row) => ({ z: row.z, mu: row.mu })), {
+        x: "z",
+        y: "mu",
+        stroke: chartPalette.modelStroke,
+        strokeWidth: 2,
+      }),
       vg.xLabel("Redshift z (log) →"),
       vg.yLabel("↑ Distance modulus μ (mag)"),
       vg.xDomain([0.005, 2.3]),
@@ -71,13 +64,9 @@ export function SupernovaHubble(): JSX.Element {
       vg.height(480),
       vg.marginLeft(70),
       vg.marginBottom(50),
-    );
-    const host = plotRef.current;
-    host.replaceChildren(element as Node);
-    return () => {
-      host.replaceChildren();
-    };
-  }, [ready, modelCurve]);
+    ],
+    [modelCurve],
+  );
 
   return (
     <PlotSection
@@ -111,21 +100,13 @@ export function SupernovaHubble(): JSX.Element {
       }
       plot={
         error !== null ? (
-          <Box color="red.300" p={4}>
-            <Text fontWeight="bold">Plot failed to initialize</Text>
-            <Code mt={2} display="block" whiteSpace="pre-wrap" bg="navy.800">
-              {error}
-            </Code>
-          </Box>
+          <PlotError message={error} />
         ) : (
-          <Box
-            ref={plotRef}
-            w="100%"
-            overflowX="auto"
-            sx={{ "& > .plot": { mx: "auto" } }}
-            minH="480px"
-            aria-label="Hubble diagram of Type Ia supernovae"
-            role="img"
+          <MosaicPlot
+            spec={spec}
+            enabled={ready}
+            ariaLabel="Hubble diagram of Type Ia supernovae"
+            minHeight="480px"
           />
         )
       }
@@ -200,11 +181,10 @@ export function SupernovaHubble(): JSX.Element {
       citation={
         <Citation title="Data source & provenance">
           <Text>
-            Simulated 250 Type Ia SNe drawn from fiducial ΛCDM (H0=70,
-            Ω_m=0.3, Ω_Λ=0.7) via{" "}
-            <Code>scripts/simulate/pantheon.ts</Code>. Real source:
-            Pantheon+ (Brout et al. 2022) ApJ 938, 110. Public data is
-            on GitHub; see{" "}
+            Simulated 250 Type Ia SNe drawn from fiducial ΛCDM (H0=70, Ω_m=0.3,
+            Ω_Λ=0.7) via <Code>scripts/simulate/pantheon.ts</Code>. Real source:
+            Pantheon+ (Brout et al. 2022) ApJ 938, 110. Public data is on
+            GitHub; see{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/pantheon.md"
               isExternal

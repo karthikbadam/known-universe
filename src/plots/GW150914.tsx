@@ -1,47 +1,33 @@
-import { Box, Code, Link, SimpleGrid, Text } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Code, Link, SimpleGrid, Text } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
 import { Citation } from "../components/Citation";
 import { MathBlock, MathInline } from "../components/MathBlock";
+import { MosaicPlot } from "../components/MosaicPlot";
 import { ParamSlider } from "../components/ParamSlider";
+import { PlotError } from "../components/PlotError";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
 import { type DataStatus } from "../components/DataStatusBadge";
 
-import { ensureCoordinator, loadTable } from "../mosaic/coordinator";
-import {
-  GW150914_FIDUCIAL,
-  chirpWaveform,
-} from "../physics/chirp";
+import { TABLES } from "../data/loaders";
+import { useDataTable } from "../mosaic/useDataTable";
+import { GW150914_FIDUCIAL, chirpWaveform } from "../physics/chirp";
+import { chartPalette } from "../theme/palette";
 
 const dataStatus: DataStatus = "simulated";
-const STRAIN_TABLE = "gw150914_strain";
 const T_C = GW150914_FIDUCIAL.tc;
 const SAMPLES = 600;
 
 export function GW150914(): JSX.Element {
-  const plotRef = useRef<HTMLDivElement | null>(null);
-  const [ready, setReady] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const { ready, error } = useDataTable(
+    TABLES.gw150914.name,
+    TABLES.gw150914.url,
+    { skipHeaderLines: TABLES.gw150914.skipHeaderLines },
+  );
   const [chirpMass, setChirpMass] = useState<number>(GW150914_FIDUCIAL.chirpMassSolar);
   const [phaseOffset, setPhaseOffset] = useState<number>(0);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        ensureCoordinator();
-        await loadTable(STRAIN_TABLE, "/data/gw150914_strain.csv", { skipHeaderLines: 6 });
-        if (!cancelled) setReady(true);
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : String(e));
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const modelLine = useMemo(() => {
     const ts: number[] = [];
@@ -50,25 +36,24 @@ export function GW150914(): JSX.Element {
     return ts.map((t, i) => ({ t, h: h[i]! * 1e21 }));
   }, [chirpMass, phaseOffset]);
 
-  useEffect(() => {
-    if (!ready || plotRef.current === null) return;
-    const element = vg.plot(
-      vg.line(vg.from(STRAIN_TABLE), {
+  const spec = useMemo(
+    () => [
+      vg.line(vg.from(TABLES.gw150914.name), {
         x: "t_s",
         y: "strain",
-        stroke: "#a3b3d2",
+        stroke: chartPalette.errorStroke,
         strokeWidth: 0.6,
         strokeOpacity: 0.7,
       }),
       vg.line(modelLine, {
         x: "t",
         y: "h",
-        stroke: "#f1c156",
+        stroke: chartPalette.dataFill,
         strokeWidth: 2,
       }),
       vg.ruleX([{ x: T_C }], {
         x: "x",
-        stroke: "#e8ad2a",
+        stroke: chartPalette.dataStroke,
         strokeOpacity: 0.5,
         strokeDasharray: "4,3",
       }),
@@ -80,13 +65,9 @@ export function GW150914(): JSX.Element {
       vg.height(420),
       vg.marginLeft(65),
       vg.marginBottom(50),
-    );
-    const host = plotRef.current;
-    host.replaceChildren(element as Node);
-    return () => {
-      host.replaceChildren();
-    };
-  }, [ready, modelLine]);
+    ],
+    [modelLine],
+  );
 
   return (
     <PlotSection
@@ -98,9 +79,9 @@ export function GW150914(): JSX.Element {
         <Text>
           On 14 September 2015 LIGO detected a tenth-of-a-second chirp — strain
           rising from ~10⁻²² to 10⁻²¹ as the frequency swept from 35 to 250 Hz
-          before flat-lining at merger. Slide M_c to fit the model line
-          (gold) against the noisy strain (grey); the published chirp mass is
-          ≈ 30 M_☉, implying two 30-M_☉ BHs spiralling together.
+          before flat-lining at merger. Slide M_c to fit the model line (gold)
+          against the noisy strain (grey); the published chirp mass is ≈ 30
+          M_☉, implying two 30-M_☉ BHs spiralling together.
         </Text>
       }
       math={
@@ -119,21 +100,13 @@ export function GW150914(): JSX.Element {
       }
       plot={
         error !== null ? (
-          <Box color="red.300" p={4}>
-            <Text fontWeight="bold">Plot failed to initialize</Text>
-            <Code mt={2} display="block" whiteSpace="pre-wrap" bg="navy.800">
-              {error}
-            </Code>
-          </Box>
+          <PlotError message={error} />
         ) : (
-          <Box
-            ref={plotRef}
-            w="100%"
-            overflowX="auto"
-            sx={{ "& > .plot": { mx: "auto" } }}
-            minH="420px"
-            aria-label="GW150914 strain time series with chirp model overlay"
-            role="img"
+          <MosaicPlot
+            spec={spec}
+            enabled={ready}
+            ariaLabel="GW150914 strain time series with chirp model overlay"
+            minHeight="420px"
           />
         )
       }
@@ -178,11 +151,10 @@ export function GW150914(): JSX.Element {
       citation={
         <Citation title="Data source & provenance">
           <Text>
-            Simulated strain via{" "}
-            <Code>scripts/simulate/gw150914.ts</Code> from the chirp
-            waveform in <Code>src/physics/chirp.ts</Code>. Real source:
-            Abbott et al. (LIGO 2016) PRL 116, 061102. Public GWOSC HDF5
-            available; see{" "}
+            Simulated strain via <Code>scripts/simulate/gw150914.ts</Code> from
+            the chirp waveform in <Code>src/physics/chirp.ts</Code>. Real
+            source: Abbott et al. (LIGO 2016) PRL 116, 061102. Public GWOSC
+            HDF5 available; see{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/gw150914.md"
               isExternal

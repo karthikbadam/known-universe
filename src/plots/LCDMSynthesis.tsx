@@ -1,12 +1,14 @@
 import { Box, Code, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
 import { MathBlock, MathInline } from "../components/MathBlock";
+import { MosaicPlot } from "../components/MosaicPlot";
 import { ParamSlider } from "../components/ParamSlider";
 
 import { cmbModelCurve } from "../physics/cmb";
 import { muCurve } from "../physics/luminosity";
+import { chartPalette } from "../theme/palette";
 
 const PLANCK_2018 = {
   H0: 67.4,
@@ -17,13 +19,18 @@ const PLANCK_2018 = {
   AsLog: 3.044,
 };
 
-const PARAM_DESCRIPTIONS: { name: string; key: keyof typeof PLANCK_2018; controls: string }[] = [
-  { name: "Ω_b h²", key: "omegaBh2", controls: "BBN curves; CMB peak heights; baryon ruler in BAO." },
-  { name: "Ω_c h²", key: "omegaM", controls: "Sound horizon size; CMB peak positions; rotation-curve halos." },
-  { name: "H₀", key: "H0", controls: "Hubble line slope; SN distance ladder; CMB peak ℓ_1 placement." },
-  { name: "τ", key: "tau", controls: "Optical depth to reionization; CMB low-ℓ polarization amplitude." },
-  { name: "ln(10¹⁰ A_s)", key: "AsLog", controls: "Overall amplitude of primordial perturbations." },
-  { name: "n_s", key: "nS", controls: "Spectral tilt; CMB high-ℓ tail; tilts the matter power spectrum." },
+interface ParamDescriptor {
+  name: string;
+  controls: string;
+}
+
+const PARAM_DESCRIPTIONS: ReadonlyArray<ParamDescriptor> = [
+  { name: "Ω_b h²", controls: "BBN curves; CMB peak heights; baryon ruler in BAO." },
+  { name: "Ω_c h²", controls: "Sound horizon size; CMB peak positions; rotation-curve halos." },
+  { name: "H₀", controls: "Hubble line slope; SN distance ladder; CMB peak ℓ_1 placement." },
+  { name: "τ", controls: "Optical depth to reionization; CMB low-ℓ polarization amplitude." },
+  { name: "ln(10¹⁰ A_s)", controls: "Overall amplitude of primordial perturbations." },
+  { name: "n_s", controls: "Spectral tilt; CMB high-ℓ tail; tilts the matter power spectrum." },
 ];
 
 export function LCDMSynthesis(): JSX.Element {
@@ -31,7 +38,7 @@ export function LCDMSynthesis(): JSX.Element {
   const [omegaBh2, setOmegaBh2] = useState<number>(PLANCK_2018.omegaBh2);
   const [omegaCh2, setOmegaCh2] = useState<number>(0.120);
   const [tau, setTau] = useState<number>(PLANCK_2018.tau);
-  const [As, setAs] = useState<number>(PLANCK_2018.AsLog);
+  const [as_, setAs] = useState<number>(PLANCK_2018.AsLog);
   const [nS, setNS] = useState<number>(PLANCK_2018.nS);
 
   const omegaM = useMemo(() => {
@@ -39,13 +46,12 @@ export function LCDMSynthesis(): JSX.Element {
     return (omegaBh2 + omegaCh2) / (h * h);
   }, [H0, omegaBh2, omegaCh2]);
 
-  const cmbRef = useRef<HTMLDivElement | null>(null);
-  const snRef = useRef<HTMLDivElement | null>(null);
+  const cmbScaled = useMemo(() => {
+    const baseCurve = cmbModelCurve({ H0, omegaM, omegaBh2, nS }, { samples: 500, ellMax: 2500 });
+    const amplitude = Math.exp(as_ - PLANCK_2018.AsLog);
+    return baseCurve.map((r) => ({ ell: r.ell, Dl: r.Dl * amplitude }));
+  }, [H0, omegaM, omegaBh2, nS, as_]);
 
-  const cmbData = useMemo(
-    () => cmbModelCurve({ H0, omegaM, omegaBh2, nS }, { samples: 500, ellMax: 2500 }),
-    [H0, omegaM, omegaBh2, nS],
-  );
   const snData = useMemo(
     () =>
       muCurve({ H0, omegaM, omegaLambda: 1 - omegaM }, {
@@ -56,19 +62,14 @@ export function LCDMSynthesis(): JSX.Element {
     [H0, omegaM],
   );
 
-  const cmbScaled = useMemo(
-    () =>
-      cmbData.map((r) => ({
-        ell: r.ell,
-        Dl: r.Dl * Math.exp(As - PLANCK_2018.AsLog),
-      })),
-    [cmbData, As],
-  );
-
-  useEffect(() => {
-    if (cmbRef.current === null) return;
-    const el = vg.plot(
-      vg.line(cmbScaled, { x: "ell", y: "Dl", stroke: "#f1c156", strokeWidth: 2 }),
+  const cmbSpec = useMemo(
+    () => [
+      vg.line(cmbScaled, {
+        x: "ell",
+        y: "Dl",
+        stroke: chartPalette.dataFill,
+        strokeWidth: 2,
+      }),
       vg.xLabel("Multipole ℓ →"),
       vg.yLabel("↑ Dℓ (μK²)"),
       vg.xDomain([0, 2500]),
@@ -77,17 +78,18 @@ export function LCDMSynthesis(): JSX.Element {
       vg.height(220),
       vg.marginLeft(55),
       vg.marginBottom(35),
-    );
-    cmbRef.current.replaceChildren(el as Node);
-    return () => {
-      cmbRef.current?.replaceChildren();
-    };
-  }, [cmbScaled]);
+    ],
+    [cmbScaled],
+  );
 
-  useEffect(() => {
-    if (snRef.current === null) return;
-    const el = vg.plot(
-      vg.line(snData, { x: "z", y: "mu", stroke: "#f1c156", strokeWidth: 2 }),
+  const snSpec = useMemo(
+    () => [
+      vg.line(snData.map((r) => ({ z: r.z, mu: r.mu })), {
+        x: "z",
+        y: "mu",
+        stroke: chartPalette.dataFill,
+        strokeWidth: 2,
+      }),
       vg.xLabel("Redshift z →"),
       vg.yLabel("↑ Distance modulus μ"),
       vg.xDomain([0.005, 2.3]),
@@ -96,13 +98,13 @@ export function LCDMSynthesis(): JSX.Element {
       vg.height(220),
       vg.marginLeft(55),
       vg.marginBottom(35),
-    );
-    snRef.current.replaceChildren(el as Node);
-    return () => {
-      snRef.current?.replaceChildren();
-    };
-  }, [snData]);
+    ],
+    [snData],
+  );
 
+  // tau slider has no current effect on these two thumbnails (it drives
+  // CMB polarization, not the temperature D_ℓ). Referenced here so the
+  // setter stays alive and so the cheat sheet below has a value to show.
   void tau;
 
   return (
@@ -125,24 +127,20 @@ export function LCDMSynthesis(): JSX.Element {
             Every observation above — the Hubble line, the BBN abundances, the
             CMB peaks, the supernova distances, the BAO ruler, the rotation
             curves — sits in the same parameter space. Drag any of the six
-            ΛCDM sliders below and the CMB power spectrum and supernova
-            Hubble line shift to match. The other plots scale the same way
-            (re-mount this page to compose them).
+            ΛCDM sliders below and the CMB power spectrum and supernova Hubble
+            line shift to match. The other plots scale the same way (re-mount
+            this page to compose them).
           </Text>
         </VStack>
 
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={6}>
           <Box>
-            <Text color="navy.300" fontSize="sm" mb={2}>
-              CMB Dℓ vs ℓ
-            </Text>
-            <Box ref={cmbRef} minH="220px" />
+            <Text color="navy.300" fontSize="sm" mb={2}>CMB Dℓ vs ℓ</Text>
+            <MosaicPlot spec={cmbSpec} ariaLabel="CMB Dℓ thumbnail" minHeight="220px" />
           </Box>
           <Box>
-            <Text color="navy.300" fontSize="sm" mb={2}>
-              SN Hubble diagram μ(z)
-            </Text>
-            <Box ref={snRef} minH="220px" />
+            <Text color="navy.300" fontSize="sm" mb={2}>SN Hubble diagram μ(z)</Text>
+            <MosaicPlot spec={snSpec} ariaLabel="Supernova Hubble thumbnail" minHeight="220px" />
           </Box>
         </SimpleGrid>
 
@@ -150,9 +148,11 @@ export function LCDMSynthesis(): JSX.Element {
           {`\\{\\Omega_b h^2,\\; \\Omega_c h^2,\\; H_0,\\; \\tau,\\; A_s,\\; n_s\\}`}
         </MathBlock>
         <Text fontSize="sm" color="navy.200" mb={6}>
-          Plus the derived <MathInline>{`\\Omega_m = (\\Omega_b h^2 + \\Omega_c h^2)/h^2`}</MathInline>
-          {" "}— currently {omegaM.toFixed(3)} — and{" "}
-          <MathInline>{`\\Omega_\\Lambda = 1 - \\Omega_m`}</MathInline> for a flat universe.
+          Plus the derived{" "}
+          <MathInline>{`\\Omega_m = (\\Omega_b h^2 + \\Omega_c h^2)/h^2`}</MathInline>{" "}
+          — currently {omegaM.toFixed(3)} — and{" "}
+          <MathInline>{`\\Omega_\\Lambda = 1 - \\Omega_m`}</MathInline> for a
+          flat universe.
         </Text>
 
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={5}>
@@ -199,7 +199,7 @@ export function LCDMSynthesis(): JSX.Element {
             min={2.8}
             max={3.3}
             step={0.005}
-            value={As}
+            value={as_}
             onChange={setAs}
           />
           <ParamSlider
