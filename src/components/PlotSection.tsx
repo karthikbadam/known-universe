@@ -1,4 +1,4 @@
-import { Box, Divider, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Heading, HStack, Separator, Text, VStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 
 import { DataStatusBadge, type DataStatus } from "./DataStatusBadge";
@@ -32,11 +32,11 @@ export function PlotSection({
   rules,
   citation,
   dataStatus,
-}: Props): JSX.Element {
+}: Props) {
   return (
     <Box as="section" py={{ base: 8, md: 12 }} px={{ base: 4, md: 6 }}>
-      <VStack align="stretch" spacing={4} maxW="6xl" mx="auto">
-        <HStack align="baseline" spacing={3} flexWrap="wrap">
+      <VStack align="stretch" gap={4} maxW="6xl" mx="auto">
+        <HStack align="baseline" gap={3} flexWrap="wrap">
           <Text
             color="gold.500"
             fontFamily="mono"
@@ -45,7 +45,7 @@ export function PlotSection({
           >
             {String(index).padStart(2, "0")}
           </Text>
-          <Heading as="h2" size="lg">
+          <Heading as="h2" size="lg" color="gold.300">
             {title}
           </Heading>
           <DataStatusBadge status={dataStatus} />
@@ -61,13 +61,13 @@ export function PlotSection({
 
         <Box>{math}</Box>
 
-        <Divider borderColor="navy.700" my={2} />
+        <Separator borderColor="navy.700" my={2} />
 
         <Box w="100%" minH="320px">{plot}</Box>
 
         <Box>{controls}</Box>
 
-        <Divider borderColor="navy.700" my={2} />
+        <Separator borderColor="navy.700" my={2} />
 
         {rules}
 

@@ -1,7 +1,7 @@
 {
   "name": "cosmology-visualization-lab",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "Interactive journal of canonical data visualizations in physics. Module 1: Cosmology.",
   "scripts": {
@@ -11,7 +11,6 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "fetch:hubble": "tsx scripts/fetch-or-simulate/hubble1929.ts",
     "simulate:hubble": "tsx scripts/simulate/hubble1929.ts",
     "simulate:cmb": "tsx scripts/simulate/cmb_powerspectrum.ts",
     "simulate:bbn": "tsx scripts/simulate/bbn.ts",
@@ -21,31 +20,30 @@
     "simulate:sparc": "tsx scripts/simulate/sparc.ts"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.2.4",
-    "@chakra-ui/react": "^2.10.4",
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
-    "@uwdata/mosaic-core": "^0.16.1",
-    "@uwdata/mosaic-plot": "^0.16.1",
-    "@uwdata/mosaic-sql": "^0.16.1",
-    "@uwdata/vgplot": "^0.25.0",
-    "framer-motion": "^11.11.17",
+    "@chakra-ui/react": "^3.35.0",
+    "@emotion/react": "^11.14.0",
+    "@uwdata/mosaic-core": "^0.26.0",
+    "@uwdata/mosaic-plot": "^0.26.0",
+    "@uwdata/mosaic-sql": "^0.26.0",
+    "@uwdata/vgplot": "^0.26.0",
     "katex": "^0.16.11",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-katex": "^3.0.1",
-    "zod": "^3.23.8"
+    "lucide-react": "^1.15.0",
+    "next-themes": "^0.4.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-katex": "^3.1.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@testing-library/react": "^16.1.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.0",
     "@types/react-katex": "^3.0.4",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^5.2.0",
     "jsdom": "^25.0.1",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.11",
-    "vitest": "^2.1.5"
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0",
+    "vitest": "^2.1.9"
   }
 }

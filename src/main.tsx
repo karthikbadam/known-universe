@@ -1,18 +1,24 @@
-import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { ThemeProvider as ColorModeProvider } from "next-themes";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import App from "./App";
-import { theme } from "./theme";
+import { system } from "./theme";
 
 const container = document.getElementById("root");
 if (!container) throw new Error("#root not found");
 
 createRoot(container).render(
   <StrictMode>
-    <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-    <ChakraProvider theme={theme}>
-      <App />
-    </ChakraProvider>
+    <ColorModeProvider
+      attribute="class"
+      defaultTheme="dark"
+      disableTransitionOnChange
+    >
+      <ChakraProvider value={system}>
+        <App />
+      </ChakraProvider>
+    </ColorModeProvider>
   </StrictMode>,
 );

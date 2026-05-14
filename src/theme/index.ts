@@ -1,8 +1,9 @@
-import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
 // Navy / gold palette. Hex anchors chosen to evoke a starfield-on-deep-water
-// aesthetic; swap if a prior project pins exact values.
-const navy = {
+// aesthetic. v3 token shape is `{ value: "#..." }`; reference as
+// `colors: "navy.500"` in component props.
+const NAVY = {
   50: "#e9eef7",
   100: "#c8d2e6",
   200: "#a3b3d2",
@@ -13,9 +14,9 @@ const navy = {
   700: "#1a2e57",
   800: "#0f1f3c",
   900: "#070f1f",
-};
+} as const;
 
-const gold = {
+const GOLD = {
   50: "#fdf6e3",
   100: "#fae8b9",
   200: "#f6d586",
@@ -26,65 +27,64 @@ const gold = {
   700: "#7c5b0a",
   800: "#503a06",
   900: "#291d03",
-};
+} as const;
 
-const config: ThemeConfig = {
-  initialColorMode: "dark",
-  useSystemColorMode: false,
-};
+function tokenScale<T extends Record<string, string>>(
+  scale: T,
+): Record<keyof T, { value: string }> {
+  const out = {} as Record<keyof T, { value: string }>;
+  for (const [k, v] of Object.entries(scale)) {
+    out[k as keyof T] = { value: v };
+  }
+  return out;
+}
 
-export const theme = extendTheme({
-  config,
-  colors: {
-    navy,
-    gold,
-    brand: gold,
-  },
-  fonts: {
-    heading:
-      'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-    body: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-    mono: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
-  },
-  styles: {
-    global: {
-      "body": {
-        bg: "navy.900",
-        color: "navy.50",
-      },
-      ".katex": {
-        color: "navy.50",
-      },
-      ".katex-display": {
-        overflowX: "auto",
-        overflowY: "hidden",
-        paddingY: 2,
-      },
-      ".plot text": {
-        fill: "var(--chakra-colors-navy-50) !important",
-      },
-      ".plot .tick line": {
-        stroke: "var(--chakra-colors-navy-400) !important",
-      },
-      ".plot .domain": {
-        stroke: "var(--chakra-colors-navy-400) !important",
-      },
+const config = defineConfig({
+  globalCss: {
+    "html, body": {
+      bg: "navy.900",
+      color: "navy.50",
+    },
+    ".katex": {
+      color: "navy.50",
+    },
+    ".katex-display": {
+      overflowX: "auto",
+      overflowY: "hidden",
+      paddingY: "2",
+    },
+    ".plot text": {
+      fill: "var(--chakra-colors-navy-50) !important",
+    },
+    ".plot .tick line": {
+      stroke: "var(--chakra-colors-navy-400) !important",
+    },
+    ".plot .domain": {
+      stroke: "var(--chakra-colors-navy-400) !important",
     },
   },
-  components: {
-    Heading: {
-      baseStyle: {
-        color: "gold.300",
-        letterSpacing: "tight",
+  theme: {
+    tokens: {
+      colors: {
+        navy: tokenScale(NAVY),
+        gold: tokenScale(GOLD),
       },
-    },
-    Link: {
-      baseStyle: {
-        color: "gold.400",
-        _hover: { color: "gold.200", textDecoration: "underline" },
+      fonts: {
+        heading: {
+          value:
+            'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        },
+        body: {
+          value:
+            'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        },
+        mono: {
+          value:
+            'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+        },
       },
     },
   },
 });
 
-export type AppTheme = typeof theme;
+export const system = createSystem(defaultConfig, config);

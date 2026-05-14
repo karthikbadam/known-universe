@@ -2,7 +2,7 @@ import { Param } from "@uwdata/mosaic-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseParamReturn {
-  param: Param;
+  param: Param<number>;
   value: number;
   setValue: (next: number) => void;
 }
@@ -16,9 +16,9 @@ interface UseParamReturn {
 // dispatch through the Param so any Mosaic plot referencing it updates
 // in lockstep.
 export function useParam(initialValue: number): UseParamReturn {
-  const paramRef = useRef<Param | null>(null);
+  const paramRef = useRef<Param<number> | null>(null);
   if (paramRef.current === null) {
-    paramRef.current = Param.value(initialValue) as Param;
+    paramRef.current = Param.value(initialValue) as Param<number>;
   }
   const param = paramRef.current;
 

@@ -27,7 +27,7 @@ export function MosaicPlot({
   enabled = true,
   ariaLabel,
   minHeight = "440px",
-}: Props): JSX.Element {
+}: Props) {
   const hostRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export function MosaicPlot({
       ref={hostRef}
       w="100%"
       overflowX="auto"
-      sx={{ "& > .plot": { mx: "auto" } }}
+      css={{ "& > .plot": { mx: "auto" } }}
       minH={minHeight}
       aria-label={ariaLabel}
       role="img"

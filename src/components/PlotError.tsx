@@ -9,7 +9,7 @@ interface Props {
  * coordinator init fails. Shows the raw error string so the user (or
  * inspector) can see what went wrong.
  */
-export function PlotError({ message }: Props): JSX.Element {
+export function PlotError({ message }: Props) {
   return (
     <Box color="red.300" p={4}>
       <Text fontWeight="bold">Plot failed to initialize</Text>

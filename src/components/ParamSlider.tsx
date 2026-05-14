@@ -1,15 +1,7 @@
 import {
-  FormLabel,
   HStack,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
   NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -35,57 +27,71 @@ export function ParamSlider({
   step,
   value,
   onChange,
-}: Props): JSX.Element {
-  const id = useId();
+}: Props) {
+  const labelId = useId();
   const valueText = unit ? `${value} ${unit}` : `${value}`;
 
   return (
-    <VStack align="stretch" spacing={1} w="100%">
+    <VStack align="stretch" gap={1} w="100%">
       <HStack justify="space-between" align="baseline">
-        <FormLabel htmlFor={id} m={0} color="navy.100" fontWeight="medium">
+        <Text
+          id={labelId}
+          m={0}
+          color="navy.100"
+          fontWeight="medium"
+          fontSize="sm"
+        >
           {label}
           {unit ? (
             <Text as="span" color="navy.300" fontSize="sm" ml={1}>
               ({unit})
             </Text>
           ) : null}
-        </FormLabel>
-        <NumberInput
+        </Text>
+        <NumberInput.Root
           size="sm"
           maxW="6.5rem"
-          value={value}
-          onChange={(_, n) => {
-            if (Number.isFinite(n)) onChange(n);
+          value={value.toString()}
+          onValueChange={(d) => {
+            if (Number.isFinite(d.valueAsNumber)) onChange(d.valueAsNumber);
           }}
           min={min}
           max={max}
           step={step}
-          aria-label={`${label} numeric input`}
         >
-          <NumberInputField bg="navy.800" borderColor="navy.600" />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
+          <NumberInput.Input
+            bg="navy.800"
+            borderColor="navy.600"
+            aria-label={`${label} numeric input`}
+          />
+          <NumberInput.Control>
+            <NumberInput.IncrementTrigger />
+            <NumberInput.DecrementTrigger />
+          </NumberInput.Control>
+        </NumberInput.Root>
       </HStack>
-      <Slider
-        id={id}
-        aria-label={label}
+      <Slider.Root
+        aria-labelledby={[labelId]}
         aria-valuetext={valueText}
         min={min}
         max={max}
         step={step}
-        value={value}
-        onChange={onChange}
-        focusThumbOnChange={false}
-        colorScheme="gold"
+        value={[value]}
+        onValueChange={(d) => {
+          const v = d.value[0];
+          if (typeof v === "number") onChange(v);
+        }}
+        colorPalette="yellow"
       >
-        <SliderTrack bg="navy.700">
-          <SliderFilledTrack bg="gold.400" />
-        </SliderTrack>
-        <SliderThumb boxSize={4} bg="gold.300" />
-      </Slider>
+        <Slider.Control>
+          <Slider.Track bg="navy.700">
+            <Slider.Range bg="gold.400" />
+          </Slider.Track>
+          <Slider.Thumb index={0} boxSize={4} bg="gold.300">
+            <Slider.HiddenInput />
+          </Slider.Thumb>
+        </Slider.Control>
+      </Slider.Root>
       {description ? (
         <Text fontSize="xs" color="navy.300">
           {description}

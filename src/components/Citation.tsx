@@ -1,12 +1,4 @@
-import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  Text,
-} from "@chakra-ui/react";
+import { Accordion, Box, Text } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 
 interface Props {
@@ -14,11 +6,11 @@ interface Props {
   children: ReactNode;
 }
 
-export function Citation({ title, children }: Props): JSX.Element {
+export function Citation({ title, children }: Props) {
   return (
-    <Accordion allowToggle my={2}>
-      <AccordionItem border="none">
-        <AccordionButton
+    <Accordion.Root collapsible my={2}>
+      <Accordion.Item value="citation" border="none">
+        <Accordion.ItemTrigger
           px={2}
           py={1}
           color="navy.200"
@@ -27,12 +19,19 @@ export function Citation({ title, children }: Props): JSX.Element {
           <Box flex="1" textAlign="left" fontSize="sm" fontWeight="medium">
             {title}
           </Box>
-          <AccordionIcon />
-        </AccordionButton>
-        <AccordionPanel px={2} py={2} fontSize="sm" color="navy.200">
-          <Text as="div">{children}</Text>
-        </AccordionPanel>
-      </AccordionItem>
-    </Accordion>
+          <Accordion.ItemIndicator />
+        </Accordion.ItemTrigger>
+        <Accordion.ItemContent>
+          <Accordion.ItemBody
+            px={2}
+            py={2}
+            fontSize="sm"
+            color="navy.200"
+          >
+            <Text as="div">{children}</Text>
+          </Accordion.ItemBody>
+        </Accordion.ItemContent>
+      </Accordion.Item>
+    </Accordion.Root>
   );
 }
