@@ -97,18 +97,29 @@ export function mollweideInverse(
   return { lon, lat };
 }
 
-export function temperatureColor(tMicroK: number, scaleMicroK: number): string {
+/**
+ * Diverging colormap (Planck-like blue-white-red). Input t in μK, scale
+ * sets the ± clip range. Returns an [r, g, b] triple of 0-255 ints so
+ * callers writing into a canvas ImageData can avoid per-pixel string
+ * parsing.
+ */
+export function temperatureColor(
+  tMicroK: number,
+  scaleMicroK: number,
+): [number, number, number] {
   const x = Math.max(-1, Math.min(1, tMicroK / scaleMicroK));
   if (x < 0) {
     const f = -x;
-    const r = Math.round(255 * (1 - 0.8 * f));
-    const g = Math.round(255 * (1 - 0.6 * f));
-    const b = Math.round(255 * (1 - 0.2 * f));
-    return `rgb(${r},${g},${b})`;
+    return [
+      Math.round(255 * (1 - 0.8 * f)),
+      Math.round(255 * (1 - 0.6 * f)),
+      Math.round(255 * (1 - 0.2 * f)),
+    ];
   }
   const f = x;
-  const r = Math.round(255 * (1 - 0.05 * f));
-  const g = Math.round(255 * (1 - 0.5 * f));
-  const b = Math.round(255 * (1 - 0.85 * f));
-  return `rgb(${r},${g},${b})`;
+  return [
+    Math.round(255 * (1 - 0.05 * f)),
+    Math.round(255 * (1 - 0.5 * f)),
+    Math.round(255 * (1 - 0.85 * f)),
+  ];
 }

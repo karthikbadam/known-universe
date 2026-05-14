@@ -56,11 +56,7 @@ export function CMBMap(): JSX.Element {
           Math.max(0, Math.floor(((ll.lat + Math.PI / 2) / Math.PI) * FIELD_H)),
         );
         const t = field.values[fy * FIELD_W + fx] ?? 0;
-        const color = temperatureColor(t, scale);
-        const match = color.match(/(\d+),(\d+),(\d+)/);
-        const r = match ? Number(match[1]) : 0;
-        const g = match ? Number(match[2]) : 0;
-        const b = match ? Number(match[3]) : 0;
+        const [r, g, b] = temperatureColor(t, scale);
         data[idx] = r;
         data[idx + 1] = g;
         data[idx + 2] = b;
