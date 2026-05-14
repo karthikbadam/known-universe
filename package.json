@@ -13,7 +13,12 @@
     "test:watch": "vitest",
     "fetch:hubble": "tsx scripts/fetch-or-simulate/hubble1929.ts",
     "simulate:hubble": "tsx scripts/simulate/hubble1929.ts",
-    "simulate:cmb": "tsx scripts/simulate/cmb_powerspectrum.ts"
+    "simulate:cmb": "tsx scripts/simulate/cmb_powerspectrum.ts",
+    "simulate:bbn": "tsx scripts/simulate/bbn.ts",
+    "simulate:bao": "tsx scripts/simulate/bao.ts",
+    "simulate:gw": "tsx scripts/simulate/gw150914.ts",
+    "simulate:pantheon": "tsx scripts/simulate/pantheon.ts",
+    "simulate:sparc": "tsx scripts/simulate/sparc.ts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",

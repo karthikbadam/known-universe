@@ -13,8 +13,16 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
+import { BAOFeature } from "./plots/BAOFeature";
+import { BBNAbundances } from "./plots/BBNAbundances";
+import { CMBMap } from "./plots/CMBMap";
 import { CMBPowerSpectrum } from "./plots/CMBPowerSpectrum";
+import { EHTShadow } from "./plots/EHTShadow";
+import { GW150914 } from "./plots/GW150914";
 import { HubbleDiagram } from "./plots/HubbleDiagram";
+import { LCDMSynthesis } from "./plots/LCDMSynthesis";
+import { RotationCurves } from "./plots/RotationCurves";
+import { SupernovaHubble } from "./plots/SupernovaHubble";
 
 function Header(): JSX.Element {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -89,50 +97,9 @@ function Hero(): JSX.Element {
             One scroll through the visualizations that turned cosmology from
             philosophy into a six-parameter model. Each plot opens with the
             physics question it answers, then shows the math, then the data,
-            then a slider so you can see what changes when a parameter moves.
-            The synthesis at the bottom shows how every plot above shifts when
-            you change the six ΛCDM numbers.
-          </Text>
-          <Text fontSize="sm" color="navy.300">
-            Gate 2 preview — the Hubble 1929 plot and the CMB angular
-            power spectrum are wired up. The shared template, parameter
-            binding, and data status badges are production-ready; the
-            remaining eight plots ship in Gate 3.
-          </Text>
-        </VStack>
-      </Container>
-    </Box>
-  );
-}
-
-function SynthesisStub(): JSX.Element {
-  return (
-    <Box
-      as="section"
-      py={{ base: 12, md: 16 }}
-      px={{ base: 4, md: 6 }}
-      bg="navy.800"
-    >
-      <Container maxW="3xl">
-        <VStack align="stretch" spacing={4}>
-          <Text
-            color="gold.400"
-            fontSize="sm"
-            letterSpacing="widest"
-            textTransform="uppercase"
-            fontFamily="mono"
-          >
-            Synthesis · coming in Gate 3
-          </Text>
-          <Heading as="h2" size="xl" lineHeight="short">
-            Six numbers, every plot.
-          </Heading>
-          <Text fontSize="md" color="navy.100" lineHeight="tall">
-            The closing section will pin every plot above to six ΛCDM sliders:
-            Ω<sub>b</sub>h², Ω<sub>c</sub>h², H₀, τ, A<sub>s</sub>, n<sub>s</sub>.
-            Drag any one and watch the cosmic microwave background, the supernova
-            Hubble diagram, and the BAO feature shift in lockstep. The point:
-            the universe collapses to these six numbers.
+            then sliders so you can see what changes when a parameter moves.
+            The synthesis at the bottom collapses every plot above into the
+            six ΛCDM numbers.
           </Text>
         </VStack>
       </Container>
@@ -179,8 +146,15 @@ export function App(): JSX.Element {
       <Header />
       <Hero />
       <HubbleDiagram />
+      <BBNAbundances />
+      <CMBMap />
       <CMBPowerSpectrum />
-      <SynthesisStub />
+      <SupernovaHubble />
+      <RotationCurves />
+      <BAOFeature />
+      <EHTShadow />
+      <GW150914 />
+      <LCDMSynthesis />
       <Footer />
     </Box>
   );
