@@ -77,7 +77,12 @@ function Header() {
 
 function Hero() {
   return (
-    <Box as="section" pt={{ base: 12, md: 16 }} pb={{ base: 10, md: 16 }}>
+    <Box
+      as="section"
+      pt={{ base: 12, md: 16 }}
+      pb={{ base: 10, md: 16 }}
+      px={{ base: 6, md: 8 }}
+    >
       <Container maxW="4xl" px={0}>
         <VStack align="stretch" gap={6}>
           <Text
