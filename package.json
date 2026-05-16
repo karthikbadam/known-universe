@@ -1,9 +1,9 @@
 {
-  "name": "cosmology-visualization-lab",
+  "name": "known-universe",
   "private": true,
   "version": "0.2.0",
   "type": "module",
-  "description": "Interactive journal of canonical data visualizations in physics. Module 1: Cosmology.",
+  "description": "Known Universe: interactive journal of canonical visualizations in physics. Module 01 is Cosmology.",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

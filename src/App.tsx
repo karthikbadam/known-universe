@@ -38,15 +38,27 @@ function Header() {
     >
       <Container maxW="4xl" py={4}>
         <HStack justify="space-between" align="center">
-          <Text
-            fontFamily="heading"
-            fontSize="sm"
-            fontWeight="medium"
-            color="fg"
-            letterSpacing="-0.01em"
-          >
-            Cosmology Visualization Lab
-          </Text>
+          <HStack gap={3} align="baseline">
+            <Text
+              fontFamily="heading"
+              fontSize="sm"
+              fontWeight="medium"
+              color="fg"
+              letterSpacing="-0.01em"
+            >
+              Known Universe
+            </Text>
+            <Text
+              fontFamily="mono"
+              fontSize="xs"
+              color="fg.subtle"
+              letterSpacing="0.08em"
+              textTransform="uppercase"
+              display={{ base: "none", sm: "inline" }}
+            >
+              Module 01 / Cosmology
+            </Text>
+          </HStack>
           <IconButton
             size="sm"
             variant="ghost"
@@ -75,7 +87,7 @@ function Hero() {
             letterSpacing="0.12em"
             textTransform="uppercase"
           >
-            Module 01 · Cosmology
+            Known Universe / Module 01 / Cosmology
           </Text>
           <Heading
             as="h1"
@@ -94,12 +106,12 @@ function Hero() {
             color="fg.muted"
             lineHeight="1.7"
           >
-            One scroll through the visualizations that turned cosmology from
-            philosophy into a six-parameter model. Each plot opens with the
-            physics question it answers, then shows the math, then the data,
-            then sliders so you can see what changes when a parameter moves.
-            The synthesis at the bottom collapses every plot above into the
-            six ΛCDM numbers.
+            Known Universe is an interactive journal of canonical visualizations
+            in physics. Cosmology is the first of many modules. One scroll
+            through the visualizations that turned cosmology from philosophy
+            into a six-parameter model. Each plot opens with the physics
+            question it answers, then shows the math, then the data, then
+            sliders so you can see what changes when a parameter moves.
           </Text>
         </VStack>
       </Container>

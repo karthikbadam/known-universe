@@ -1,8 +1,10 @@
-# Cosmology Visualization Lab
+# Known Universe
 
-Interactive journal of canonical data visualizations in physics. Module 1 is
-Cosmology, a single-page scroll through ten plots that build the ΛCDM model,
-each with parameter sliders that re-derive the curve in real time.
+Known Universe is an interactive journal of canonical visualizations in
+physics. Module 01 is Cosmology: a single-page scroll through ten plots that
+build the ΛCDM model, each with parameter sliders that re-derive the curve in
+real time. Future modules will cover other branches of physics in the same
+format.
 
 ## Status
 
