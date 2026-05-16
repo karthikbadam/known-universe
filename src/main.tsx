@@ -13,7 +13,7 @@ createRoot(container).render(
   <StrictMode>
     <ColorModeProvider
       attribute="class"
-      defaultTheme="dark"
+      defaultTheme="light"
       disableTransitionOnChange
     >
       <ChakraProvider value={system}>
