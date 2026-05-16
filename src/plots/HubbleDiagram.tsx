@@ -9,22 +9,22 @@ import { ParamSlider } from "../components/ParamSlider";
 import { PlotError } from "../components/PlotError";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
-import { type DataStatus } from "../components/DataStatusBadge";
 
 import { TABLES } from "../data/loaders";
 import { ensureCoordinator } from "../mosaic/coordinator";
 import { useDataTable } from "../mosaic/useDataTable";
 import { useParam } from "../mosaic/useParam";
 import { hubbleTimeGyr } from "../physics/friedmann";
-import { chartPalette } from "../theme/palette";
+import { useChartPalette } from "../theme/palette";
 
-const dataStatus: DataStatus = "real";
 
 const MAX_DISTANCE_MPC = 2.2;
 const MODEL_GRID_TABLE = "hubble_model_grid";
 const MODEL_GRID_POINTS = 45;
+const PLOT_HEIGHT = 440;
 
 export function HubbleDiagram() {
+  const palette = useChartPalette();
   const { ready, error } = useDataTable(
     TABLES.hubble1929.name,
     TABLES.hubble1929.url,
@@ -60,55 +60,53 @@ export function HubbleDiagram() {
         x: "distance_mpc",
         y: "velocity_km_s",
         r: 4,
-        fill: chartPalette.dataFill,
-        stroke: chartPalette.dataStroke,
+        fill: palette.dataFill,
+        stroke: palette.dataStroke,
         strokeWidth: 1,
       }),
       vg.line(vg.from(MODEL_GRID_TABLE), {
         x: "d",
         y: vg.sql`${h0} * d`,
-        stroke: chartPalette.modelStroke,
+        stroke: palette.modelStroke,
         strokeWidth: 2,
       }),
-      vg.ruleY([0], { stroke: chartPalette.axisStroke, strokeOpacity: 0.4 }),
-      vg.ruleX([0], { stroke: chartPalette.axisStroke, strokeOpacity: 0.4 }),
+      vg.ruleY([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
+      vg.ruleX([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
       vg.xLabel("Distance (Mpc) →"),
       vg.yLabel("↑ Recession velocity (km/s)"),
       vg.xDomain([0, MAX_DISTANCE_MPC]),
       vg.yDomain([-400, 1300]),
       vg.width(720),
-      vg.height(440),
+      vg.height(PLOT_HEIGHT),
       vg.marginLeft(60),
       vg.marginBottom(50),
     ],
-    [h0],
+    [h0, palette],
   );
 
   return (
     <PlotSection
       index={1}
-      title="Hubble 1929 — galaxies are receding"
+      title="Hubble 1929, galaxies are receding"
       question="Are galaxy recession velocities proportional to distance?"
-      dataStatus={dataStatus}
       summary={
         <Text>
           Hubble's 24 galaxies show velocity rising roughly linearly with
-          distance. That single line — fitted by eye to a noisy cloud —
-          is the first evidence that the universe is expanding. The slope is
+          distance. That single line, fitted by eye to a noisy cloud,           is the first evidence that the universe is expanding. The slope is
           the Hubble constant <MathInline>{`H_0`}</MathInline>.
           Drag the slider to see why Hubble himself read off{" "}
           <MathInline>{`H_0 \\approx 500`}</MathInline> km/s/Mpc (a distance
-          scale wrong by a factor of seven — the modern value sits near 70).
+          scale wrong by a factor of seven, the modern value sits near 70).
         </Text>
       }
       math={
         <>
           <MathBlock ariaLabel="Hubble's law">{`v = H_0 \\, d`}</MathBlock>
-          <Text fontSize="sm" color="navy.200">
+          <Text fontFamily="body" fontSize="sm" color="fg.muted" lineHeight="1.7">
             <MathInline>{`v`}</MathInline> is recession velocity (km/s),{" "}
             <MathInline>{`d`}</MathInline> is distance (Mpc),{" "}
             <MathInline>{`H_0`}</MathInline> is the Hubble constant in
-            km/s/Mpc. Inverting it gives a rough age of the universe — the
+            km/s/Mpc. Inverting it gives a rough age of the universe, the
             Hubble time{" "}
             <MathInline>{`t_H = 1/H_0`}</MathInline> ≈{" "}
             {hubbleTimeGyr(h0Value).toFixed(2)} Gyr for your current slider
@@ -124,7 +122,7 @@ export function HubbleDiagram() {
             spec={spec}
             enabled={gridReady}
             ariaLabel="Scatter plot of recession velocity vs distance for Hubble's 24 galaxies, with a model line overlaid"
-            minHeight="440px"
+            height={PLOT_HEIGHT}
           />
         )
       }
@@ -147,14 +145,14 @@ export function HubbleDiagram() {
       rules={
         <RulesInOut
           rulesIn={[
-            "An expanding universe — the linear v–d relation is its signature.",
+            "An expanding universe, the linear v–d relation is its signature.",
             "A finite age: 1/H₀ sets an upper bound on the time since expansion began.",
             "A roughly uniform expansion in this small local volume.",
           ]}
           rulesOut={[
             "A static universe (the line would be flat at v ≈ 0).",
             "A contracting universe (the slope would be negative).",
-            "Distance scale precision: Hubble's slope is 7× too steep — the points themselves can't tell you that.",
+            "Distance scale precision: Hubble's slope is 7× too steep, the points themselves can't tell you that.",
           ]}
         />
       }

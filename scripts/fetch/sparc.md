@@ -1,4 +1,4 @@
-# SPARC galaxy rotation curves — fetch instructions
+# SPARC galaxy rotation curves, fetch instructions
 
 ## Source
 

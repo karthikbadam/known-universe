@@ -1,4 +1,4 @@
-# Hubble 1929 — real data fetch instructions
+# Hubble 1929, real data fetch instructions
 
 ## Source
 
@@ -22,10 +22,10 @@ name,distance_mpc,velocity_km_s
 ```
 
 with a 6-line `#`-prefixed provenance header above the column row. Use the
-header format from `/scripts/simulate/hubble1929.ts` as the template — same
-6 fields, swap `# SIMULATED DATA …` for `# REAL DATA — Hubble 1929 Table I+II`.
+header format from `/scripts/simulate/hubble1929.ts` as the template, same
+6 fields, swap `# SIMULATED DATA …` for `# REAL DATA, Hubble 1929 Table I+II`.
 
-## Option A — pull from the Astropy tutorials data mirror
+## Option A, pull from the Astropy tutorials data mirror
 
 The Astropy project hosts a curated transcription of Hubble's tables for
 their teaching notebooks. It changes form occasionally; check before relying.
@@ -38,7 +38,7 @@ curl -fL -o public/data/hubble1929.csv \
 Then prepend the 6-line provenance header by hand or with `sed -i '1i …'`,
 and rename columns to match the schema if the upstream uses different ones.
 
-## Option B — transcribe from the paper directly
+## Option B, transcribe from the paper directly
 
 The 24 rows from Hubble (1929) Tables I + II, written out:
 
@@ -71,11 +71,11 @@ The 24 rows from Hubble (1929) Tables I + II, written out:
 
 Distances are Hubble's original (Cepheid-luminosity-miscalibrated) values
 in Mpc; velocities are radial velocities corrected for solar motion. These
-are the published numbers — known to be wrong by a factor of ~7 in
-distance — and that's the point: they reproduce the famous original
+are the published numbers, known to be wrong by a factor of ~7 in
+distance, and that's the point: they reproduce the famous original
 scatter plot exactly.
 
-Transcribe into a CSV with the 6-line header (using `# REAL DATA — Hubble
+Transcribe into a CSV with the 6-line header (using `# REAL DATA, Hubble
 1929 Table I+II` as the first line), save as `/public/data/hubble1929.csv`.
 
 ## Flip the UI from simulated to real

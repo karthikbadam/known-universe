@@ -9,14 +9,13 @@ import { ParamSlider } from "../components/ParamSlider";
 import { PlotError } from "../components/PlotError";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
-import { type DataStatus } from "../components/DataStatusBadge";
 
 import { TABLES } from "../data/loaders";
 import { useDataTable } from "../mosaic/useDataTable";
 import { rotationCurve } from "../physics/nfw";
-import { chartPalette } from "../theme/palette";
+import { useChartPalette } from "../theme/palette";
 
-const dataStatus: DataStatus = "simulated";
+const PLOT_HEIGHT = 440;
 
 interface GalaxyDefaults {
   diskMassSolar: number; scaleKpc: number; rsKpc: number;
@@ -30,6 +29,7 @@ const GALAXY_DEFAULTS: Record<string, GalaxyDefaults> = {
 };
 
 export function RotationCurves() {
+  const palette = useChartPalette();
   const { ready, error } = useDataTable(TABLES.sparcGalaxies.name, TABLES.sparcGalaxies.url, { skipHeaderLines: TABLES.sparcGalaxies.skipHeaderLines });
   const [galaxy, setGalaxy] = useState<string>("NGC 3198");
   const defaults = GALAXY_DEFAULTS[galaxy]!;
@@ -55,35 +55,34 @@ export function RotationCurves() {
   const spec = useMemo(() => [
     vg.ruleX(vg.from(TABLES.sparcGalaxies.name), {
       x: "r_kpc", y1: vg.sql`v_kms - sigma_kms`, y2: vg.sql`v_kms + sigma_kms`,
-      stroke: chartPalette.errorStroke, strokeWidth: 1, strokeOpacity: 0.5,
+      stroke: palette.errorStroke, strokeWidth: 1, strokeOpacity: 0.5,
     }),
     vg.dot(vg.from(TABLES.sparcGalaxies.name), {
-      x: "r_kpc", y: "v_kms", r: 3, fill: chartPalette.dataFill, stroke: chartPalette.dataStroke,
+      x: "r_kpc", y: "v_kms", r: 3, fill: palette.dataFill, stroke: palette.dataStroke,
     }),
     vg.line(modelLines, { x: "r", y: "v", stroke: "kind", strokeWidth: 2, z: "kind" }),
     vg.xLabel("Radius (kpc) →"), vg.yLabel("↑ v (km/s)"),
     vg.xDomain([0, defaults.rMaxKpc]), vg.yDomain([0, defaults.vMax]),
-    vg.width(820), vg.height(440), vg.marginLeft(60), vg.marginBottom(50),
-  ], [modelLines, defaults]);
+    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(60), vg.marginBottom(50),
+  ], [modelLines, defaults, palette]);
 
   return (
     <PlotSection
       index={6}
-      title="Galaxy rotation curves — dark matter at the disk edge"
+      title="Galaxy rotation curves, dark matter at the disk edge"
       question="Why do galaxies rotate as if there's invisible mass holding them together?"
-      dataStatus={dataStatus}
-      summary={<Text>Newtonian gravity predicts that, beyond the visible disk, the orbital speed of stars and gas should fall as 1/√r. SPARC data says it doesn't — the curves stay flat or even rise. Either gravity breaks at galactic scales, or an unseen halo of dark matter contributes extra enclosed mass. The "baryonic" curve shows what visible mass alone predicts; the gap is what dark matter has to fill.</Text>}
+      summary={<Text>Newtonian gravity predicts that, beyond the visible disk, the orbital speed of stars and gas should fall as 1/√r. SPARC data says it doesn't, the curves stay flat or even rise. Either gravity breaks at galactic scales, or an unseen halo of dark matter contributes extra enclosed mass. The "baryonic" curve shows what visible mass alone predicts; the gap is what dark matter has to fill.</Text>}
       math={<>
         <MathBlock ariaLabel="Newtonian rotation velocity">{`v(r) \\;=\\; \\sqrt{\\frac{G M(<r)}{r}} \\qquad M_{\\rm NFW}(<r) \\;=\\; 4\\pi\\rho_s r_s^3 \\left[\\ln(1+x) - \\frac{x}{1+x}\\right]`}</MathBlock>
-        <Text fontSize="sm" color="navy.200"><MathInline>{`x = r/r_s`}</MathInline>. The total enclosed mass is the baryonic disk plus an NFW halo. The two sliders pick the halo scale radius and characteristic density; the total curve is the quadrature sum of baryonic and DM contributions.</Text>
+        <Text fontFamily="body" fontSize="sm" color="fg.muted" lineHeight="1.7"><MathInline>{`x = r/r_s`}</MathInline>. The total enclosed mass is the baryonic disk plus an NFW halo. The two sliders pick the halo scale radius and characteristic density; the total curve is the quadrature sum of baryonic and DM contributions.</Text>
       </>}
-      plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel={`Rotation curve of ${galaxy} with model decomposition`} minHeight="440px" />}
+      plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel={`Rotation curve of ${galaxy} with model decomposition`} height={PLOT_HEIGHT} />}
       controls={
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
           <Box>
-            <Text color="navy.100" fontWeight="medium" mb={2}>Galaxy</Text>
-            <NativeSelect.Root size="sm" bg="navy.800" borderColor="navy.600">
-              <NativeSelect.Field value={galaxy} onChange={(e) => setGalaxy(e.target.value)}>
+            <Text fontFamily="heading" color="fg" fontWeight="medium" fontSize="sm" mb={2}>Galaxy</Text>
+            <NativeSelect.Root size="sm" bg="bg.canvas" borderColor="border">
+              <NativeSelect.Field value={galaxy} onChange={(e) => setGalaxy(e.target.value)} fontFamily="mono">
                 {Object.keys(GALAXY_DEFAULTS).map((g) => <option key={g} value={g}>{g}</option>)}
               </NativeSelect.Field>
               <NativeSelect.Indicator />
@@ -93,8 +92,8 @@ export function RotationCurves() {
           <ParamSlider label="log₁₀(ρ_s)" unit="M_☉/kpc³" description="Characteristic NFW density. Calibrated per-galaxy in fits." min={5.5} max={8} step={0.05} value={rhoLog} onChange={setRhoLog} />
         </SimpleGrid>
       }
-      rules={<RulesInOut rulesIn={["Extra unseen mass at the galaxy edge — the modern view: cold dark matter.", "NFW profile fits the SPARC sample to ~5-10% across orders of magnitude in galaxy mass.", "The Bullet Cluster (1E 0657-558) shows DM and ordinary matter spatially separated in a collision — most direct DM evidence."]} rulesOut={["Pure Newtonian gravity with only visible baryons (curves would fall as 1/√r).", "Some MOND-like modifications, where ρ_s wouldn't be needed at all.", "A universe with no dark matter (rotation curves should diverge by 5× at galaxy edges)."]} />}
-      citation={<Citation title="Data source & provenance"><Text>Simulated rotation curves for three template galaxies (dwarf DDO 154, MW-class NGC 3198, giant UGC 2885) generated by <Code>scripts/simulate/sparc.ts</Code> from the NFW + baryonic disk model in <Code>src/physics/nfw.ts</Code>. Real source: SPARC database, Lelli et al. (2016). <Link href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/sparc.md" target="_blank" rel="noopener noreferrer">/scripts/fetch/sparc.md</Link>.</Text></Citation>}
+      rules={<RulesInOut rulesIn={["Extra unseen mass at the galaxy edge, the modern view: cold dark matter.", "NFW profile fits the SPARC sample to ~5-10% across orders of magnitude in galaxy mass.", "The Bullet Cluster (1E 0657-558) shows DM and ordinary matter spatially separated in a collision, most direct DM evidence."]} rulesOut={["Pure Newtonian gravity with only visible baryons (curves would fall as 1/√r).", "Some MOND-like modifications, where ρ_s wouldn't be needed at all.", "A universe with no dark matter (rotation curves should diverge by 5× at galaxy edges)."]} />}
+      citation={<Citation title="Data source & provenance"><Text>SPARC rotation curves for DDO 154 (dwarf), NGC 3198 (MW-class), and UGC 2885 (giant), from <Code>table2.dat</Code> on VizieR, V_obs, σ_V, and a signed-quadrature V_baryonic = √(V_gas² + V_disk² + V_bulge²) at M/L = 1. Real source: Lelli, McGaugh, Schombert (2016) AJ 152, 157. <Link href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/sparc.md" target="_blank" rel="noopener noreferrer">/scripts/fetch/sparc.md</Link>.</Text></Citation>}
     />
   );
 }

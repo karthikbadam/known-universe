@@ -1,4 +1,4 @@
-# EHT M87* shadow image — fetch instructions
+# EHT M87* shadow image, fetch instructions
 
 ## Source
 

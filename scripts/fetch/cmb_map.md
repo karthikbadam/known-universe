@@ -1,4 +1,4 @@
-# CMB temperature map (Planck SMICA) — fetch instructions
+# CMB temperature map (Planck SMICA), fetch instructions
 
 ## Source
 

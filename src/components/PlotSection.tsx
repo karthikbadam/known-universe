@@ -1,8 +1,6 @@
 import { Box, Heading, HStack, Separator, Text, VStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 
-import { DataStatusBadge, type DataStatus } from "./DataStatusBadge";
-
 interface Props {
   index: number;
   title: string;
@@ -14,13 +12,8 @@ interface Props {
   controls: ReactNode;
   rules: ReactNode;
   citation: ReactNode;
-
-  dataStatus: DataStatus;
 }
 
-// Shared template every plot section follows. Order matches the spec:
-//   physics question -> summary -> math -> plot -> controls ->
-//   rules-in/out -> citation
 export function PlotSection({
   index,
   title,
@@ -31,43 +24,66 @@ export function PlotSection({
   controls,
   rules,
   citation,
-  dataStatus,
 }: Props) {
   return (
-    <Box as="section" py={{ base: 8, md: 12 }} px={{ base: 4, md: 6 }}>
-      <VStack align="stretch" gap={4} maxW="6xl" mx="auto">
-        <HStack align="baseline" gap={3} flexWrap="wrap">
+    <Box
+      as="section"
+      py={{ base: 16, md: 24 }}
+      px={{ base: 6, md: 8 }}
+      borderTopWidth="1px"
+      borderColor="border"
+    >
+      <VStack align="stretch" gap={6} maxW="4xl" mx="auto">
+        <HStack align="baseline" gap={4} flexWrap="wrap">
           <Text
-            color="gold.500"
+            color="fg.subtle"
             fontFamily="mono"
-            fontSize="sm"
-            letterSpacing="wider"
+            fontSize="xs"
+            letterSpacing="0.1em"
           >
             {String(index).padStart(2, "0")}
           </Text>
-          <Heading as="h2" size="lg" color="gold.300">
+          <Heading
+            as="h2"
+            fontFamily="heading"
+            fontSize={{ base: "xl", md: "2xl" }}
+            fontWeight="medium"
+            color="fg"
+            letterSpacing="-0.01em"
+            flex="1"
+          >
             {title}
           </Heading>
-          <DataStatusBadge status={dataStatus} />
         </HStack>
 
-        <Heading as="h3" size="md" color="navy.50" fontWeight="normal">
+        <Text
+          fontFamily="body"
+          fontSize={{ base: "lg", md: "xl" }}
+          color="fg"
+          lineHeight="1.5"
+          fontStyle="italic"
+        >
           {question}
-        </Heading>
+        </Text>
 
-        <Box color="navy.100" fontSize="md" lineHeight="tall">
+        <Box
+          fontFamily="body"
+          color="fg.muted"
+          fontSize="md"
+          lineHeight="1.75"
+        >
           {summary}
         </Box>
 
         <Box>{math}</Box>
 
-        <Separator borderColor="navy.700" my={2} />
+        <Separator borderColor="border" my={2} />
 
-        <Box w="100%" minH="320px">{plot}</Box>
+        <Box w="100%">{plot}</Box>
 
         <Box>{controls}</Box>
 
-        <Separator borderColor="navy.700" my={2} />
+        <Separator borderColor="border" my={2} />
 
         {rules}
 

@@ -1,4 +1,4 @@
-# BBN light element abundances — fetch instructions
+# BBN light element abundances, fetch instructions
 
 ## Source
 
@@ -22,8 +22,7 @@ Each value below is a real published measurement with 1σ error:
 | Y_p      | 0.2449                | 0.0040               | Aver et al. (2015), JCAP 07, 011       |
 | ⁷Li/H    | 1.6 × 10⁻¹⁰           | 0.3 × 10⁻¹⁰          | Sbordone et al. (2010), A&A 522, A26   |
 
-The lithium discrepancy — theory predicts ~3× the observed ⁷Li/H —
-is the well-known "lithium problem". The plot makes it visually
+The lithium discrepancy, theory predicts ~3× the observed ⁷Li/H, is the well-known "lithium problem". The plot makes it visually
 obvious: at the Ω_b h² that fits D/H, the ⁷Li/H curve sits above the
 observed band.
 

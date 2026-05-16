@@ -1,4 +1,4 @@
-# Pantheon+ Type Ia supernovae — fetch instructions
+# Pantheon+ Type Ia supernovae, fetch instructions
 
 ## Source
 

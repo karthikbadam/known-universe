@@ -1,4 +1,4 @@
-# BOSS BAO ξ(s) — fetch instructions
+# BOSS BAO ξ(s), fetch instructions
 
 ## Source
 
