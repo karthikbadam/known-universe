@@ -63,7 +63,10 @@ export function BBNAbundances() {
     vg.line(verticalGuide, { x: "x", y: "y", stroke: palette.highlightStroke, strokeOpacity: 0.6, strokeWidth: 1.5, strokeDasharray: "4,3" }),
     vg.xLabel("Ω_b h² →"), vg.yLabel("↑ abundance (log scale)"),
     vg.xDomain([OMEGA_BH2_MIN, OMEGA_BH2_MAX]), vg.yDomain([1e-12, 3e-4]),
-    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(80), vg.marginBottom(50),
+    // BBN abundances span many orders of magnitude; pass the log scale via the
+    // attribute name rather than vg.yScale (which the types omit in vgplot 0.26).
+    ((plot: { attributes: Record<string, unknown> }) => { plot.attributes.yScale = "log"; }),
+    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(95), vg.marginTop(40), vg.marginBottom(50),
   ], [curves, observedMarkers, verticalGuide, palette]);
 
   return (
