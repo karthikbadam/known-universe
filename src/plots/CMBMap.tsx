@@ -5,7 +5,7 @@ import { MathBlock, MathInline } from "../components/MathBlock";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
 
-const REAL_IMAGE_URL = "/data/planck_smica.jpg";
+const REAL_IMAGE_URL = `${import.meta.env.BASE_URL}data/planck_smica.jpg`;
 const CANVAS_H = 300;
 
 export function CMBMap() {

@@ -17,7 +17,14 @@ export interface TableSpec {
 const HEADER_LINES = 6;
 
 function defineTable(name: string, file: string): TableSpec {
-  return { name, url: `/data/${file}`, skipHeaderLines: HEADER_LINES };
+  // BASE_URL always ends with `/` (Vite guarantee). In production on GitHub
+  // Pages it's `/known-universe/`; in dev it's `/`. Either way this resolves
+  // to the correct absolute path so DuckDB-WASM can fetch the CSV.
+  return {
+    name,
+    url: `${import.meta.env.BASE_URL}data/${file}`,
+    skipHeaderLines: HEADER_LINES,
+  };
 }
 
 export const TABLES = {

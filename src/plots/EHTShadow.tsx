@@ -15,7 +15,7 @@ import {
   shadowDiameterUas,
 } from "../physics/blackHoleShadow";
 
-const REAL_IMAGE_URL = "/data/eht_m87.jpg";
+const REAL_IMAGE_URL = `${import.meta.env.BASE_URL}data/eht_m87.jpg`;
 // The ESO EHT image renders the bright ring (~42 μas across) roughly
 // centred within the frame; ~0.4 of the image's vertical extent is filled
 // by the ring. We size the background image accordingly.
