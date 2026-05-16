@@ -41,7 +41,7 @@ export function MosaicPlot({ spec, enabled = true, ariaLabel, height }: Props) {
         setDimensions((prev) => {
           // Only update if changed to avoid unnecessary re-renders
           if (prev.width !== width || prev.height !== height) {
-            return { width, height };
+            return { width: 1.3 * width, height: 1.3 * height };
           }
           return prev;
         });
