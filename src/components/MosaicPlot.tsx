@@ -1,32 +1,26 @@
-import { Box, type BoxProps } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import * as vg from "@uwdata/vgplot";
 
 interface Props {
-  /**
-   * Array of vgplot directives. Wrap the construction in `useMemo` so the
-   * effect only re-runs when inputs change.
-   */
   spec: ReadonlyArray<unknown>;
-  /** When false, the plot does not render (e.g. while data is loading). */
   enabled?: boolean;
-  /** Accessible description; rendered as the host element's aria-label. */
   ariaLabel: string;
-  /** Minimum height of the container while the plot mounts. */
-  minHeight?: BoxProps["minH"];
+  /** Intrinsic plot height in pixels, must match the vg.height(...) value in the spec. Used as the aspect-ratio anchor for responsive scaling. */
+  height: number;
 }
 
 /**
  * Thin React wrapper around Mosaic's framework-agnostic `vg.plot(...)`.
- * It owns the host DOM element, mounts the plot once per `spec` change, and
- * cleans up on unmount. Centralising this pattern is the difference between
- * 30 lines of identical boilerplate in every plot section and one line.
+ * Owns the host DOM element, mounts the plot once per `spec` change, and
+ * cleans up on unmount. CSS scales the generated SVG to fill the container
+ * width while preserving its native aspect ratio.
  */
 export function MosaicPlot({
   spec,
   enabled = true,
   ariaLabel,
-  minHeight = "440px",
+  height,
 }: Props) {
   const hostRef = useRef<HTMLDivElement | null>(null);
 
@@ -44,9 +38,16 @@ export function MosaicPlot({
     <Box
       ref={hostRef}
       w="100%"
-      overflowX="auto"
-      css={{ "& > .plot": { mx: "auto" } }}
-      minH={minHeight}
+      minH={`${height}px`}
+      css={{
+        "& > .plot": { width: "100%", mx: "auto" },
+        "& > .plot > svg, & > .plot svg": {
+          width: "100% !important",
+          height: "auto !important",
+          maxWidth: "100%",
+          display: "block",
+        },
+      }}
       aria-label={ariaLabel}
       role="img"
     />
