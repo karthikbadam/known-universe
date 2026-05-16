@@ -6,55 +6,48 @@ interface Props {
   spec: ReadonlyArray<unknown>;
   enabled?: boolean;
   ariaLabel: string;
-  /** Intrinsic plot height in pixels, must match the vg.height(...) value in the spec. Used as the aspect-ratio anchor for responsive scaling. */
+  /** Intrinsic plot height in pixels. Also seeds the responsive minH so SSR/first paint match. */
+  height: number;
+}
+
+interface ChartDimensions {
+  width: number;
   height: number;
 }
 
 /**
  * Thin React wrapper around Mosaic's framework-agnostic `vg.plot(...)`.
  * Owns the host DOM element, mounts the plot once per `spec` change, and
- * cleans up on unmount. CSS scales the generated SVG to fill the container
- * width while preserving its native aspect ratio.
+ * cleans up on unmount. CSS sets a fixed pixel height anchored on `height`,
+ * while the ResizeObserver feeds the actual measured width to vgplot so the
+ * SVG fills the container without stretching past the declared aspect.
  */
-interface ChartDimensions {
-  width: number;
-  height: number;
-}
-
 export function MosaicPlot({ spec, enabled = true, ariaLabel, height }: Props) {
   const hostRef = useRef<HTMLDivElement | null>(null);
 
   const [dimensions, setDimensions] = useState<ChartDimensions>({
     width: 0,
-    height: 0,
+    height,
   });
 
-  // Track container dimensions with ResizeObserver
   useEffect(() => {
     const container = hostRef.current;
     if (!container) return;
 
     const resizeObserver = new ResizeObserver((entries) => {
       const entry = entries[0];
-      if (entry) {
-        const { width, height } = entry.contentRect;
-        setDimensions((prev) => {
-          // Only update if changed to avoid unnecessary re-renders
-          if (prev.width !== width || prev.height !== height) {
-            return { width: 1.3 * width, height: 1.3 * height };
-          }
-          return prev;
-        });
-      }
+      if (!entry) return;
+      const { width } = entry.contentRect;
+      setDimensions((prev) => (prev.width === width ? prev : { width, height }));
     });
 
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
-  }, []);
+  }, [height]);
 
   useEffect(() => {
     const host = hostRef.current;
-    if (host === null || !enabled) return;
+    if (host === null || !enabled || dimensions.width === 0) return;
     const element = vg.plot(
       ...spec,
       vg.width(dimensions.width),
@@ -71,7 +64,7 @@ export function MosaicPlot({ spec, enabled = true, ariaLabel, height }: Props) {
       ref={hostRef}
       w={{ base: "100%", md: "80%" }}
       mx="auto"
-      minH={{ base: "350px", md: height ?? "250px" }}
+      h={`${height}px`}
       aria-label={ariaLabel}
       role="img"
     />
