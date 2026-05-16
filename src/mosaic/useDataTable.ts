@@ -11,7 +11,7 @@ interface UseDataTableResult {
  * Boots the Mosaic coordinator (idempotent) and loads a single CSV into
  * a DuckDB-WASM table on mount. Returns a `{ ready, error }` state pair
  * the consumer can branch on. Every plot section that depends on a
- * CSV/JSON dataset uses this — keeps the load/error handshake in one place.
+ * CSV/JSON dataset uses this, keeps the load/error handshake in one place.
  */
 export function useDataTable(
   tableName: string,

@@ -4,16 +4,20 @@ interface Props {
   message: string;
 }
 
-/**
- * Fallback rendered in place of the Mosaic plot when its data load or
- * coordinator init fails. Shows the raw error string so the user (or
- * inspector) can see what went wrong.
- */
 export function PlotError({ message }: Props) {
   return (
-    <Box color="red.300" p={4}>
-      <Text fontWeight="bold">Plot failed to initialize</Text>
-      <Code mt={2} display="block" whiteSpace="pre-wrap" bg="navy.800">
+    <Box color="fg" p={4} borderWidth="1px" borderColor="border" borderRadius="sm">
+      <Text fontFamily="heading" fontWeight="medium" color="accent">
+        Plot failed to initialize
+      </Text>
+      <Code
+        mt={2}
+        display="block"
+        whiteSpace="pre-wrap"
+        bg="bg.subtle"
+        color="fg.muted"
+        p={2}
+      >
         {message}
       </Code>
     </Box>

@@ -5,8 +5,6 @@ import {
   HStack,
   IconButton,
   Link,
-  NativeSelect,
-  Separator,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -25,8 +23,6 @@ import { RotationCurves } from "./plots/RotationCurves";
 import { SupernovaHubble } from "./plots/SupernovaHubble";
 
 function Header() {
-  // next-themes drives color mode; resolvedTheme avoids the SSR-flash flicker
-  // even though we're CSR-only (forward-compatible).
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
@@ -34,52 +30,33 @@ function Header() {
     <Box
       as="header"
       borderBottomWidth="1px"
-      borderColor="navy.700"
-      bg="navy.900"
+      borderColor="border"
+      bg="bg.canvas"
       position="sticky"
       top={0}
       zIndex={10}
-      backdropFilter="blur(8px)"
     >
-      <Container maxW="6xl" py={3}>
+      <Container maxW="4xl" py={4}>
         <HStack justify="space-between" align="center">
-          <HStack gap={3} align="baseline">
-            <Heading as="h1" size="md" color="gold.300">
-              Cosmology Visualization Lab
-            </Heading>
-            <Text
-              color="navy.300"
-              fontSize="sm"
-              display={{ base: "none", md: "block" }}
-            >
-              Module 1 of an interactive journal
-            </Text>
-          </HStack>
-          <HStack gap={2}>
-            <NativeSelect.Root
-              size="sm"
-              w="auto"
-              bg="navy.800"
-              borderColor="navy.600"
-              disabled
-              title="More fields coming in later modules"
-            >
-              <NativeSelect.Field defaultValue="cosmology">
-                <option value="cosmology">Cosmology</option>
-                <option value="particle">Particle Physics (coming)</option>
-                <option value="cmt">Condensed Matter (coming)</option>
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-            <IconButton
-              size="sm"
-              variant="ghost"
-              aria-label="Toggle color mode"
-              onClick={() => setTheme(isDark ? "light" : "dark")}
-            >
-              {isDark ? <Sun /> : <Moon />}
-            </IconButton>
-          </HStack>
+          <Text
+            fontFamily="heading"
+            fontSize="sm"
+            fontWeight="medium"
+            color="fg"
+            letterSpacing="-0.01em"
+          >
+            Cosmology Visualization Lab
+          </Text>
+          <IconButton
+            size="sm"
+            variant="ghost"
+            aria-label="Toggle color mode"
+            onClick={() => setTheme(isDark ? "light" : "dark")}
+            color="fg.muted"
+            _hover={{ color: "fg", bg: "transparent" }}
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </IconButton>
         </HStack>
       </Container>
     </Box>
@@ -88,22 +65,35 @@ function Header() {
 
 function Hero() {
   return (
-    <Box as="section" py={{ base: 12, md: 20 }} px={{ base: 4, md: 6 }}>
-      <Container maxW="3xl">
-        <VStack align="stretch" gap={5}>
+    <Box as="section" pt={{ base: 16, md: 28 }} pb={{ base: 10, md: 16 }} px={{ base: 6, md: 8 }}>
+      <Container maxW="3xl" px={0}>
+        <VStack align="stretch" gap={6}>
           <Text
-            color="gold.400"
-            fontSize="sm"
-            letterSpacing="widest"
-            textTransform="uppercase"
+            color="fg.subtle"
             fontFamily="mono"
+            fontSize="xs"
+            letterSpacing="0.12em"
+            textTransform="uppercase"
           >
             Module 01 · Cosmology
           </Text>
-          <Heading as="h2" size="2xl" lineHeight="short" color="gold.300">
-            Ten plots built ΛCDM. Tune the parameters yourself.
+          <Heading
+            as="h1"
+            fontFamily="body"
+            fontWeight="normal"
+            fontSize={{ base: "3xl", md: "5xl" }}
+            lineHeight="1.15"
+            color="fg"
+            letterSpacing="-0.02em"
+          >
+            Ten plots build ΛCDM. Tune the parameters yourself.
           </Heading>
-          <Text fontSize="lg" color="navy.100" lineHeight="tall">
+          <Text
+            fontFamily="body"
+            fontSize={{ base: "md", md: "lg" }}
+            color="fg.muted"
+            lineHeight="1.7"
+          >
             One scroll through the visualizations that turned cosmology from
             philosophy into a six-parameter model. Each plot opens with the
             physics question it answers, then shows the math, then the data,
@@ -119,10 +109,30 @@ function Hero() {
 
 function Footer() {
   return (
-    <Box as="footer" borderTopWidth="1px" borderColor="navy.700" py={8}>
-      <Container maxW="6xl">
-        <VStack align="stretch" gap={3} fontSize="sm" color="navy.300">
-          <Heading as="h3" size="sm" color="navy.100">
+    <Box
+      as="footer"
+      borderTopWidth="1px"
+      borderColor="border"
+      py={10}
+      px={{ base: 6, md: 8 }}
+      mt={20}
+    >
+      <Container maxW="3xl" px={0}>
+        <VStack
+          align="stretch"
+          gap={3}
+          fontSize="sm"
+          color="fg.muted"
+          fontFamily="body"
+        >
+          <Heading
+            as="h3"
+            fontFamily="heading"
+            fontSize="sm"
+            fontWeight="medium"
+            color="fg"
+            mb={1}
+          >
             Data provenance
           </Heading>
           <Text>
@@ -135,16 +145,15 @@ function Footer() {
             Source:{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe"
-              color="gold.400"
-              _hover={{ color: "gold.200", textDecoration: "underline" }}
+              color="accent"
+              _hover={{ textDecoration: "underline" }}
               target="_blank"
               rel="noopener noreferrer"
             >
               github.com/karthikbadam/known-universe
             </Link>
           </Text>
-          <Separator borderColor="navy.700" my={2} />
-          <Text fontSize="xs" color="navy.400">
+          <Text fontSize="xs" color="fg.subtle" mt={2}>
             Built with React 19, Chakra UI v3, Mosaic, DuckDB-WASM, and KaTeX.
           </Text>
         </VStack>
@@ -155,7 +164,7 @@ function Footer() {
 
 export function App() {
   return (
-    <Box minH="100vh" bg="navy.900" color="navy.50">
+    <Box minH="100vh" bg="bg.canvas" color="fg">
       <Header />
       <Hero />
       <HubbleDiagram />

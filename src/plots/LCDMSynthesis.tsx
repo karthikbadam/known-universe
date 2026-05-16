@@ -8,9 +8,10 @@ import { ParamSlider } from "../components/ParamSlider";
 
 import { cmbModelCurve } from "../physics/cmb";
 import { muCurve } from "../physics/luminosity";
-import { chartPalette } from "../theme/palette";
+import { useChartPalette } from "../theme/palette";
 
 const PLANCK_2018 = { H0: 67.4, omegaM: 0.315, omegaBh2: 0.02237, nS: 0.9649, tau: 0.054, AsLog: 3.044 };
+const THUMB_HEIGHT = 220;
 
 interface ParamDescriptor { name: string; controls: string; }
 
@@ -24,6 +25,7 @@ const PARAM_DESCRIPTIONS: ReadonlyArray<ParamDescriptor> = [
 ];
 
 export function LCDMSynthesis() {
+  const palette = useChartPalette();
   const [H0, setH0] = useState<number>(PLANCK_2018.H0);
   const [omegaBh2, setOmegaBh2] = useState<number>(PLANCK_2018.omegaBh2);
   const [omegaCh2, setOmegaCh2] = useState<number>(0.120);
@@ -45,44 +47,55 @@ export function LCDMSynthesis() {
   const snData = useMemo(() => muCurve({ H0, omegaM, omegaLambda: 1 - omegaM }, { zMin: 0.005, zMax: 2.3, samples: 200 }), [H0, omegaM]);
 
   const cmbSpec = useMemo(() => [
-    vg.line(cmbScaled, { x: "ell", y: "Dl", stroke: chartPalette.dataFill, strokeWidth: 2 }),
+    vg.line(cmbScaled, { x: "ell", y: "Dl", stroke: palette.dataFill, strokeWidth: 2 }),
     vg.xLabel("Multipole ℓ →"), vg.yLabel("↑ Dℓ (μK²)"),
     vg.xDomain([0, 2500]), vg.yDomain([0, 8000]),
-    vg.width(420), vg.height(220), vg.marginLeft(55), vg.marginBottom(35),
-  ], [cmbScaled]);
+    vg.width(420), vg.height(THUMB_HEIGHT), vg.marginLeft(55), vg.marginBottom(35),
+  ], [cmbScaled, palette]);
 
   const snSpec = useMemo(() => [
-    vg.line(snData.map((r) => ({ z: r.z, mu: r.mu })), { x: "z", y: "mu", stroke: chartPalette.dataFill, strokeWidth: 2 }),
+    vg.line(snData.map((r) => ({ z: r.z, mu: r.mu })), { x: "z", y: "mu", stroke: palette.dataFill, strokeWidth: 2 }),
     vg.xLabel("Redshift z →"), vg.yLabel("↑ Distance modulus μ"),
     vg.xDomain([0.005, 2.3]), vg.yDomain([30, 47]),
-    vg.width(420), vg.height(220), vg.marginLeft(55), vg.marginBottom(35),
-  ], [snData]);
+    vg.width(420), vg.height(THUMB_HEIGHT), vg.marginLeft(55), vg.marginBottom(35),
+  ], [snData, palette]);
 
-  // tau slider drives polarization, not the temperature D_ℓ shown here.
   void tau;
 
   return (
-    <Box as="section" bg="navy.800" py={{ base: 12, md: 16 }} px={{ base: 4, md: 6 }}>
-      <Box maxW="6xl" mx="auto">
-        <VStack align="stretch" gap={4} mb={6}>
-          <Text color="gold.400" fontSize="sm" letterSpacing="widest" textTransform="uppercase" fontFamily="mono">10 · Synthesis</Text>
-          <Heading as="h2" size="xl" lineHeight="short" color="gold.300">Six numbers, every plot.</Heading>
-          <Text fontSize="md" color="navy.100" lineHeight="tall">Every observation above — the Hubble line, the BBN abundances, the CMB peaks, the supernova distances, the BAO ruler, the rotation curves — sits in the same parameter space. Drag any of the six ΛCDM sliders below and the CMB power spectrum and supernova Hubble line shift to match. The other plots scale the same way (re-mount this page to compose them).</Text>
+    <Box as="section" bg="bg.subtle" py={{ base: 16, md: 24 }} px={{ base: 6, md: 8 }} borderTopWidth="1px" borderColor="border">
+      <Box maxW="4xl" mx="auto">
+        <VStack align="stretch" gap={6} mb={8}>
+          <Text color="fg.subtle" fontFamily="mono" fontSize="xs" letterSpacing="0.12em" textTransform="uppercase">10 · Synthesis</Text>
+          <Heading
+            as="h2"
+            fontFamily="body"
+            fontWeight="normal"
+            fontSize={{ base: "2xl", md: "4xl" }}
+            lineHeight="1.2"
+            color="fg"
+            letterSpacing="-0.02em"
+          >
+            Six numbers, every plot.
+          </Heading>
+          <Text fontFamily="body" fontSize={{ base: "md", md: "lg" }} color="fg.muted" lineHeight="1.75">
+            Every observation above, the Hubble line, the BBN abundances, the CMB peaks, the supernova distances, the BAO ruler, the rotation curves, sits in the same parameter space. Drag any of the six ΛCDM sliders below and the CMB power spectrum and supernova Hubble line shift to match. The other plots scale the same way (re-mount this page to compose them).
+          </Text>
         </VStack>
 
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={6} mb={6}>
+        <SimpleGrid columns={{ base: 1, md: 2 }} gap={8} mb={8}>
           <Box>
-            <Text color="navy.300" fontSize="sm" mb={2}>CMB Dℓ vs ℓ</Text>
-            <MosaicPlot spec={cmbSpec} ariaLabel="CMB Dℓ thumbnail" minHeight="220px" />
+            <Text fontFamily="mono" color="fg.subtle" fontSize="xs" letterSpacing="0.08em" mb={2}>CMB Dℓ vs ℓ</Text>
+            <MosaicPlot spec={cmbSpec} ariaLabel="CMB Dℓ thumbnail" height={THUMB_HEIGHT} />
           </Box>
           <Box>
-            <Text color="navy.300" fontSize="sm" mb={2}>SN Hubble diagram μ(z)</Text>
-            <MosaicPlot spec={snSpec} ariaLabel="Supernova Hubble thumbnail" minHeight="220px" />
+            <Text fontFamily="mono" color="fg.subtle" fontSize="xs" letterSpacing="0.08em" mb={2}>SN Hubble diagram μ(z)</Text>
+            <MosaicPlot spec={snSpec} ariaLabel="Supernova Hubble thumbnail" height={THUMB_HEIGHT} />
           </Box>
         </SimpleGrid>
 
         <MathBlock ariaLabel="ΛCDM six parameter set">{`\\{\\Omega_b h^2,\\; \\Omega_c h^2,\\; H_0,\\; \\tau,\\; A_s,\\; n_s\\}`}</MathBlock>
-        <Text fontSize="sm" color="navy.200" mb={6}>Plus the derived <MathInline>{`\\Omega_m = (\\Omega_b h^2 + \\Omega_c h^2)/h^2`}</MathInline> — currently {omegaM.toFixed(3)} — and <MathInline>{`\\Omega_\\Lambda = 1 - \\Omega_m`}</MathInline> for a flat universe.</Text>
+        <Text fontFamily="body" fontSize="md" color="fg.muted" lineHeight="1.7" mb={6}>Plus the derived <MathInline>{`\\Omega_m = (\\Omega_b h^2 + \\Omega_c h^2)/h^2`}</MathInline>, currently {omegaM.toFixed(3)}, and <MathInline>{`\\Omega_\\Lambda = 1 - \\Omega_m`}</MathInline> for a flat universe.</Text>
 
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
           <ParamSlider label="Ω_b h²" description={PARAM_DESCRIPTIONS[0]!.controls} min={0.012} max={0.034} step={0.0002} value={omegaBh2} onChange={setOmegaBh2} />
@@ -93,14 +106,14 @@ export function LCDMSynthesis() {
           <ParamSlider label="n_s" description={PARAM_DESCRIPTIONS[5]!.controls} min={0.85} max={1.05} step={0.005} value={nS} onChange={setNS} />
         </SimpleGrid>
 
-        <Box mt={8} p={4} bg="navy.900" borderRadius="md" borderWidth={1} borderColor="navy.700">
-          <Heading as="h3" size="sm" mb={3} color="gold.300">How each parameter touches the other plots</Heading>
-          <VStack align="stretch" gap={2}>
+        <Box mt={10} pt={6} borderTopWidth="1px" borderColor="border">
+          <Heading as="h3" fontFamily="heading" fontSize="sm" fontWeight="medium" mb={4} color="fg" letterSpacing="0.04em" textTransform="uppercase">How each parameter touches the other plots</Heading>
+          <VStack align="stretch" gap={3}>
             {PARAM_DESCRIPTIONS.map((p) => (
-              <Text key={p.name} fontSize="sm" color="navy.100">
-                <Code bg="navy.800" color="gold.300">{p.name}</Code>
-                {" — "}
-                {p.controls}
+              <Text key={p.name} fontFamily="body" fontSize="md" color="fg" lineHeight="1.6">
+                <Code bg="bg.canvas" color="accent" fontFamily="mono" px={1.5} py={0.5}>{p.name}</Code>
+                {", "}
+                <Text as="span" color="fg.muted">{p.controls}</Text>
               </Text>
             ))}
           </VStack>

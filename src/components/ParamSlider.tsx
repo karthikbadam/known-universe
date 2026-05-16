@@ -32,18 +32,19 @@ export function ParamSlider({
   const valueText = unit ? `${value} ${unit}` : `${value}`;
 
   return (
-    <VStack align="stretch" gap={1} w="100%">
+    <VStack align="stretch" gap={2} w="100%">
       <HStack justify="space-between" align="baseline">
         <Text
           id={labelId}
           m={0}
-          color="navy.100"
+          color="fg"
+          fontFamily="heading"
           fontWeight="medium"
           fontSize="sm"
         >
           {label}
           {unit ? (
-            <Text as="span" color="navy.300" fontSize="sm" ml={1}>
+            <Text as="span" color="fg.subtle" fontSize="sm" ml={1}>
               ({unit})
             </Text>
           ) : null}
@@ -60,8 +61,10 @@ export function ParamSlider({
           step={step}
         >
           <NumberInput.Input
-            bg="navy.800"
-            borderColor="navy.600"
+            bg="bg.canvas"
+            color="fg"
+            borderColor="border"
+            fontFamily="mono"
             aria-label={`${label} numeric input`}
           />
           <NumberInput.Control>
@@ -81,19 +84,18 @@ export function ParamSlider({
           const v = d.value[0];
           if (typeof v === "number") onChange(v);
         }}
-        colorPalette="yellow"
       >
         <Slider.Control>
-          <Slider.Track bg="navy.700">
-            <Slider.Range bg="gold.400" />
+          <Slider.Track bg="border">
+            <Slider.Range bg="accent" />
           </Slider.Track>
-          <Slider.Thumb index={0} boxSize={4} bg="gold.300">
+          <Slider.Thumb index={0} boxSize={4} bg="accent" borderColor="accent">
             <Slider.HiddenInput />
           </Slider.Thumb>
         </Slider.Control>
       </Slider.Root>
       {description ? (
-        <Text fontSize="xs" color="navy.300">
+        <Text fontFamily="body" fontSize="sm" color="fg.muted" lineHeight="1.6">
           {description}
         </Text>
       ) : null}

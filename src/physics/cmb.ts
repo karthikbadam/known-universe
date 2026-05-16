@@ -1,6 +1,6 @@
 // CMB temperature angular power spectrum, D_ℓ = ℓ(ℓ+1)C_ℓ/2π (μK²).
 //
-// This module ships a parameterized analytical model — not CAMB output.
+// This module ships a parameterized analytical model, not CAMB output.
 // The fiducial point matches Planck 2018 base-ΛCDM. Parameter responses
 // are calibrated to reproduce the qualitative features that make this
 // plot famous:

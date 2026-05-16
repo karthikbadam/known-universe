@@ -2,7 +2,7 @@
 // function ξ(s).
 //
 // The BAO feature is a "bump" in the two-point correlation function
-// at s ≈ r_d ≈ 150 Mpc — the comoving size today of the sound horizon
+// at s ≈ r_d ≈ 150 Mpc, the comoving size today of the sound horizon
 // at the drag epoch. Acts as a standard ruler.
 //
 // We ship a phenomenological model:

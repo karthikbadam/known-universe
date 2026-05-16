@@ -44,7 +44,7 @@ export function bbnYp(omegaBh2: number, nEff: number = N_EFF_STANDARD): number {
 /**
  * ⁷Li/H predicted by BBN.
  * Fit: ⁷Li/H × 10¹⁰ ≈ 4.7 × (Ω_b h² / 0.022)^2.1
- * Predicts ~3× the observed value — the lithium problem.
+ * Predicts ~3× the observed value, the lithium problem.
  */
 export function bbnLi7overH(omegaBh2: number, nEff: number = N_EFF_STANDARD): number {
   return (

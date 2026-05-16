@@ -1,5 +1,5 @@
 import { Box, Code } from "@chakra-ui/react";
-import { Component, type ReactNode } from "react";
+import { Component, type JSX, type ReactNode } from "react";
 import { BlockMath, InlineMath } from "react-katex";
 
 interface BlockProps {
@@ -28,7 +28,7 @@ class KatexErrorBoundary extends Component<
   override render(): ReactNode {
     if (this.state.failed) {
       return (
-        <Box color="orange.300" fontSize="sm">
+        <Box color="accent" fontSize="sm">
           [math failed to render] <Code>{this.props.raw}</Code>
         </Box>
       );
