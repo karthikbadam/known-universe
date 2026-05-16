@@ -107,9 +107,9 @@ function Hero() {
             lineHeight="1.7"
           >
             Known Universe is an interactive journal of canonical visualizations
-            in physics. Cosmology is the first of many modules. One scroll
+            in scientific fields. Cosmology is the first of many modules. One scroll
             through the visualizations that turned cosmology from philosophy
-            into a six-parameter model. Each plot opens with the physics
+            into a six-parameter model. Each plot opens with the scientific
             question it answers, then shows the math, then the data, then
             sliders so you can see what changes when a parameter moves.
           </Text>
