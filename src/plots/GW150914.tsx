@@ -36,7 +36,7 @@ export function GW150914() {
     vg.ruleX([{ x: T_C }], { x: "x", stroke: palette.dataStroke, strokeOpacity: 0.5, strokeDasharray: "4,3" }),
     vg.xLabel("Time (s) →"), vg.yLabel("↑ strain × 10⁻²¹"),
     vg.xDomain([0, 0.5]), vg.yDomain([-1.8, 1.8]),
-    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(65), vg.marginBottom(50),
+    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(80), vg.marginTop(40), vg.marginBottom(50),
   ], [modelLine, palette]);
 
   return (

@@ -54,7 +54,7 @@ export function CMBPowerSpectrum() {
       vg.xDomain([0, 2550]),
       vg.yDomain([0, 7000]),
       vg.width(820), vg.height(PLOT_HEIGHT),
-      vg.marginLeft(65), vg.marginBottom(50),
+      vg.marginLeft(80), vg.marginTop(40), vg.marginBottom(50),
     ],
     [modelCurve, palette],
   );

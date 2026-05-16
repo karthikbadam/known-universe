@@ -32,7 +32,7 @@ export function SupernovaHubble() {
     vg.line(modelCurve.map((row) => ({ z: row.z, mu: row.mu })), { x: "z", y: "mu", stroke: palette.modelStroke, strokeWidth: 2 }),
     vg.xLabel("Redshift z (log) →"), vg.yLabel("↑ Distance modulus μ (mag)"),
     vg.xDomain([0.005, 2.3]), vg.yDomain([30, 48]),
-    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(70), vg.marginBottom(50),
+    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(85), vg.marginTop(40), vg.marginBottom(50),
   ], [modelCurve, palette]);
 
   return (

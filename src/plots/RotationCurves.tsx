@@ -63,7 +63,7 @@ export function RotationCurves() {
     vg.line(modelLines, { x: "r", y: "v", stroke: "kind", strokeWidth: 2, z: "kind" }),
     vg.xLabel("Radius (kpc) →"), vg.yLabel("↑ v (km/s)"),
     vg.xDomain([0, defaults.rMaxKpc]), vg.yDomain([0, defaults.vMax]),
-    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(60), vg.marginBottom(50),
+    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(80), vg.marginTop(40), vg.marginBottom(50),
   ], [modelLines, defaults, palette]);
 
   return (

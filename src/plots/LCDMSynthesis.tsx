@@ -50,14 +50,14 @@ export function LCDMSynthesis() {
     vg.line(cmbScaled, { x: "ell", y: "Dl", stroke: palette.dataFill, strokeWidth: 2 }),
     vg.xLabel("Multipole ℓ →"), vg.yLabel("↑ Dℓ (μK²)"),
     vg.xDomain([0, 2500]), vg.yDomain([0, 8000]),
-    vg.width(420), vg.height(THUMB_HEIGHT), vg.marginLeft(55), vg.marginBottom(35),
+    vg.width(420), vg.height(THUMB_HEIGHT), vg.marginLeft(65), vg.marginTop(25), vg.marginBottom(35),
   ], [cmbScaled, palette]);
 
   const snSpec = useMemo(() => [
     vg.line(snData.map((r) => ({ z: r.z, mu: r.mu })), { x: "z", y: "mu", stroke: palette.dataFill, strokeWidth: 2 }),
     vg.xLabel("Redshift z →"), vg.yLabel("↑ Distance modulus μ"),
     vg.xDomain([0.005, 2.3]), vg.yDomain([30, 47]),
-    vg.width(420), vg.height(THUMB_HEIGHT), vg.marginLeft(55), vg.marginBottom(35),
+    vg.width(420), vg.height(THUMB_HEIGHT), vg.marginLeft(65), vg.marginTop(25), vg.marginBottom(35),
   ], [snData, palette]);
 
   void tau;
