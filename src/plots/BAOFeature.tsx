@@ -30,7 +30,7 @@ export function BAOFeature() {
     vg.ruleY([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
     vg.xLabel("Separation s (Mpc) →"), vg.yLabel("↑ ξ(s)"),
     vg.xDomain([50, 200]), vg.yDomain([-0.001, 0.012]),
-    vg.width(820), vg.height(PLOT_HEIGHT), vg.marginLeft(90), vg.marginTop(40), vg.marginBottom(50),
+    vg.marginLeft(90), vg.marginTop(40), vg.marginBottom(50),
   ], [modelCurve, rd, palette]);
 
   return (

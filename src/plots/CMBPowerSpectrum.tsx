@@ -53,7 +53,6 @@ export function CMBPowerSpectrum() {
       vg.yLabel("↑ Dℓ = ℓ(ℓ+1)Cℓ/2π  (μK²)"),
       vg.xDomain([0, 2550]),
       vg.yDomain([0, 7000]),
-      vg.width(820), vg.height(PLOT_HEIGHT),
       vg.marginLeft(80), vg.marginTop(40), vg.marginBottom(50),
     ],
     [modelCurve, palette],

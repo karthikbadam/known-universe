@@ -1,4 +1,10 @@
-import { Box, Heading, HStack, Separator, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  HStack,
+  Text,
+  VStack
+} from "@chakra-ui/react";
 import { type ReactNode } from "react";
 
 interface Props {
@@ -33,12 +39,12 @@ export function PlotSection({
       borderTopWidth="1px"
       borderColor="border"
     >
-      <VStack align="stretch" gap={6} maxW="4xl" mx="auto">
+      <VStack align="stretch" gap={8} maxW="4xl" mx="auto">
         <HStack align="baseline" gap={4} flexWrap="wrap">
           <Text
             color="fg.subtle"
             fontFamily="mono"
-            fontSize="xs"
+            fontSize="sm"
             letterSpacing="0.1em"
           >
             {String(index).padStart(2, "0")}
@@ -66,27 +72,13 @@ export function PlotSection({
           {question}
         </Text>
 
-        <Box
-          fontFamily="body"
-          color="fg.muted"
-          fontSize="md"
-          lineHeight="1.75"
-        >
+        <Box fontFamily="body" color="fg.muted" fontSize="md" lineHeight="1.75">
           {summary}
         </Box>
-
         <Box>{math}</Box>
-
-        <Separator borderColor="border" my={2} />
-
         <Box w="100%">{plot}</Box>
-
         <Box>{controls}</Box>
-
-        <Separator borderColor="border" my={2} />
-
         {rules}
-
         {citation}
       </VStack>
     </Box>

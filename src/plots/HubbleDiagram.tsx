@@ -21,7 +21,7 @@ import { useChartPalette } from "../theme/palette";
 const MAX_DISTANCE_MPC = 2.2;
 const MODEL_GRID_TABLE = "hubble_model_grid";
 const MODEL_GRID_POINTS = 45;
-const PLOT_HEIGHT = 440;
+const PLOT_HEIGHT = 350;
 
 export function HubbleDiagram() {
   const palette = useChartPalette();
@@ -76,8 +76,6 @@ export function HubbleDiagram() {
       vg.yLabel("↑ Recession velocity (km/s)"),
       vg.xDomain([0, MAX_DISTANCE_MPC]),
       vg.yDomain([-400, 1300]),
-      vg.width(720),
-      vg.height(PLOT_HEIGHT),
       vg.marginLeft(80),
       vg.marginTop(40),
       vg.marginBottom(50),
