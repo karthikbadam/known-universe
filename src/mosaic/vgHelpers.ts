@@ -2,6 +2,8 @@ import * as vg from "@uwdata/vgplot";
 
 import { PLOT_MARGINS } from "../theme/chartDimensions";
 
+const PLOT_FONT_SIZE = "0.9rem";
+
 export interface VgFrameOptions {
   xLabel: string;
   yLabel: string;
@@ -29,6 +31,10 @@ export function vgFrame(opts: VgFrameOptions): unknown[] {
     vg.marginLeft(left),
     vg.marginTop(top),
     vg.marginBottom(bottom),
+    // vg.style is missing from the vgplot 0.26 types; set the attribute directly.
+    (plot: { attributes: Record<string, unknown> }) => {
+      plot.attributes.style = `font-size: ${PLOT_FONT_SIZE};`;
+    },
   ];
   if (opts.yLog) {
     frame.push((plot: { attributes: Record<string, unknown> }) => {
