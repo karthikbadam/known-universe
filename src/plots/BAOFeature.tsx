@@ -12,25 +12,34 @@ import { RulesInOut } from "../components/RulesInOut";
 
 import { TABLES } from "../data/loaders";
 import { useDataTable } from "../mosaic/useDataTable";
+import { vgFrame } from "../mosaic/vgHelpers";
 import { SOUND_HORIZON_FIDUCIAL_MPC, baoCurve } from "../physics/bao";
+import { CHART_HEIGHT } from "../theme/chartDimensions";
 import { useChartPalette } from "../theme/palette";
 
-const PLOT_HEIGHT = 440;
+const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 export function BAOFeature() {
   const palette = useChartPalette();
   const { ready, error } = useDataTable(TABLES.bossXi.name, TABLES.bossXi.url, { skipHeaderLines: TABLES.bossXi.skipHeaderLines });
   const [rd, setRd] = useState<number>(SOUND_HORIZON_FIDUCIAL_MPC);
-  const modelCurve = useMemo(() => baoCurve(rd, { sMinMpc: 50, sMaxMpc: 200, samples: 400 }), [rd]);
+  const modelCurve = useMemo(
+    () => baoCurve(rd, { sMinMpc: 50, sMaxMpc: 200, samples: 400 }).map((row) => ({ s: row.s, xi: row.xi })),
+    [rd],
+  );
   const spec = useMemo(() => [
     vg.ruleX(vg.from(TABLES.bossXi.name), { x: "s_mpc", y1: "xi_lower", y2: "xi_upper", stroke: palette.errorStroke, strokeWidth: 1.2, strokeOpacity: 0.7 }),
     vg.dot(vg.from(TABLES.bossXi.name), { x: "s_mpc", y: "xi", r: 4, fill: palette.dataFill, stroke: palette.dataStroke }),
-    vg.line(modelCurve.map((row) => ({ s: row.s, xi: row.xi })), { x: "s", y: "xi", stroke: palette.modelStroke, strokeWidth: 2 }),
+    vg.line(modelCurve, { x: "s", y: "xi", stroke: palette.modelStroke, strokeWidth: 2 }),
     vg.ruleX([{ x: rd }], { x: "x", stroke: palette.highlightStroke, strokeWidth: 1.2, strokeDasharray: "4,3", strokeOpacity: 0.7 }),
     vg.ruleY([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
-    vg.xLabel("Separation s (Mpc) →"), vg.yLabel("↑ ξ(s)"),
-    vg.xDomain([50, 200]), vg.yDomain([-0.001, 0.012]),
-    vg.marginLeft(90), vg.marginTop(40), vg.marginBottom(50),
+    ...vgFrame({
+      xLabel: "Separation s (Mpc) →",
+      yLabel: "↑ ξ(s)",
+      xDomain: [50, 200],
+      yDomain: [-0.001, 0.012],
+      margins: { left: 90 },
+    }),
   ], [modelCurve, rd, palette]);
 
   return (

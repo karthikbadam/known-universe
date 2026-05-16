@@ -12,11 +12,13 @@ import { RulesInOut } from "../components/RulesInOut";
 
 import { TABLES } from "../data/loaders";
 import { useDataTable } from "../mosaic/useDataTable";
+import { vgFrame } from "../mosaic/vgHelpers";
 import { muCurve } from "../physics/luminosity";
+import { CHART_HEIGHT } from "../theme/chartDimensions";
 import { useChartPalette } from "../theme/palette";
 
 const SAMPLES = 240;
-const PLOT_HEIGHT = 480;
+const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 export function SupernovaHubble() {
   const palette = useChartPalette();
@@ -34,7 +36,8 @@ export function SupernovaHubble() {
     [H0, omegaM, omegaLambda, flat],
   );
   const modelCurve = useMemo(
-    () => muCurve(params, { zMin: 0.005, zMax: 2.3, samples: SAMPLES }),
+    () => muCurve(params, { zMin: 0.005, zMax: 2.3, samples: SAMPLES })
+      .map((row) => ({ z: row.z, mu: row.mu })),
     [params],
   );
   const spec = useMemo(
@@ -46,17 +49,16 @@ export function SupernovaHubble() {
         fill: palette.dataFill,
         fillOpacity: 0.55,
       }),
-      vg.line(
-        modelCurve.map((row) => ({ z: row.z, mu: row.mu })),
-        { x: "z", y: "mu", stroke: palette.modelStroke, strokeWidth: 2 },
-      ),
-      vg.xLabel("Redshift z (log) →"),
-      vg.yLabel("↑ Distance modulus μ (mag)"),
-      vg.xDomain([0.005, 2.3]),
-      vg.yDomain([30, 48]),
-      vg.marginLeft(85),
-      vg.marginTop(40),
-      vg.marginBottom(50),
+      vg.line(modelCurve, {
+        x: "z", y: "mu", stroke: palette.modelStroke, strokeWidth: 2,
+      }),
+      ...vgFrame({
+        xLabel: "Redshift z (log) →",
+        yLabel: "↑ Distance modulus μ (mag)",
+        xDomain: [0.005, 2.3],
+        yDomain: [30, 48],
+        margins: { left: 85 },
+      }),
     ],
     [modelCurve, palette],
   );

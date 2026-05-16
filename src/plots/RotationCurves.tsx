@@ -12,10 +12,12 @@ import { RulesInOut } from "../components/RulesInOut";
 
 import { TABLES } from "../data/loaders";
 import { useDataTable } from "../mosaic/useDataTable";
+import { vgFrame } from "../mosaic/vgHelpers";
 import { rotationCurve } from "../physics/nfw";
+import { CHART_HEIGHT } from "../theme/chartDimensions";
 import { useChartPalette } from "../theme/palette";
 
-const PLOT_HEIGHT = 440;
+const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 interface GalaxyDefaults {
   diskMassSolar: number; scaleKpc: number; rsKpc: number;
@@ -61,9 +63,12 @@ export function RotationCurves() {
       x: "r_kpc", y: "v_kms", r: 3, fill: palette.dataFill, stroke: palette.dataStroke,
     }),
     vg.line(modelLines, { x: "r", y: "v", stroke: "kind", strokeWidth: 2, z: "kind" }),
-    vg.xLabel("Radius (kpc) →"), vg.yLabel("↑ v (km/s)"),
-    vg.xDomain([0, defaults.rMaxKpc]), vg.yDomain([0, defaults.vMax]),
-    vg.marginLeft(80), vg.marginTop(40), vg.marginBottom(50),
+    ...vgFrame({
+      xLabel: "Radius (kpc) →",
+      yLabel: "↑ v (km/s)",
+      xDomain: [0, defaults.rMaxKpc],
+      yDomain: [0, defaults.vMax],
+    }),
   ], [modelLines, defaults, palette]);
 
   return (

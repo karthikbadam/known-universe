@@ -9,6 +9,7 @@ import { ParamSlider } from "../components/ParamSlider";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
 
+import { vgFrame } from "../mosaic/vgHelpers";
 import {
   BBN_OBSERVED,
   N_EFF_STANDARD,
@@ -16,13 +17,14 @@ import {
   bbnLi7overH,
   bbnYp,
 } from "../physics/bbn";
+import { CHART_HEIGHT } from "../theme/chartDimensions";
 import { useChartPalette } from "../theme/palette";
 
 const N_SAMPLES = 240;
 const OMEGA_BH2_MIN = 0.005;
 const OMEGA_BH2_MAX = 0.05;
 const YP_SCALE = 1e-4;
-const PLOT_HEIGHT = 460;
+const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 interface CurveRow {
   omegaBh2: number;
@@ -104,18 +106,14 @@ export function BBNAbundances() {
         strokeWidth: 1.5,
         strokeDasharray: "4,3",
       }),
-      vg.xLabel("Ω_b h² →"),
-      vg.yLabel("↑ abundance (log scale)"),
-      vg.xDomain([OMEGA_BH2_MIN, OMEGA_BH2_MAX]),
-      vg.yDomain([1e-12, 3e-4]),
-      // BBN abundances span many orders of magnitude; pass the log scale via the
-      // attribute name rather than vg.yScale (which the types omit in vgplot 0.26).
-      (plot: { attributes: Record<string, unknown> }) => {
-        plot.attributes.yScale = "log";
-      },
-      vg.marginLeft(45),
-      vg.marginTop(40),
-      vg.marginBottom(50),
+      ...vgFrame({
+        xLabel: "Ω_b h² →",
+        yLabel: "↑ abundance (log scale)",
+        xDomain: [OMEGA_BH2_MIN, OMEGA_BH2_MAX],
+        yDomain: [1e-12, 3e-4],
+        margins: { left: 45 },
+        yLog: true,
+      }),
     ],
     [curves, observedMarkers, verticalGuide, palette],
   );

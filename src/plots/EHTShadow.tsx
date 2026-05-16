@@ -7,6 +7,7 @@ import { MathBlock, MathInline } from "../components/MathBlock";
 import { ParamSlider } from "../components/ParamSlider";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
+import { CHART_HEIGHT } from "../theme/chartDimensions";
 import { useChartPalette } from "../theme/palette";
 
 import {
@@ -21,7 +22,7 @@ const REAL_IMAGE_URL = `${import.meta.env.BASE_URL}data/eht_m87.jpg`;
 // by the ring. We size the background image accordingly.
 const REAL_IMAGE_SCALE_UAS = 100;
 const VIEW_BOX_UAS = 80;
-const PLOT_HEIGHT = 440;
+const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 export function EHTShadow() {
   const palette = useChartPalette();

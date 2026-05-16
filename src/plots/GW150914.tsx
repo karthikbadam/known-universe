@@ -12,12 +12,14 @@ import { RulesInOut } from "../components/RulesInOut";
 
 import { TABLES } from "../data/loaders";
 import { useDataTable } from "../mosaic/useDataTable";
+import { vgFrame } from "../mosaic/vgHelpers";
 import { GW150914_FIDUCIAL, chirpWaveform } from "../physics/chirp";
+import { CHART_HEIGHT } from "../theme/chartDimensions";
 import { useChartPalette } from "../theme/palette";
 
 const T_C = GW150914_FIDUCIAL.tc;
 const SAMPLES = 600;
-const PLOT_HEIGHT = 420;
+const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 export function GW150914() {
   const palette = useChartPalette();
@@ -57,13 +59,12 @@ export function GW150914() {
         strokeOpacity: 0.5,
         strokeDasharray: "4,3",
       }),
-      vg.xLabel("Time (s) →"),
-      vg.yLabel("↑ strain × 10⁻²¹"),
-      vg.xDomain([0, 0.5]),
-      vg.yDomain([-1.8, 1.8]),
-      vg.marginLeft(80),
-      vg.marginTop(40),
-      vg.marginBottom(50),
+      ...vgFrame({
+        xLabel: "Time (s) →",
+        yLabel: "↑ strain × 10⁻²¹",
+        xDomain: [0, 0.5],
+        yDomain: [-1.8, 1.8],
+      }),
     ],
     [modelLine, palette],
   );

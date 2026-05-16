@@ -12,11 +12,13 @@ import { RulesInOut } from "../components/RulesInOut";
 
 import { TABLES } from "../data/loaders";
 import { useDataTable } from "../mosaic/useDataTable";
+import { vgFrame } from "../mosaic/vgHelpers";
 import { PLANCK_2018, cmbModelCurve, type CmbParams } from "../physics/cmb";
+import { CHART_HEIGHT } from "../theme/chartDimensions";
 import { useChartPalette } from "../theme/palette";
 
 const MODEL_SAMPLES = 600;
-const PLOT_HEIGHT = 480;
+const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 export function CMBPowerSpectrum() {
   const palette = useChartPalette();
@@ -33,7 +35,8 @@ export function CMBPowerSpectrum() {
 
   const modelCurve = useMemo(() => {
     const params: CmbParams = { H0, omegaM, omegaBh2, nS };
-    return cmbModelCurve(params, { ellMin: 2, ellMax: 2500, samples: MODEL_SAMPLES });
+    return cmbModelCurve(params, { ellMin: 2, ellMax: 2500, samples: MODEL_SAMPLES })
+      .map((row) => ({ ell: row.ell, Dl: row.Dl }));
   }, [H0, omegaM, omegaBh2, nS]);
 
   const spec = useMemo(
@@ -46,14 +49,15 @@ export function CMBPowerSpectrum() {
         x: "ell", y: "Dl", r: 3,
         fill: palette.dataFill, stroke: palette.dataStroke, strokeWidth: 1,
       }),
-      vg.line(modelCurve.map((row) => ({ ell: row.ell, Dl: row.Dl })), {
+      vg.line(modelCurve, {
         x: "ell", y: "Dl", stroke: palette.modelStroke, strokeWidth: 2,
       }),
-      vg.xLabel("Multipole ℓ →"),
-      vg.yLabel("↑ Dℓ = ℓ(ℓ+1)Cℓ/2π  (μK²)"),
-      vg.xDomain([0, 2550]),
-      vg.yDomain([0, 7000]),
-      vg.marginLeft(80), vg.marginTop(40), vg.marginBottom(50),
+      ...vgFrame({
+        xLabel: "Multipole ℓ →",
+        yLabel: "↑ Dℓ = ℓ(ℓ+1)Cℓ/2π  (μK²)",
+        xDomain: [0, 2550],
+        yDomain: [0, 7000],
+      }),
     ],
     [modelCurve, palette],
   );

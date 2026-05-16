@@ -14,14 +14,16 @@ import { TABLES } from "../data/loaders";
 import { ensureCoordinator } from "../mosaic/coordinator";
 import { useDataTable } from "../mosaic/useDataTable";
 import { useParam } from "../mosaic/useParam";
+import { vgFrame } from "../mosaic/vgHelpers";
 import { hubbleTimeGyr } from "../physics/friedmann";
+import { CHART_HEIGHT } from "../theme/chartDimensions";
 import { useChartPalette } from "../theme/palette";
 
 
 const MAX_DISTANCE_MPC = 2.2;
 const MODEL_GRID_TABLE = "hubble_model_grid";
 const MODEL_GRID_POINTS = 45;
-const PLOT_HEIGHT = 350;
+const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 export function HubbleDiagram() {
   const palette = useChartPalette();
@@ -72,13 +74,12 @@ export function HubbleDiagram() {
       }),
       vg.ruleY([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
       vg.ruleX([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
-      vg.xLabel("Distance (Mpc) →"),
-      vg.yLabel("↑ Recession velocity (km/s)"),
-      vg.xDomain([0, MAX_DISTANCE_MPC]),
-      vg.yDomain([-400, 1300]),
-      vg.marginLeft(80),
-      vg.marginTop(40),
-      vg.marginBottom(50),
+      ...vgFrame({
+        xLabel: "Distance (Mpc) →",
+        yLabel: "↑ Recession velocity (km/s)",
+        xDomain: [0, MAX_DISTANCE_MPC],
+        yDomain: [-400, 1300],
+      }),
     ],
     [h0, palette],
   );

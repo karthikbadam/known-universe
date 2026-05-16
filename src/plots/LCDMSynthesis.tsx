@@ -6,19 +6,17 @@ import { MathBlock, MathInline } from "../components/MathBlock";
 import { MosaicPlot } from "../components/MosaicPlot";
 import { ParamSlider } from "../components/ParamSlider";
 
-import { cmbModelCurve } from "../physics/cmb";
+import { vgFrame } from "../mosaic/vgHelpers";
+import { PLANCK_2018, cmbModelCurve } from "../physics/cmb";
 import { muCurve } from "../physics/luminosity";
+import { CHART_HEIGHT } from "../theme/chartDimensions";
 import { useChartPalette } from "../theme/palette";
 
-const PLANCK_2018 = {
-  H0: 67.4,
-  omegaM: 0.315,
-  omegaBh2: 0.02237,
-  nS: 0.9649,
-  tau: 0.054,
-  AsLog: 3.044,
-};
-const THUMB_HEIGHT = 220;
+// Extra parameters not in the canonical CmbParams type (the CMB model
+// currently ignores tau and rolls As into the curve amplitude downstream).
+const PLANCK_TAU = 0.054;
+const PLANCK_AS_LOG = 3.044;
+const THUMB_HEIGHT = CHART_HEIGHT.thumb;
 
 interface ParamDescriptor {
   name: string;
@@ -59,8 +57,8 @@ export function LCDMSynthesis() {
   const [H0, setH0] = useState<number>(PLANCK_2018.H0);
   const [omegaBh2, setOmegaBh2] = useState<number>(PLANCK_2018.omegaBh2);
   const [omegaCh2, setOmegaCh2] = useState<number>(0.12);
-  const [tau, setTau] = useState<number>(PLANCK_2018.tau);
-  const [as_, setAs] = useState<number>(PLANCK_2018.AsLog);
+  const [tau, setTau] = useState<number>(PLANCK_TAU);
+  const [as_, setAs] = useState<number>(PLANCK_AS_LOG);
   const [nS, setNS] = useState<number>(PLANCK_2018.nS);
 
   const omegaM = useMemo(() => {
@@ -73,7 +71,7 @@ export function LCDMSynthesis() {
       { H0, omegaM, omegaBh2, nS },
       { samples: 500, ellMax: 2500 },
     );
-    const amplitude = Math.exp(as_ - PLANCK_2018.AsLog);
+    const amplitude = Math.exp(as_ - PLANCK_AS_LOG);
     return baseCurve.map((r) => ({ ell: r.ell, Dl: r.Dl * amplitude }));
   }, [H0, omegaM, omegaBh2, nS, as_]);
 
@@ -82,7 +80,7 @@ export function LCDMSynthesis() {
       muCurve(
         { H0, omegaM, omegaLambda: 1 - omegaM },
         { zMin: 0.005, zMax: 2.3, samples: 200 },
-      ),
+      ).map((r) => ({ z: r.z, mu: r.mu })),
     [H0, omegaM],
   );
 
@@ -94,30 +92,29 @@ export function LCDMSynthesis() {
         stroke: palette.dataFill,
         strokeWidth: 2,
       }),
-      vg.xLabel("Multipole ℓ →"),
-      vg.yLabel("↑ Dℓ (μK²)"),
-      vg.xDomain([0, 2500]),
-      vg.yDomain([0, 8000]),
-      vg.marginLeft(65),
-      vg.marginTop(35),
-      vg.marginBottom(45),
+      ...vgFrame({
+        xLabel: "Multipole ℓ →",
+        yLabel: "↑ Dℓ (μK²)",
+        xDomain: [0, 2500],
+        yDomain: [0, 8000],
+        margins: { left: 65, top: 35, bottom: 45 },
+      }),
     ],
     [cmbScaled, palette],
   );
 
   const snSpec = useMemo(
     () => [
-      vg.line(
-        snData.map((r) => ({ z: r.z, mu: r.mu })),
-        { x: "z", y: "mu", stroke: palette.dataFill, strokeWidth: 2 },
-      ),
-      vg.xLabel("Redshift z →"),
-      vg.yLabel("↑ Distance modulus μ"),
-      vg.xDomain([0.005, 2.3]),
-      vg.yDomain([30, 47]),
-      vg.marginLeft(65),
-      vg.marginTop(35),
-      vg.marginBottom(45),
+      vg.line(snData, {
+        x: "z", y: "mu", stroke: palette.dataFill, strokeWidth: 2,
+      }),
+      ...vgFrame({
+        xLabel: "Redshift z →",
+        yLabel: "↑ Distance modulus μ",
+        xDomain: [0.005, 2.3],
+        yDomain: [30, 47],
+        margins: { left: 65, top: 35, bottom: 45 },
+      }),
     ],
     [snData, palette],
   );
