@@ -2,6 +2,7 @@ import {
   Box,
   Heading,
   HStack,
+  Stack,
   Text,
   VStack
 } from "@chakra-ui/react";
@@ -76,8 +77,19 @@ export function PlotSection({
           {summary}
         </Box>
         <Box>{math}</Box>
-        <Box w="100%">{plot}</Box>
-        <Box>{controls}</Box>
+        <Stack
+          direction={{ base: "column", md: "row" }}
+          align="flex-start"
+          gap={8}
+          w="100%"
+        >
+          <Box w={{ base: "100%", md: "70%" }}>{plot}</Box>
+          <Box w={{ base: "100%", md: "30%" }}>
+            <VStack align="stretch" gap={4}>
+              {controls}
+            </VStack>
+          </Box>
+        </Stack>
         {rules}
         {citation}
       </VStack>
