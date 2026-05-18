@@ -1,4 +1,4 @@
-import { Code, Link, SimpleGrid, Text } from "@chakra-ui/react";
+import { Code, Link, Text, VStack } from "@chakra-ui/react";
 import * as vg from "@uwdata/vgplot";
 import { useMemo, useState } from "react";
 
@@ -160,7 +160,7 @@ export function BBNAbundances() {
         />
       }
       controls={
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={5}>
+        <VStack align="stretch" gap={5}>
           <ParamSlider
             label="Baryon density Ω_b h²"
             description="The vertical guide; watch where it intersects each theory curve vs observed dot."
@@ -179,7 +179,7 @@ export function BBNAbundances() {
             value={nEff}
             onChange={setNEff}
           />
-        </SimpleGrid>
+        </VStack>
       }
       rules={
         <RulesInOut
