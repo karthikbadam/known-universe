@@ -38,7 +38,9 @@ export function MosaicPlot({ spec, enabled = true, ariaLabel, height }: Props) {
       const entry = entries[0];
       if (!entry) return;
       const { width } = entry.contentRect;
-      setDimensions((prev) => (prev.width === width ? prev : { width, height }));
+      setDimensions((prev) =>
+        prev.width === width ? prev : { width, height },
+      );
     });
 
     resizeObserver.observe(container);
@@ -62,7 +64,7 @@ export function MosaicPlot({ spec, enabled = true, ariaLabel, height }: Props) {
   return (
     <Box
       ref={hostRef}
-      w={{ base: "100%", md: "80%" }}
+      w="100%"
       mx="auto"
       h={`${height}px`}
       aria-label={ariaLabel}

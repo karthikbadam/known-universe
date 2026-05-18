@@ -1,3 +1,9 @@
+<!-- BEGIN agent-harness managed: do not edit -->
+
+# Project: known-universe
+
+<!-- END agent-harness managed -->
+
 # Project Guidelines
 
 ## Commits
