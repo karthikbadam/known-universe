@@ -77,19 +77,27 @@ export function PlotSection({
           {summary}
         </Box>
         <Box>{math}</Box>
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          align="flex-start"
-          gap={8}
-          w="100%"
-        >
-          <Box w={{ base: "100%", md: "70%" }}>{plot}</Box>
-          <Box w={{ base: "100%", md: "30%" }}>
-            <VStack align="stretch" gap={4}>
-              {controls}
-            </VStack>
-          </Box>
-        </Stack>
+        {controls ? (
+          <Stack
+            direction={{ base: "column", md: "row" }}
+            align="flex-start"
+            gap={8}
+            w="100%"
+          >
+            <Box flex="1" minW={0}>{plot}</Box>
+            <Box
+              w={{ base: "100%", md: "auto" }}
+              maxW={{ base: "100%", md: "320px" }}
+              flexShrink={0}
+            >
+              <VStack align="stretch" gap={4}>
+                {controls}
+              </VStack>
+            </Box>
+          </Stack>
+        ) : (
+          <Box w="100%">{plot}</Box>
+        )}
         {rules}
         {citation}
       </VStack>
