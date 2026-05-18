@@ -1,4 +1,4 @@
-import { Box, Code, Link, SimpleGrid, Switch, Text } from "@chakra-ui/react";
+import { Box, Code, Link, Switch, Text, VStack } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
@@ -108,7 +108,7 @@ export function SupernovaHubble() {
         )
       }
       controls={
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={5}>
+        <VStack align="stretch" gap={5}>
           <ParamSlider
             label="Hubble constant H₀"
             unit="km/s/Mpc"
@@ -170,7 +170,7 @@ export function SupernovaHubble() {
               </Switch.Control>
             </Switch.Root>
           </Box>
-        </SimpleGrid>
+        </VStack>
       }
       rules={
         <RulesInOut
