@@ -35,30 +35,19 @@ function Header() {
       position="sticky"
       top={0}
       zIndex={10}
+      px={{ base: 6, md: 8 }}
     >
-      <Container maxW="4xl" py={4}>
+      <Container maxW="4xl" px={0} py={4}>
         <HStack justify="space-between" align="center">
-          <HStack gap={3} align="baseline">
-            <Text
-              fontFamily="heading"
-              fontSize="sm"
-              fontWeight="medium"
-              color="fg"
-              letterSpacing="-0.01em"
-            >
-              Known Universe
-            </Text>
-            <Text
-              fontFamily="mono"
-              fontSize="xs"
-              color="fg.subtle"
-              letterSpacing="0.08em"
-              textTransform="uppercase"
-              display={{ base: "none", sm: "inline" }}
-            >
-              Module 01 / Cosmology
-            </Text>
-          </HStack>
+          <Text
+            fontFamily="heading"
+            fontSize="sm"
+            fontWeight="medium"
+            color="fg"
+            letterSpacing="-0.01em"
+          >
+            Known Universe
+          </Text>
           <IconButton
             size="sm"
             variant="ghost"
