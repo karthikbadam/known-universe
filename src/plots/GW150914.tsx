@@ -1,4 +1,4 @@
-import { Code, Link, SimpleGrid, Text } from "@chakra-ui/react";
+import { Code, Link, Text, VStack } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
@@ -112,7 +112,7 @@ export function GW150914() {
         )
       }
       controls={
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={5}>
+        <VStack align="stretch" gap={5}>
           <ParamSlider
             label="Chirp mass M_c"
             unit="M_☉"
@@ -133,7 +133,7 @@ export function GW150914() {
             value={phaseOffset}
             onChange={setPhaseOffset}
           />
-        </SimpleGrid>
+        </VStack>
       }
       rules={
         <RulesInOut
