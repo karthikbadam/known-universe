@@ -1,4 +1,4 @@
-import { Code, Link, SimpleGrid, Text } from "@chakra-ui/react";
+import { Code, Link, Text, VStack } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
@@ -74,12 +74,12 @@ export function CMBPowerSpectrum() {
       </>}
       plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel="CMB angular power spectrum: binned Dℓ data with error bars and ΛCDM theory line" height={PLOT_HEIGHT} />}
       controls={
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={5}>
+        <VStack align="stretch" gap={5}>
           <ParamSlider label="Hubble constant H₀" unit="km/s/Mpc" description="Higher H₀ shrinks the angular-diameter distance, shifting peaks left." min={50} max={90} step={0.1} value={H0} onChange={setH0} />
           <ParamSlider label="Matter density Ω_m" description="More matter pushes the sound horizon down, shifting peaks right; weak overall." min={0.15} max={0.55} step={0.005} value={omegaM} onChange={setOmegaM} />
           <ParamSlider label="Baryon density Ω_b h²" description="More baryons boost odd (compression) peaks, suppress even (rarefaction) peaks." min={0.012} max={0.034} step={0.0002} value={omegaBh2} onChange={setOmegaBh2} />
           <ParamSlider label="Spectral index n_s" description="n_s < 1 tilts power red (toward low ℓ); n_s > 1 tilts blue." min={0.85} max={1.05} step={0.005} value={nS} onChange={setNS} />
-        </SimpleGrid>
+        </VStack>
       }
       rules={<RulesInOut rulesIn={["Flat spatial geometry (the first peak at ℓ ≈ 220 rules in Ω_k ≈ 0).", "A baryon-to-photon ratio of ~6 × 10⁻¹⁰ (the odd/even peak asymmetry).", "Adiabatic, nearly scale-invariant initial perturbations (the SW plateau + peak coherence).", "Cold dark matter: without it the peaks would be in the wrong place by ~ 30%."]} rulesOut={["Universes with no acoustic horizon (e.g. pure isocurvature), the peaks would be shifted.", "Very open or closed universes (peaks at the wrong ℓ).", "Baryon-only cosmologies (peak ratios totally different)."]} />}
       citation={<Citation title="Data source & provenance"><Text>Planck 2018 binned TT power spectrum (<Code>COM_PowerSpect_CMB-TT-binned_R3.01.txt</Code> from the Planck Legacy Archive), 83 ℓ-bins spanning ℓ ∈ [48, 2499]. Real source: Planck Collab. (2020) A&A 641, A6; doi:10.1051/0004-6361/201833910.</Text><Text mt={2}>The theory curve still comes from a parameterized analytical model in <Code>src/physics/cmb.ts</Code> (~5-15% accurate vs CAMB); <Link href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/cmb_powerspectrum.md" target="_blank" rel="noopener noreferrer">/scripts/fetch/cmb_powerspectrum.md</Link> describes upgrading to a CAMB grid.</Text></Citation>}
