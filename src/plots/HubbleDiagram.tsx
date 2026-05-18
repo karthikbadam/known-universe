@@ -1,4 +1,4 @@
-import { Box, Code, Link, Stack, Text } from "@chakra-ui/react";
+import { Code, Link, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
@@ -127,20 +127,18 @@ export function HubbleDiagram() {
         )
       }
       controls={
-        <Stack direction={{ base: "column", md: "row" }} gap={6} align="stretch">
-          <Box flex="1">
-            <ParamSlider
-              label="Hubble constant H₀"
-              unit="km/s/Mpc"
-              description="Slope of the model line. Modern value ≈ 70; Hubble's 1929 fit ≈ 500."
-              min={20}
-              max={650}
-              step={1}
-              value={h0Value}
-              onChange={setH0}
-            />
-          </Box>
-        </Stack>
+        <VStack align="stretch" gap={6}>
+          <ParamSlider
+            label="Hubble constant H₀"
+            unit="km/s/Mpc"
+            description="Slope of the model line. Modern value ≈ 70; Hubble's 1929 fit ≈ 500."
+            min={20}
+            max={650}
+            step={1}
+            value={h0Value}
+            onChange={setH0}
+          />
+        </VStack>
       }
       rules={
         <RulesInOut
