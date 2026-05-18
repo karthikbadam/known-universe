@@ -84,7 +84,7 @@ export function PlotSection({
             gap={8}
             w="100%"
           >
-            <Box flex="1" minW={0}>{plot}</Box>
+            <Box flex="1" minW={0} w={{ base: "100%", md: "auto" }}>{plot}</Box>
             <Box
               w={{ base: "100%", md: "auto" }}
               maxW={{ base: "100%", md: "320px" }}
