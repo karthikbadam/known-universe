@@ -1,4 +1,4 @@
-import { Box, Code, Link, SimpleGrid, Stat, Text } from "@chakra-ui/react";
+import { Box, Code, Link, Stat, Text, VStack } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 
@@ -141,7 +141,7 @@ export function EHTShadow() {
         </Box>
       }
       controls={
-        <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
+        <VStack align="stretch" gap={5}>
           <ParamSlider
             label="Mass M_BH"
             unit="× 10⁹ M_☉"
@@ -189,7 +189,7 @@ export function EHTShadow() {
               EHT measured: 42 ± 3 μas
             </Text>
           </Stat.Root>
-        </SimpleGrid>
+        </VStack>
       }
       rules={
         <RulesInOut
