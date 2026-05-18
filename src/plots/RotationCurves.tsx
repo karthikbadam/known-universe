@@ -1,4 +1,4 @@
-import { Box, Code, Link, NativeSelect, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Code, Link, NativeSelect, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
@@ -83,7 +83,7 @@ export function RotationCurves() {
       </>}
       plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel={`Rotation curve of ${galaxy} with model decomposition`} height={PLOT_HEIGHT} />}
       controls={
-        <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
+        <VStack align="stretch" gap={5}>
           <Box>
             <Text fontFamily="heading" color="fg" fontWeight="medium" fontSize="sm" mb={2}>Galaxy</Text>
             <NativeSelect.Root size="sm" bg="bg.canvas" borderColor="border">
@@ -95,7 +95,7 @@ export function RotationCurves() {
           </Box>
           <ParamSlider label="NFW scale radius r_s" unit="kpc" description="Where the halo density profile transitions from ρ ∝ r⁻¹ to ρ ∝ r⁻³." min={1} max={40} step={0.5} value={rsKpc} onChange={setRsKpc} />
           <ParamSlider label="log₁₀(ρ_s)" unit="M_☉/kpc³" description="Characteristic NFW density. Calibrated per-galaxy in fits." min={5.5} max={8} step={0.05} value={rhoLog} onChange={setRhoLog} />
-        </SimpleGrid>
+        </VStack>
       }
       rules={<RulesInOut rulesIn={["Extra unseen mass at the galaxy edge, the modern view: cold dark matter.", "NFW profile fits the SPARC sample to ~5-10% across orders of magnitude in galaxy mass.", "The Bullet Cluster (1E 0657-558) shows DM and ordinary matter spatially separated in a collision, most direct DM evidence."]} rulesOut={["Pure Newtonian gravity with only visible baryons (curves would fall as 1/√r).", "Some MOND-like modifications, where ρ_s wouldn't be needed at all.", "A universe with no dark matter (rotation curves should diverge by 5× at galaxy edges)."]} />}
       citation={<Citation title="Data source & provenance"><Text>SPARC rotation curves for DDO 154 (dwarf), NGC 3198 (MW-class), and UGC 2885 (giant), from <Code>table2.dat</Code> on VizieR, V_obs, σ_V, and a signed-quadrature V_baryonic = √(V_gas² + V_disk² + V_bulge²) at M/L = 1. Real source: Lelli, McGaugh, Schombert (2016) AJ 152, 157. <Link href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/sparc.md" target="_blank" rel="noopener noreferrer">/scripts/fetch/sparc.md</Link>.</Text></Citation>}
