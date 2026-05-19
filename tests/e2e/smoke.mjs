@@ -7,13 +7,16 @@
 // verifies:
 //   - the React tree mounts without runtime errors (other than the expected
 //     DuckDB worker network failure)
-//   - all 11 sections (1 hero + 10 plots) render
+//   - the catalog at `/` lists module cards (Cosmology live, a placeholder
+//     "Coming soon" card that is not a link)
+//   - the cosmology module at `/m/cosmology` renders the hero plus all 10
+//     plot sections
 //   - every Chakra v3 component used in the migration appears with the
 //     correct ARIA role (Slider, Switch, NativeSelect, IconButton, Accordion)
 //   - the EHT shadow SVG renders (no Mosaic dependency)
 //   - the CMB map <canvas> paints non-background pixels
 //   - the color-mode toggle changes the html class
-//   - mobile viewport (375px) still loads
+//   - mobile viewport (375px) still loads the cosmology module
 //
 // To exercise the Mosaic plots end-to-end you need a network that can reach
 // jsdelivr, or you need to override @uwdata/mosaic-core's `wasmConnector` to
@@ -52,19 +55,49 @@ page.on("console", (msg) => {
 });
 page.on("pageerror", (e) => consoleErrors.push(`pageerror: ${e.message}`));
 
-console.log("─── Loading app ───");
+console.log("─── Loading catalog ───");
 await page.goto(BASE_URL, { waitUntil: "networkidle", timeout: 60_000 });
+await page.waitForTimeout(1_500);
+await page.screenshot({ path: `${SCREENSHOT_DIR}/00-catalog.png`, fullPage: false });
+
+console.log("\n─── Catalog cards ───");
+const catalogTitle = await page.locator("h1").first().textContent();
+check(
+  (catalogTitle ?? "").toLowerCase().includes("known universe"),
+  `catalog h1 is "${catalogTitle?.trim()}"`,
+);
+const cosmologyCard = await page
+  .getByRole("heading", { name: /Cosmology/i })
+  .count();
+check(cosmologyCard > 0, `catalog shows Cosmology card`);
+const comingSoonBadge = await page.getByText(/Coming soon/i).count();
+check(comingSoonBadge > 0, `catalog shows at least one "Coming soon" placeholder`);
+const cosmologyLink = await page
+  .locator('a[href="/m/cosmology"]')
+  .count();
+check(
+  cosmologyLink === 1,
+  `exactly one router link points to /m/cosmology (count=${cosmologyLink})`,
+);
+const quantumLink = await page.locator('a[href="/m/quantum"]').count();
+check(quantumLink === 0, `placeholder card is not a router link (count=${quantumLink})`);
+
+console.log("\n─── Loading cosmology module ───");
+await page.goto(`${BASE_URL}m/cosmology`, {
+  waitUntil: "networkidle",
+  timeout: 60_000,
+});
 await page.waitForTimeout(2_500);
 await page.screenshot({ path: `${SCREENSHOT_DIR}/01-loaded.png`, fullPage: false });
 
 console.log("\n─── Header / theme ───");
 const title = await page.locator("h1").first().textContent();
-check(title?.includes("Cosmology Visualization Lab"), `title is "${title?.trim()}"`);
+check(title?.includes("Cosmology"), `title is "${title?.trim()}"`);
 
 const heroHeading = await page.locator("h2").first().textContent();
 check(
-  (heroHeading ?? "").toLowerCase().includes("ten plots"),
-  `hero heading present: "${heroHeading?.trim()}"`,
+  (heroHeading ?? "").toLowerCase().includes("hubble"),
+  `first plot section heading present: "${heroHeading?.trim()}"`,
 );
 
 const colorModeBtn = page.getByRole("button", { name: /toggle color mode/i });
@@ -236,7 +269,7 @@ await page.screenshot({ path: `${SCREENSHOT_DIR}/04-synthesis.png`, fullPage: fa
 
 console.log("\n─── Mobile viewport (375px) ───");
 await page.setViewportSize({ width: 375, height: 720 });
-await page.goto(BASE_URL, { waitUntil: "networkidle" });
+await page.goto(`${BASE_URL}m/cosmology`, { waitUntil: "networkidle" });
 await page.waitForTimeout(1500);
 const mobileTitle = await page.locator("h1").first().textContent();
 check(

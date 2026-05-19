@@ -12,6 +12,10 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
+import { ModulePage } from "./components/ModulePage";
+import { getModuleBySlug } from "./modules";
+import { Catalog } from "./pages/Catalog";
+
 function Header() {
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
@@ -109,39 +113,13 @@ function Footer() {
   );
 }
 
-function CatalogStub() {
-  return (
-    <Box
-      as="section"
-      pt={{ base: 12, md: 16 }}
-      pb={{ base: 10, md: 16 }}
-      px={{ base: 6, md: 8 }}
-    >
-      <Container maxW="4xl" px={0}>
-        <Text fontFamily="body" fontSize={{ base: "md", md: "lg" }} color="fg">
-          Catalog coming soon
-        </Text>
-      </Container>
-    </Box>
-  );
-}
-
-function ModuleStub() {
+function ModuleRoute() {
   const { slug } = useParams<{ slug: string }>();
-  return (
-    <Box
-      as="section"
-      pt={{ base: 12, md: 16 }}
-      pb={{ base: 10, md: 16 }}
-      px={{ base: 6, md: 8 }}
-    >
-      <Container maxW="4xl" px={0}>
-        <Text fontFamily="body" fontSize={{ base: "md", md: "lg" }} color="fg">
-          Module: {slug}
-        </Text>
-      </Container>
-    </Box>
-  );
+  const module = slug ? getModuleBySlug(slug) : undefined;
+  if (!module || module.status === "soon") {
+    return <Navigate to="/" replace />;
+  }
+  return <ModulePage meta={module} />;
 }
 
 export function App() {
@@ -149,8 +127,8 @@ export function App() {
     <Box minH="100vh" bg="bg.canvas" color="fg">
       <Header />
       <Routes>
-        <Route path="/" element={<CatalogStub />} />
-        <Route path="/m/:slug" element={<ModuleStub />} />
+        <Route path="/" element={<Catalog />} />
+        <Route path="/m/:slug" element={<ModuleRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />
