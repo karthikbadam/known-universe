@@ -12,8 +12,8 @@ import {
   SOUND_HORIZON_FIDUCIAL_MPC,
   approximateBossSigma,
   baoCorrelation,
-} from "../../src/physics/bao.js";
-import { gaussian, mulberry32 } from "../../src/physics/rng.js";
+} from "../../src/modules/cosmology/physics/bao.js";
+import { gaussian, mulberry32 } from "../../src/lib/rng.js";
 
 const S_MIN = 50;
 const S_MAX = 200;
