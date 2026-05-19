@@ -2,6 +2,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { ThemeProvider as ColorModeProvider } from "next-themes";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
 import { system } from "./theme";
@@ -17,7 +18,9 @@ createRoot(container).render(
       disableTransitionOnChange
     >
       <ChakraProvider value={system}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </ChakraProvider>
     </ColorModeProvider>
   </StrictMode>,
