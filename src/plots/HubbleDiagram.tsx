@@ -10,7 +10,7 @@ import { PlotError } from "../components/PlotError";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
 
-import { TABLES } from "../data/loaders";
+import { TABLES } from "../modules/cosmology/data/tables";
 import { ensureCoordinator } from "../mosaic/coordinator";
 import { useDataTable } from "../mosaic/useDataTable";
 import { useParam } from "../mosaic/useParam";

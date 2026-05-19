@@ -10,7 +10,7 @@ import { PlotError } from "../components/PlotError";
 import { PlotSection } from "../components/PlotSection";
 import { RulesInOut } from "../components/RulesInOut";
 
-import { TABLES } from "../data/loaders";
+import { TABLES } from "../modules/cosmology/data/tables";
 import { useDataTable } from "../mosaic/useDataTable";
 import { vgFrame } from "../mosaic/vgHelpers";
 import { PLANCK_2018, cmbModelCurve, type CmbParams } from "../physics/cmb";
