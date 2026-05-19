@@ -1,13 +1,16 @@
-import type { ModuleMeta } from './types';
+import type { ModuleMeta } from "./types";
+import { cosmologyModule } from "./cosmology";
+import { comingSoonModule } from "./_placeholder";
 
-// TODO: register module entries here (e.g. cosmology) as they are extracted
-// into their own folders under src/modules/<slug>/.
-export const MODULES: readonly ModuleMeta[] = [];
+export const MODULES: readonly ModuleMeta[] = [
+  cosmologyModule,
+  comingSoonModule,
+];
 
 export function getModuleBySlug(slug: string): ModuleMeta | undefined {
   return MODULES.find((m) => m.slug === slug);
 }
 
 export function getLiveModules(): readonly ModuleMeta[] {
-  return MODULES.filter((m) => m.status === 'live');
+  return MODULES.filter((m) => m.status === "live");
 }
