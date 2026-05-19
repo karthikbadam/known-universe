@@ -2,20 +2,20 @@ import { Box, Code, Link, NativeSelect, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
-import { Citation } from "../components/Citation";
-import { MathBlock, MathInline } from "../components/MathBlock";
-import { MosaicPlot } from "../components/MosaicPlot";
-import { ParamSlider } from "../components/ParamSlider";
-import { PlotError } from "../components/PlotError";
-import { PlotSection } from "../components/PlotSection";
-import { RulesInOut } from "../components/RulesInOut";
+import { Citation } from "../../../components/Citation";
+import { MathBlock, MathInline } from "../../../components/MathBlock";
+import { MosaicPlot } from "../../../components/MosaicPlot";
+import { ParamSlider } from "../../../components/ParamSlider";
+import { PlotError } from "../../../components/PlotError";
+import { PlotSection } from "../../../components/PlotSection";
+import { RulesInOut } from "../../../components/RulesInOut";
 
-import { TABLES } from "../modules/cosmology/data/tables";
-import { useDataTable } from "../mosaic/useDataTable";
-import { vgFrame } from "../mosaic/vgHelpers";
+import { TABLES } from "../data/tables";
+import { useDataTable } from "../../../mosaic/useDataTable";
+import { vgFrame } from "../../../mosaic/vgHelpers";
 import { rotationCurve } from "../physics/nfw";
-import { CHART_HEIGHT } from "../theme/chartDimensions";
-import { useChartPalette } from "../theme/palette";
+import { CHART_HEIGHT } from "../../../theme/chartDimensions";
+import { useChartPalette } from "../../../theme/palette";
 
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
 

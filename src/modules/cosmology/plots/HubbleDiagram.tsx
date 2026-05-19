@@ -2,22 +2,22 @@ import { Code, Link, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
-import { Citation } from "../components/Citation";
-import { MathBlock, MathInline } from "../components/MathBlock";
-import { MosaicPlot } from "../components/MosaicPlot";
-import { ParamSlider } from "../components/ParamSlider";
-import { PlotError } from "../components/PlotError";
-import { PlotSection } from "../components/PlotSection";
-import { RulesInOut } from "../components/RulesInOut";
+import { Citation } from "../../../components/Citation";
+import { MathBlock, MathInline } from "../../../components/MathBlock";
+import { MosaicPlot } from "../../../components/MosaicPlot";
+import { ParamSlider } from "../../../components/ParamSlider";
+import { PlotError } from "../../../components/PlotError";
+import { PlotSection } from "../../../components/PlotSection";
+import { RulesInOut } from "../../../components/RulesInOut";
 
-import { TABLES } from "../modules/cosmology/data/tables";
-import { ensureCoordinator } from "../mosaic/coordinator";
-import { useDataTable } from "../mosaic/useDataTable";
-import { useParam } from "../mosaic/useParam";
-import { vgFrame } from "../mosaic/vgHelpers";
+import { TABLES } from "../data/tables";
+import { ensureCoordinator } from "../../../mosaic/coordinator";
+import { useDataTable } from "../../../mosaic/useDataTable";
+import { useParam } from "../../../mosaic/useParam";
+import { vgFrame } from "../../../mosaic/vgHelpers";
 import { hubbleTimeGyr } from "../physics/friedmann";
-import { CHART_HEIGHT } from "../theme/chartDimensions";
-import { useChartPalette } from "../theme/palette";
+import { CHART_HEIGHT } from "../../../theme/chartDimensions";
+import { useChartPalette } from "../../../theme/palette";
 
 
 const MAX_DISTANCE_MPC = 2.2;

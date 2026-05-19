@@ -2,13 +2,13 @@ import { Box, Code, Link, Stat, Text, VStack } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 
-import { Citation } from "../components/Citation";
-import { MathBlock, MathInline } from "../components/MathBlock";
-import { ParamSlider } from "../components/ParamSlider";
-import { PlotSection } from "../components/PlotSection";
-import { RulesInOut } from "../components/RulesInOut";
-import { CHART_HEIGHT } from "../theme/chartDimensions";
-import { useChartPalette } from "../theme/palette";
+import { Citation } from "../../../components/Citation";
+import { MathBlock, MathInline } from "../../../components/MathBlock";
+import { ParamSlider } from "../../../components/ParamSlider";
+import { PlotSection } from "../../../components/PlotSection";
+import { RulesInOut } from "../../../components/RulesInOut";
+import { CHART_HEIGHT } from "../../../theme/chartDimensions";
+import { useChartPalette } from "../../../theme/palette";
 
 import {
   M87_OBSERVED,

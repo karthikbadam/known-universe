@@ -2,15 +2,15 @@ import { Box, Code, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
-import { MathBlock, MathInline } from "../components/MathBlock";
-import { MosaicPlot } from "../components/MosaicPlot";
-import { ParamSlider } from "../components/ParamSlider";
+import { MathBlock, MathInline } from "../../../components/MathBlock";
+import { MosaicPlot } from "../../../components/MosaicPlot";
+import { ParamSlider } from "../../../components/ParamSlider";
 
-import { vgFrame } from "../mosaic/vgHelpers";
+import { vgFrame } from "../../../mosaic/vgHelpers";
 import { PLANCK_2018, cmbModelCurve } from "../physics/cmb";
 import { muCurve } from "../physics/luminosity";
-import { CHART_HEIGHT } from "../theme/chartDimensions";
-import { useChartPalette } from "../theme/palette";
+import { CHART_HEIGHT } from "../../../theme/chartDimensions";
+import { useChartPalette } from "../../../theme/palette";
 
 // Extra parameters not in the canonical CmbParams type (the CMB model
 // currently ignores tau and rolls As into the curve amplitude downstream).

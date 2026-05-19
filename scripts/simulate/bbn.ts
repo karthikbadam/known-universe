@@ -14,7 +14,7 @@ import {
   BBN_OBSERVED,
   N_EFF_STANDARD,
   bbnGrid,
-} from "../../src/physics/bbn.js";
+} from "../../src/modules/cosmology/physics/bbn.js";
 
 const N_SAMPLES = 80;
 

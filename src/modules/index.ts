@@ -1,8 +1,7 @@
 import type { ModuleMeta } from './types';
+import { cosmologyModule } from './cosmology/index';
 
-// TODO: register module entries here (e.g. cosmology) as they are extracted
-// into their own folders under src/modules/<slug>/.
-export const MODULES: readonly ModuleMeta[] = [];
+export const MODULES: readonly ModuleMeta[] = [cosmologyModule];
 
 export function getModuleBySlug(slug: string): ModuleMeta | undefined {
   return MODULES.find((m) => m.slug === slug);

@@ -4,7 +4,7 @@ import {
   hubbleTimeGyr,
   hubbleVelocity,
 } from "../friedmann.js";
-import { gaussian, mulberry32 } from "../rng.js";
+import { gaussian, mulberry32 } from "../../../../lib/rng.js";
 
 describe("hubbleVelocity", () => {
   it("is linear in distance and proportional to H0", () => {
