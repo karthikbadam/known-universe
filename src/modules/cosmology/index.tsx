@@ -20,7 +20,13 @@ export const cosmologyModule: ModuleMeta = {
   summary:
     'Known Universe is an interactive journal of canonical visualizations in scientific fields. Cosmology is the first of many modules. One scroll through the visualizations that turned cosmology from philosophy into a six-parameter model. Each plot opens with the scientific question it answers, then shows the math, then the data, then sliders so you can see what changes when a parameter moves.',
   status: 'live',
-  cover: { kind: 'gradient', from: '#0a0a0a', to: '#1a1a2e' },
+  cover: {
+    kind: 'gradient',
+    from: '#fef3c7',
+    to: '#c7d2fe',
+    fromDark: '#0a0a0a',
+    toDark: '#1a1a2e',
+  },
   sections: () => [
     <HubbleDiagram key="hubble" />,
     <BBNAbundances key="bbn" />,

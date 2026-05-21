@@ -11,14 +11,9 @@ import { MODULES } from "../modules";
 
 export function Catalog() {
   return (
-    <Box
-      as="section"
-      pt={{ base: 8, md: 12 }}
-      pb={{ base: 8, md: 12 }}
-      px={{ base: 6, md: 8 }}
-    >
+    <Box as="section" pt={{ base: 8, md: 12 }} pb={8} px={{ base: 6, md: 8 }}>
       <Container maxW="4xl" px={0}>
-        <VStack align="stretch" gap={4} mb={{ base: 10, md: 12 }}>
+        <VStack align="stretch" gap={4} mb={8}>
           <Heading
             as="h1"
             fontFamily="heading"

@@ -10,6 +10,8 @@ import { system } from "./theme";
 const container = document.getElementById("root");
 if (!container) throw new Error("#root not found");
 
+const basename = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 createRoot(container).render(
   <StrictMode>
     <ColorModeProvider
@@ -18,7 +20,7 @@ createRoot(container).render(
       disableTransitionOnChange
     >
       <ChakraProvider value={system}>
-        <BrowserRouter>
+        <BrowserRouter basename={basename}>
           <App />
         </BrowserRouter>
       </ChakraProvider>

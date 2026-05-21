@@ -33,9 +33,9 @@ function Cover({ meta }: Props) {
         <Box
           w="100%"
           h="100%"
-          bgGradient={`linear(to-br, ${cover.from}, ${cover.to})`}
-          style={{
-            backgroundImage: `linear-gradient(to bottom right, ${cover.from}, ${cover.to})`,
+          backgroundImage={`linear-gradient(to bottom right, ${cover.from}, ${cover.to})`}
+          _dark={{
+            backgroundImage: `linear-gradient(to bottom right, ${cover.fromDark ?? cover.from}, ${cover.toDark ?? cover.to})`,
           }}
         />
       )}
