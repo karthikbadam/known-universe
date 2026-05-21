@@ -1,10 +1,10 @@
 import { Box, Code, Image, Link, Text } from "@chakra-ui/react";
 
-import { Citation } from "../components/Citation";
-import { MathBlock, MathInline } from "../components/MathBlock";
-import { PlotSection } from "../components/PlotSection";
-import { RulesInOut } from "../components/RulesInOut";
-import { CHART_HEIGHT } from "../theme/chartDimensions";
+import { Citation } from "../../../components/Citation";
+import { MathBlock, MathInline } from "../../../components/MathBlock";
+import { PlotSection } from "../../../components/PlotSection";
+import { RulesInOut } from "../../../components/RulesInOut";
+import { CHART_HEIGHT } from "../../../theme/chartDimensions";
 
 const REAL_IMAGE_URL = `${import.meta.env.BASE_URL}data/planck_smica.jpg`;
 const CANVAS_H = CHART_HEIGHT.standard;

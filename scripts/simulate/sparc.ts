@@ -10,8 +10,8 @@ import {
   baryonEnclosedMass,
   circularVelocityKmS,
   nfwEnclosedMass,
-} from "../../src/physics/nfw.js";
-import { gaussian, mulberry32 } from "../../src/physics/rng.js";
+} from "../../src/modules/cosmology/physics/nfw.js";
+import { gaussian, mulberry32 } from "../../src/lib/rng.js";
 
 interface GalaxySpec {
   name: string;

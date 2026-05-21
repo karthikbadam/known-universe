@@ -13,8 +13,8 @@ import { fileURLToPath } from "node:url";
 import {
   GW150914_FIDUCIAL,
   chirpWaveform,
-} from "../../src/physics/chirp.js";
-import { gaussian, mulberry32 } from "../../src/physics/rng.js";
+} from "../../src/modules/cosmology/physics/chirp.js";
+import { gaussian, mulberry32 } from "../../src/lib/rng.js";
 
 const SAMPLE_RATE_HZ = 2048;
 const DURATION_S = 0.45;

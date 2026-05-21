@@ -2,14 +2,14 @@ import { Code, Link, Text, VStack } from "@chakra-ui/react";
 import * as vg from "@uwdata/vgplot";
 import { useMemo, useState } from "react";
 
-import { Citation } from "../components/Citation";
-import { MathBlock, MathInline } from "../components/MathBlock";
-import { MosaicPlot } from "../components/MosaicPlot";
-import { ParamSlider } from "../components/ParamSlider";
-import { PlotSection } from "../components/PlotSection";
-import { RulesInOut } from "../components/RulesInOut";
+import { Citation } from "../../../components/Citation";
+import { MathBlock, MathInline } from "../../../components/MathBlock";
+import { MosaicPlot } from "../../../components/MosaicPlot";
+import { ParamSlider } from "../../../components/ParamSlider";
+import { PlotSection } from "../../../components/PlotSection";
+import { RulesInOut } from "../../../components/RulesInOut";
 
-import { vgFrame } from "../mosaic/vgHelpers";
+import { vgFrame } from "../../../mosaic/vgHelpers";
 import {
   BBN_OBSERVED,
   N_EFF_STANDARD,
@@ -17,8 +17,8 @@ import {
   bbnLi7overH,
   bbnYp,
 } from "../physics/bbn";
-import { CHART_HEIGHT } from "../theme/chartDimensions";
-import { useChartPalette } from "../theme/palette";
+import { CHART_HEIGHT } from "../../../theme/chartDimensions";
+import { useChartPalette } from "../../../theme/palette";
 
 const N_SAMPLES = 240;
 const OMEGA_BH2_MIN = 0.005;

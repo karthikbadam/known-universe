@@ -15,8 +15,8 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { hubbleVelocity } from "../../src/physics/friedmann.js";
-import { gaussian, mulberry32 } from "../../src/physics/rng.js";
+import { hubbleVelocity } from "../../src/modules/cosmology/physics/friedmann.js";
+import { gaussian, mulberry32 } from "../../src/lib/rng.js";
 
 const HUBBLE_1929_SLOPE_KM_S_PER_MPC = 500;
 const DISTANCE_MIN_MPC = 0.03;

@@ -10,17 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
-import { BAOFeature } from "./plots/BAOFeature";
-import { BBNAbundances } from "./plots/BBNAbundances";
-import { CMBMap } from "./plots/CMBMap";
-import { CMBPowerSpectrum } from "./plots/CMBPowerSpectrum";
-import { EHTShadow } from "./plots/EHTShadow";
-import { GW150914 } from "./plots/GW150914";
-import { HubbleDiagram } from "./plots/HubbleDiagram";
-import { LCDMSynthesis } from "./plots/LCDMSynthesis";
-import { RotationCurves } from "./plots/RotationCurves";
-import { SupernovaHubble } from "./plots/SupernovaHubble";
+import { ModulePage } from "./components/ModulePage";
+import { getModuleBySlug } from "./modules";
+import { Catalog } from "./pages/Catalog";
 
 function Header() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -59,55 +53,6 @@ function Header() {
             {isDark ? <Sun size={16} /> : <Moon size={16} />}
           </IconButton>
         </HStack>
-      </Container>
-    </Box>
-  );
-}
-
-function Hero() {
-  return (
-    <Box
-      as="section"
-      pt={{ base: 12, md: 16 }}
-      pb={{ base: 10, md: 16 }}
-      px={{ base: 6, md: 8 }}
-    >
-      <Container maxW="4xl" px={0}>
-        <VStack align="stretch" gap={6}>
-          <Text
-            color="fg.subtle"
-            fontFamily="mono"
-            fontSize="xs"
-            letterSpacing="0.12em"
-            textTransform="uppercase"
-          >
-            Known Universe / Module 01 / Cosmology
-          </Text>
-          <Heading
-            as="h1"
-            fontFamily="body"
-            fontWeight="normal"
-            fontSize={{ base: "3xl", md: "5xl" }}
-            lineHeight="1.15"
-            color="fg"
-            letterSpacing="-0.02em"
-          >
-            Ten plots build ΛCDM. Tune the parameters yourself.
-          </Heading>
-          <Text
-            fontFamily="body"
-            fontSize={{ base: "md", md: "lg" }}
-            color="fg.muted"
-            lineHeight="1.7"
-          >
-            Known Universe is an interactive journal of canonical visualizations
-            in scientific fields. Cosmology is the first of many modules. One
-            scroll through the visualizations that turned cosmology from
-            philosophy into a six-parameter model. Each plot opens with the
-            scientific question it answers, then shows the math, then the data,
-            then sliders so you can see what changes when a parameter moves.
-          </Text>
-        </VStack>
       </Container>
     </Box>
   );
@@ -168,21 +113,24 @@ function Footer() {
   );
 }
 
+function ModuleRoute() {
+  const { slug } = useParams<{ slug: string }>();
+  const module = slug ? getModuleBySlug(slug) : undefined;
+  if (!module || module.status === "soon") {
+    return <Navigate to="/" replace />;
+  }
+  return <ModulePage meta={module} />;
+}
+
 export function App() {
   return (
     <Box minH="100vh" bg="bg.canvas" color="fg">
       <Header />
-      <Hero />
-      <HubbleDiagram />
-      <BBNAbundances />
-      <CMBMap />
-      <CMBPowerSpectrum />
-      <SupernovaHubble />
-      <RotationCurves />
-      <BAOFeature />
-      <EHTShadow />
-      <GW150914 />
-      <LCDMSynthesis />
+      <Routes>
+        <Route path="/" element={<Catalog />} />
+        <Route path="/m/:slug" element={<ModuleRoute />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
       <Footer />
     </Box>
   );

@@ -17,8 +17,8 @@ import {
   PLANCK_2018,
   approximatePlanckSigma,
   cmbModelDl,
-} from "../../src/physics/cmb.js";
-import { gaussian, mulberry32 } from "../../src/physics/rng.js";
+} from "../../src/modules/cosmology/physics/cmb.js";
+import { gaussian, mulberry32 } from "../../src/lib/rng.js";
 
 const ELL_MIN = 30;
 const ELL_MAX = 2500;

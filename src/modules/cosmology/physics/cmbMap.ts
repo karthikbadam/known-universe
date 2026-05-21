@@ -6,7 +6,7 @@
 // large-scale, smooth patches at the ~200 μK level (dipole-subtracted)
 // plus higher-frequency speckle.
 
-import { mulberry32 } from "./rng.js";
+import { mulberry32 } from "../../../lib/rng.js";
 
 const FIXED_SEED = 42;
 
