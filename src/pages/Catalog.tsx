@@ -13,16 +13,16 @@ export function Catalog() {
   return (
     <Box
       as="section"
-      pt={{ base: 12, md: 16 }}
-      pb={{ base: 10, md: 16 }}
+      pt={{ base: 8, md: 12 }}
+      pb={{ base: 8, md: 12 }}
       px={{ base: 6, md: 8 }}
     >
-      <Container maxW="6xl" px={0}>
-        <VStack align="stretch" gap={4} mb={{ base: 10, md: 14 }}>
+      <Container maxW="4xl" px={0}>
+        <VStack align="stretch" gap={4} mb={{ base: 10, md: 12 }}>
           <Heading
             as="h1"
             fontFamily="heading"
-            fontSize={{ base: "3xl", md: "5xl" }}
+            fontSize={{ base: "2xl", md: "4xl" }}
             fontWeight="medium"
             color="fg"
             letterSpacing="-0.02em"
@@ -38,11 +38,9 @@ export function Catalog() {
           >
             An interactive journal of canonical visualizations in scientific
             fields. Each module is a single-page scroll through plots that build
-            a model, with parameter sliders that re-derive the curves in real
-            time.
+            the core knowledge of the field.
           </Text>
         </VStack>
-
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={8}>
           {MODULES.map((m) => (
             <ModuleCard key={m.id} meta={m} />

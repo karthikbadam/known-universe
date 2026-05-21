@@ -95,7 +95,7 @@ export function ParamSlider({
         </Slider.Control>
       </Slider.Root>
       {description ? (
-        <Text fontFamily="body" fontSize="sm" color="fg.muted" lineHeight="1.6">
+        <Text fontFamily="body" fontSize="sm" lineHeight="1.6">
           {description}
         </Text>
       ) : null}

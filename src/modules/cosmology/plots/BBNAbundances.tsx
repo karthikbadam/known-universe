@@ -140,7 +140,6 @@ export function BBNAbundances() {
           <Text
             fontFamily="body"
             fontSize="sm"
-            color="fg.muted"
             lineHeight="1.7"
           >
             More baryons (larger η) → less deuterium survives (it photoionises

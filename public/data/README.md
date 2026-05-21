@@ -10,8 +10,6 @@ Every dataset bundled with this app declares its provenance in a 6-line
   5. The schema
   6. Generation parameters or downsampling notes
 
-Replacement instructions for every file live under `/scripts/fetch/`.
-
 ## File index, all gates
 
 | File                       | Status     | Size    | Source                                            |
@@ -26,7 +24,3 @@ Replacement instructions for every file live under `/scripts/fetch/`.
 | `gw150914_strain.csv`      | real       | <6 kB   | LIGO H1 whitened+bandpassed strain                |
 | `planck_smica.jpg`         | real       | ~700 kB | Planck 2018 SMICA all-sky map (ESA)               |
 | `eht_m87.jpg`              | real       | ~40 kB  | EHT M87* April 2019 image (ESO)                   |
-
-Bundle stays under the 20 MB budget (~755 kB total after switching to
-real data). Every CSV file replaced from simulated → real preserves the
-existing schema so the loader and plot code did not need to change.

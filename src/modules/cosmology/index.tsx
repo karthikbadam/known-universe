@@ -15,7 +15,7 @@ export const cosmologyModule: ModuleMeta = {
   id: 'cosmology',
   slug: 'cosmology',
   title: 'Cosmology',
-  heroLabel: 'Module 01 / Cosmology',
+  heroLabel: 'Module 01',
   tagline: 'Ten plots build ΛCDM. Tune the parameters yourself.',
   summary:
     'Known Universe is an interactive journal of canonical visualizations in scientific fields. Cosmology is the first of many modules. One scroll through the visualizations that turned cosmology from philosophy into a six-parameter model. Each plot opens with the scientific question it answers, then shows the math, then the data, then sliders so you can see what changes when a parameter moves.',

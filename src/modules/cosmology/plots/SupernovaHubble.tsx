@@ -156,7 +156,7 @@ export function SupernovaHubble() {
               >
                 Flat universe
               </Text>
-              <Text fontFamily="body" color="fg.muted" fontSize="sm">
+              <Text fontFamily="body" fontSize="sm">
                 Enforces Ω_k = 0 (Ω_Λ = 1 - Ω_m).
               </Text>
             </Box>

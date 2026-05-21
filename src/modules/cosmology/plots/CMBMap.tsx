@@ -18,7 +18,7 @@ export function CMBMap() {
       summary={<Text>A Mollweide projection of the cosmic microwave background, with the mean temperature and dipole removed. Red regions are slightly hotter than 2.725 K, blue slightly cooler; the typical anisotropy is ~100 μK on top of the 2.7 K mean. These tiny ripples are the seeds of every galaxy you've ever heard of: gravitational growth from these initial overdensities built the cosmic web over 14 Gyr.</Text>}
       math={<>
         <MathBlock ariaLabel="CMB spherical harmonic expansion">{`T(\\hat{n}) \\;=\\; \\sum_{\\ell, m} a_{\\ell m} \\, Y_{\\ell m}(\\hat{n}) \\qquad C_\\ell \\;=\\; \\langle |a_{\\ell m}|^2 \\rangle_m`}</MathBlock>
-        <Text fontFamily="body" fontSize="sm" color="fg.muted" lineHeight="1.7"><MathInline>{`Y_{\\ell m}`}</MathInline> are spherical harmonics; the variance of the <MathInline>{`a_{\\ell m}`}</MathInline> coefficients is the angular power spectrum <MathInline>{`C_\\ell`}</MathInline> plotted in the next section.</Text>
+        <Text fontFamily="body" fontSize="sm" lineHeight="1.7"><MathInline>{`Y_{\\ell m}`}</MathInline> are spherical harmonics; the variance of the <MathInline>{`a_{\\ell m}`}</MathInline> coefficients is the angular power spectrum <MathInline>{`C_\\ell`}</MathInline> plotted in the next section.</Text>
       </>}
       plot={
         <Box display="flex" justifyContent="center" h={`${CANVAS_H}px`}>

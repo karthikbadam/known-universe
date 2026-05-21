@@ -50,7 +50,7 @@ export function BAOFeature() {
       summary={<Text>Before recombination, sound waves rippled through the photon-baryon plasma. At decoupling these waves froze in place at a comoving radius r_d ≈ 150 Mpc. Galaxies are slightly more likely to sit at that separation than at neighbouring scales, a feature you can measure today by counting pairs. The bump shifts left or right with r_d, giving an independent geometric ruler on the expansion history.</Text>}
       math={<>
         <MathBlock ariaLabel="comoving distance integral">{`r_d \\;=\\; \\int_{z_{\\rm drag}}^{\\infty} \\frac{c_s(z)}{H(z)} \\, dz`}</MathBlock>
-        <Text fontFamily="body" fontSize="sm" color="fg.muted" lineHeight="1.7"><MathInline>{`c_s`}</MathInline> is the photon-baryon plasma sound speed; <MathInline>{`H(z)`}</MathInline> the Hubble rate. The integral gives the sound horizon at the drag epoch (z ≈ 1060). At late times it appears as the dashed vertical guide moving with the slider.</Text>
+        <Text fontFamily="body" fontSize="sm" lineHeight="1.7"><MathInline>{`c_s`}</MathInline> is the photon-baryon plasma sound speed; <MathInline>{`H(z)`}</MathInline> the Hubble rate. The integral gives the sound horizon at the drag epoch (z ≈ 1060). At late times it appears as the dashed vertical guide moving with the slider.</Text>
       </>}
       plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel="BAO correlation function with a bump near 150 Mpc" height={PLOT_HEIGHT} />}
       controls={

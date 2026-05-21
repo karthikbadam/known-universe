@@ -179,13 +179,13 @@ export function EHTShadow() {
             borderWidth={1}
             borderColor="border"
           >
-            <Stat.Label color="fg.muted" fontFamily="mono" fontSize="xs">
+            <Stat.Label fontFamily="mono" fontSize="xs">
               Predicted shadow diameter
             </Stat.Label>
             <Stat.ValueText color={matches ? "accent" : "fg"} fontFamily="mono">
               {predictedDiameterUas.toFixed(1)} μas
             </Stat.ValueText>
-            <Text color="fg.muted" fontSize="xs" mt={1}>
+            <Text fontSize="xs" mt={1}>
               EHT measured: 42 ± 3 μas
             </Text>
           </Stat.Root>

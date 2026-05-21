@@ -10,7 +10,7 @@ export function ModuleHero({ meta }: ModuleHeroProps) {
   return (
     <Box
       as="section"
-      pt={{ base: 12, md: 16 }}
+      pt={{ base: 8, md: 12 }}
       pb={{ base: 10, md: 16 }}
       px={{ base: 6, md: 8 }}
     >
@@ -39,7 +39,6 @@ export function ModuleHero({ meta }: ModuleHeroProps) {
           <Text
             fontFamily="body"
             fontSize={{ base: "md", md: "lg" }}
-            color="fg.muted"
             lineHeight="1.7"
           >
             {meta.summary}

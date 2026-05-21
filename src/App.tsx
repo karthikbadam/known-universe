@@ -38,7 +38,6 @@ function Header() {
             fontSize="sm"
             fontWeight="medium"
             color="fg"
-            letterSpacing="-0.01em"
           >
             Known Universe
           </Text>
@@ -71,7 +70,7 @@ function Footer() {
       <Container maxW="3xl" px={0}>
         <VStack
           align="stretch"
-          gap={3}
+          gap={2}
           fontSize="sm"
           color="fg.muted"
           fontFamily="body"
@@ -88,9 +87,7 @@ function Footer() {
           </Heading>
           <Text>
             All datasets ship in <code>/public/data</code> with a six-line
-            provenance header. Replacement instructions for every file live in{" "}
-            <code>/scripts/fetch/</code>. Simulated fallbacks live in{" "}
-            <code>/scripts/simulate/</code>.
+            provenance header.
           </Text>
           <Text>
             Source:{" "}

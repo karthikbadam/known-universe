@@ -102,7 +102,7 @@ export function HubbleDiagram() {
       math={
         <>
           <MathBlock ariaLabel="Hubble's law">{`v = H_0 \\, d`}</MathBlock>
-          <Text fontFamily="body" fontSize="sm" color="fg.muted" lineHeight="1.7">
+          <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
             <MathInline>{`v`}</MathInline> is recession velocity (km/s),{" "}
             <MathInline>{`d`}</MathInline> is distance (Mpc),{" "}
             <MathInline>{`H_0`}</MathInline> is the Hubble constant in

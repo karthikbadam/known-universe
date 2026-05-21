@@ -79,7 +79,7 @@ export function RotationCurves() {
       summary={<Text>Newtonian gravity predicts that, beyond the visible disk, the orbital speed of stars and gas should fall as 1/√r. SPARC data says it doesn't, the curves stay flat or even rise. Either gravity breaks at galactic scales, or an unseen halo of dark matter contributes extra enclosed mass. The "baryonic" curve shows what visible mass alone predicts; the gap is what dark matter has to fill.</Text>}
       math={<>
         <MathBlock ariaLabel="Newtonian rotation velocity">{`v(r) \\;=\\; \\sqrt{\\frac{G M(<r)}{r}} \\qquad M_{\\rm NFW}(<r) \\;=\\; 4\\pi\\rho_s r_s^3 \\left[\\ln(1+x) - \\frac{x}{1+x}\\right]`}</MathBlock>
-        <Text fontFamily="body" fontSize="sm" color="fg.muted" lineHeight="1.7"><MathInline>{`x = r/r_s`}</MathInline>. The total enclosed mass is the baryonic disk plus an NFW halo. The two sliders pick the halo scale radius and characteristic density; the total curve is the quadrature sum of baryonic and DM contributions.</Text>
+        <Text fontFamily="body" fontSize="sm" lineHeight="1.7"><MathInline>{`x = r/r_s`}</MathInline>. The total enclosed mass is the baryonic disk plus an NFW halo. The two sliders pick the halo scale radius and characteristic density; the total curve is the quadrature sum of baryonic and DM contributions.</Text>
       </>}
       plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel={`Rotation curve of ${galaxy} with model decomposition`} height={PLOT_HEIGHT} />}
       controls={

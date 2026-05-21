@@ -68,12 +68,11 @@ export function PlotSection({
           fontSize={{ base: "lg", md: "xl" }}
           color="fg"
           lineHeight="1.5"
-          fontStyle="italic"
         >
           {question}
         </Text>
 
-        <Box fontFamily="body" color="fg.muted" fontSize="md" lineHeight="1.75">
+        <Box fontFamily="body" fontSize="md" lineHeight="1.75">
           {summary}
         </Box>
         <Box>{math}</Box>
