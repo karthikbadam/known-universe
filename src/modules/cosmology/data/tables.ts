@@ -9,4 +9,5 @@ export const TABLES = {
   sparcGalaxies: defineTable("sparc_galaxies", "sparc_galaxies.csv"),
   bossXi: defineTable("boss_xi", "boss_xi.csv"),
   gw150914: defineTable("gw150914_strain", "gw150914_strain.csv"),
+  cmbMollweide: defineTable("cmb_mollweide", "cmb_mollweide.csv"),
 } as const;
