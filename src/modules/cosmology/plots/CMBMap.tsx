@@ -37,10 +37,11 @@ export function CMBMap() {
         x: "x",
         y: "y",
         fill: vgX.max("t_uk"),
-        interpolate: "nearest",
+        interpolate: "none",
+        pixelSize: 1,
       }),
-      vg.xDomain([-2, 2]),
-      vg.yDomain([-1, 1]),
+      vg.xDomain([-2.05, 2.05]),
+      vg.yDomain([-1.05, 1.05]),
       vg.marginLeft(0),
       vg.marginRight(0),
       vg.marginTop(0),
@@ -51,7 +52,7 @@ export function CMBMap() {
         plot.attributes.colorReverse = true;
         plot.attributes.xAxis = null;
         plot.attributes.yAxis = null;
-        plot.attributes.aspectRatio = 0.5;
+        plot.attributes.aspectRatio = 1;
         plot.attributes.style = "background: transparent;";
       },
     ],

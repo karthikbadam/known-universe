@@ -32,9 +32,9 @@ from pathlib import Path
 import healpy as hp
 import numpy as np
 
-GRID_W = 480
-GRID_H = 240
-DOWNSAMPLE_NSIDE = 256  # ~800k pixels, plenty for a 480x240 display grid
+GRID_W = 720
+GRID_H = 360
+DOWNSAMPLE_NSIDE = 256  # ~800k HEALPix pixels, plenty for a 720x360 display grid
 
 
 def mollweide_inverse(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:

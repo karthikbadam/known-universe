@@ -22,9 +22,10 @@ import { fileURLToPath } from "node:url";
 
 import { mulberry32 } from "../../src/lib/rng.js";
 
-const GRID_W = 480;
-const GRID_H = 240;
+const GRID_W = 720;
+const GRID_H = 360;
 const SEED = 42;
+const SPECKLE_AMP_UK = 60;
 
 interface Blob {
   lon: number;
@@ -57,12 +58,39 @@ function lowFrequencyAt(lon: number, lat: number, blobs: Blob[]): number {
   return t;
 }
 
-function speckleAt(rng: () => number): number {
-  let u = 0;
-  let v = 0;
-  while (u === 0) u = rng();
-  while (v === 0) v = rng();
-  return 80 * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+function speckleField(
+  rng: () => number,
+  width: number,
+  height: number,
+  amp: number,
+): Float32Array {
+  const raw = new Float32Array(width * height);
+  for (let i = 0; i < raw.length; i++) {
+    let u = 0;
+    let v = 0;
+    while (u === 0) u = rng();
+    while (v === 0) v = rng();
+    raw[i] = amp * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  const out = new Float32Array(width * height);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let sum = 0;
+      let count = 0;
+      for (let dy = -2; dy <= 2; dy++) {
+        for (let dx = -2; dx <= 2; dx++) {
+          const xi = x + dx;
+          const yi = y + dy;
+          if (xi >= 0 && xi < width && yi >= 0 && yi < height) {
+            sum += raw[yi * width + xi]!;
+            count++;
+          }
+        }
+      }
+      out[y * width + x] = sum / count;
+    }
+  }
+  return out;
 }
 
 function mollweideInverseProper(
@@ -81,7 +109,12 @@ function mollweideInverseProper(
 function main(): void {
   const rng = mulberry32(SEED);
   const blobs = makeBlobs(rng, 12);
-  const noise = mulberry32(SEED + 1);
+  const speckle = speckleField(
+    mulberry32(SEED + 1),
+    GRID_W,
+    GRID_H,
+    SPECKLE_AMP_UK,
+  );
 
   const rows: string[] = [];
   for (let j = 0; j < GRID_H; j++) {
@@ -90,7 +123,7 @@ function main(): void {
       const x = ((i / (GRID_W - 1)) * 2 - 1) * 2;
       const lonlat = mollweideInverseProper(x, y);
       if (!lonlat) continue;
-      const t = lowFrequencyAt(lonlat.lon, lonlat.lat, blobs) + speckleAt(noise);
+      const t = lowFrequencyAt(lonlat.lon, lonlat.lat, blobs) + speckle[j * GRID_W + i]!;
       rows.push(`${x.toFixed(4)},${y.toFixed(4)},${t.toFixed(2)}`);
     }
   }
