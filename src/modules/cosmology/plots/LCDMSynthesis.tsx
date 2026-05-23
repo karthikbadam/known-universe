@@ -160,10 +160,11 @@ export function LCDMSynthesis() {
           >
             Every observation above, the Hubble line, the BBN abundances, the
             CMB peaks, the supernova distances, the BAO ruler, the rotation
-            curves, sits in the same parameter space. Drag any of the six ΛCDM
-            sliders below and the CMB power spectrum and supernova Hubble line
-            shift to match. The other plots scale the same way (re-mount this
-            page to compose them).
+            curves, sits in the same parameter space, the six-parameter
+            ΛCDM (Lambda-Cold Dark Matter) model. Drag any of the sliders
+            below and the CMB power spectrum and supernova Hubble line shift
+            to match. The other plots scale the same way (re-mount this page
+            to compose them).
           </Text>
         </VStack>
 

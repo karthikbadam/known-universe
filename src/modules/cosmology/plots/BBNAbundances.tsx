@@ -143,13 +143,14 @@ export function BBNAbundances() {
         <VStack align="stretch" gap={4}>
           <Text>
             When the universe was three minutes old, it briefly became a fusion
-            reactor. The yields, deuterium, helium-4, lithium-7, all depend on
-            one number: the baryon density Ω_b h². Slide it and watch the curves
-            shift. At Ω_b h² ≈ 0.022 the D/H and Y_p dots sit right on their
-            theory curves, in perfect agreement with the Cosmic Microwave
-            Background (CMB) constraint that follows below. The ⁷Li/H dot
-            intentionally does not: theory predicts ~3× the observed abundance,
-            the unsolved "lithium problem".
+            reactor, an episode known as Big Bang Nucleosynthesis (BBN). The
+            yields, deuterium, helium-4, lithium-7, all depend on one number:
+            the baryon density Ω_b h². Slide it and watch the curves shift. At
+            Ω_b h² ≈ 0.022 the D/H and Y_p dots sit right on their theory
+            curves, in perfect agreement with the Cosmic Microwave Background
+            (CMB) constraint that follows below. The ⁷Li/H dot intentionally
+            does not: theory predicts ~3× the observed abundance, the unsolved
+            "lithium problem".
           </Text>
           <Text>
             <Text as="span" color="fg" fontWeight="medium">

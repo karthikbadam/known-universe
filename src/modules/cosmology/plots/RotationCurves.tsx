@@ -76,7 +76,7 @@ export function RotationCurves() {
       index={6}
       title="Galaxy rotation curves, dark matter at the disk edge"
       question="Why do galaxies rotate as if there's invisible mass holding them together?"
-      summary={<Text>Newtonian gravity predicts that, beyond the visible disk, the orbital speed of stars and gas should fall as 1/√r. SPARC data says it doesn't, the curves stay flat or even rise. Either gravity breaks at galactic scales, or an unseen halo of dark matter contributes extra enclosed mass. The "baryonic" curve shows what visible mass alone predicts; the gap is what dark matter has to fill.</Text>}
+      summary={<Text>Newtonian gravity predicts that, beyond the visible disk, the orbital speed of stars and gas should fall as 1/√r. SPARC (Spitzer Photometry & Accurate Rotation Curves) data says it doesn't, the curves stay flat or even rise. Either gravity breaks at galactic scales, or an unseen halo of dark matter contributes extra enclosed mass. The "baryonic" curve shows what visible mass alone predicts; the gap is what dark matter has to fill.</Text>}
       math={<>
         <MathBlock ariaLabel="Newtonian rotation velocity">{`v(r) \\;=\\; \\sqrt{\\frac{G M(<r)}{r}} \\qquad M_{\\rm NFW}(<r) \\;=\\; 4\\pi\\rho_s r_s^3 \\left[\\ln(1+x) - \\frac{x}{1+x}\\right]`}</MathBlock>
         <Text fontFamily="body" fontSize="sm" lineHeight="1.7"><MathInline>{`x = r/r_s`}</MathInline>. The total enclosed mass is the baryonic disk plus an NFW halo. The two sliders pick the halo scale radius and characteristic density; the total curve is the quadrature sum of baryonic and DM contributions.</Text>

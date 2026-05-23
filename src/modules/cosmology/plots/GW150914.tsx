@@ -76,11 +76,12 @@ export function GW150914() {
       question="Can two black holes nine billion light years away ring spacetime loudly enough to hear?"
       summary={
         <Text>
-          On 14 September 2015 LIGO detected a tenth-of-a-second chirp, strain
-          rising from ~10⁻²² to 10⁻²¹ as the frequency swept from 35 to 250 Hz
-          before flat-lining at merger. Slide M_c to fit the model line against
-          the noisy strain; the published chirp mass is ≈ 30 M_☉, implying two
-          30-M_☉ BHs spiralling together.
+          On 14 September 2015 LIGO (the Laser Interferometer Gravitational-Wave
+          Observatory) detected a tenth-of-a-second gravitational-wave (GW)
+          chirp, strain rising from ~10⁻²² to 10⁻²¹ as the frequency swept from
+          35 to 250 Hz before flat-lining at merger. Slide M_c to fit the model
+          line against the noisy strain; the published chirp mass is ≈ 30 M_☉,
+          implying two 30-M_☉ BHs spiralling together.
         </Text>
       }
       math={

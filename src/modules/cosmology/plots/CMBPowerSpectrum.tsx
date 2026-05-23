@@ -66,7 +66,7 @@ export function CMBPowerSpectrum() {
     <PlotSection
       index={4}
       title="CMB power spectrum, six numbers, seven peaks"
-      question="What does the cosmic microwave background tell us about the early universe?"
+      question="What does the cosmic microwave background (CMB) tell us about the early universe?"
       summary={<Text>Each dot is the average angular power of CMB temperature fluctuations in a band of multipoles ℓ, equivalently, how much "ripple" the early universe carried at angular scale π/ℓ. The peaks are acoustic oscillations of the photon-baryon plasma at recombination, frozen in when the universe became transparent. Their positions encode geometry; their relative heights encode composition. Drag the sliders to see which slider moves which peak.</Text>}
       math={<>
         <MathBlock ariaLabel="Definition of D_ell">{`D_\\ell \\;=\\; \\frac{\\ell(\\ell+1)}{2\\pi}\\, C_\\ell \\qquad\\text{where}\\qquad \\langle a_{\\ell m} a^{*}_{\\ell' m'}\\rangle = C_\\ell\\, \\delta_{\\ell\\ell'}\\delta_{mm'}`}</MathBlock>
