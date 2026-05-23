@@ -1,4 +1,4 @@
-import { Code, Link, Text, VStack } from "@chakra-ui/react";
+import { Box, Code, HStack, Link, Text, VStack } from "@chakra-ui/react";
 import * as vg from "@uwdata/vgplot";
 import { useMemo, useState } from "react";
 
@@ -25,6 +25,18 @@ const OMEGA_BH2_MIN = 0.005;
 const OMEGA_BH2_MAX = 0.05;
 const YP_SCALE = 1e-4;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
+
+const SPECIES_ORDER = ["D/H", "Y_p (×10⁻⁴)", "⁷Li/H"] as const;
+const SPECIES_COLOR: Record<(typeof SPECIES_ORDER)[number], string> = {
+  "D/H": "#4c8bf5",
+  "Y_p (×10⁻⁴)": "#e6c84a",
+  "⁷Li/H": "#f06a5d",
+};
+const SPECIES_MEANING: Record<(typeof SPECIES_ORDER)[number], string> = {
+  "D/H": "deuterium / hydrogen",
+  "Y_p (×10⁻⁴)": "⁴He mass fraction (scaled)",
+  "⁷Li/H": "lithium-7 / hydrogen",
+};
 
 interface CurveRow {
   omegaBh2: number;
@@ -114,6 +126,10 @@ export function BBNAbundances() {
         margins: { left: 45 },
         yLog: true,
       }),
+      (plot: { attributes: Record<string, unknown> }) => {
+        plot.attributes.colorDomain = [...SPECIES_ORDER];
+        plot.attributes.colorRange = SPECIES_ORDER.map((s) => SPECIES_COLOR[s]);
+      },
     ],
     [curves, observedMarkers, verticalGuide, palette],
   );
@@ -124,39 +140,79 @@ export function BBNAbundances() {
       title="BBN, three numbers from the first three minutes"
       question="How does the baryon density determine the universe's primordial light-element budget?"
       summary={
-        <Text>
-          When the universe was three minutes old, it briefly became a fusion
-          reactor. The yields, deuterium, helium-4, lithium-7, all depend on one
-          number: the baryon density Ω_b h². Slide it and watch the curves
-          shift. The cross-over where all three theory curves match observed
-          measurements is the BBN constraint on Ω_b h² ≈ 0.022, in perfect
-          agreement with the CMB above. The lithium curve sits ~3× above its
-          observed band: the unsolved "lithium problem".
-        </Text>
+        <VStack align="stretch" gap={4}>
+          <Text>
+            When the universe was three minutes old, it briefly became a fusion
+            reactor. The yields, deuterium, helium-4, lithium-7, all depend on
+            one number: the baryon density Ω_b h². Slide it and watch the curves
+            shift. At Ω_b h² ≈ 0.022 the D/H and Y_p dots sit right on their
+            theory curves, in perfect agreement with the Cosmic Microwave
+            Background (CMB) constraint that follows below. The ⁷Li/H dot
+            intentionally does not: theory predicts ~3× the observed abundance,
+            the unsolved "lithium problem".
+          </Text>
+          <Text>
+            <Text as="span" color="fg" fontWeight="medium">
+              Why the gap?
+            </Text>{" "}
+            Three candidates: old halo stars depleted their primordial ⁷Li via
+            diffusion or mixing (the dots are too low), an under-measured ⁷Be
+            destruction cross-section makes the prediction too high (the curve
+            is wrong), or new physics, decaying relics or modified expansion at
+            freeze-out, selectively burns ⁷Be (the model is wrong). Since BBN
+            has no free parameters once Ω_b h² is fixed, this 4–5σ anomaly is
+            one of the cleanest pointers we have to either under-modeled stellar
+            astrophysics or new physics in the 1 keV–100 MeV range where
+            dark-sector models live.
+          </Text>
+        </VStack>
       }
       math={
         <>
           <MathBlock ariaLabel="Saha-like ratio">{`\\frac{n_B}{n_\\gamma} \\equiv \\eta \\approx 273.5 \\cdot \\Omega_b h^2 \\cdot 10^{-10}`}</MathBlock>
-          <Text
-            fontFamily="body"
-            fontSize="sm"
-            lineHeight="1.7"
-          >
+          <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
             More baryons (larger η) → less deuterium survives (it photoionises
             into helium), more <MathInline>{`Y_p`}</MathInline>, more lithium.
             The abundances come from solving Boltzmann/coupled rate equations
-            for the freeze-out of a dozen nuclear species. We ship calibrated
-            analytical fits in <Code>src/physics/bbn.ts</Code>; full PArthENoPE
-            grids can be swapped in (see fetch.md).
+            for the freeze-out of a dozen nuclear species.
           </Text>
         </>
       }
       plot={
-        <MosaicPlot
-          spec={spec}
-          ariaLabel="BBN light element abundances vs baryon density"
-          height={PLOT_HEIGHT}
-        />
+        <VStack align="stretch" gap={6}>
+          <HStack gap={6} flexWrap="wrap" pl={1}>
+            {SPECIES_ORDER.map((species) => (
+              <HStack key={species} gap={2} align="flex-start">
+                <Box
+                  w="10px"
+                  h="10px"
+                  mt="5px"
+                  borderRadius="full"
+                  bg={SPECIES_COLOR[species]}
+                  flexShrink={0}
+                />
+                <VStack align="flex-start" gap={0}>
+                  <Text
+                    fontFamily="mono"
+                    fontSize="xs"
+                    color="fg"
+                    letterSpacing="0.04em"
+                  >
+                    {species}
+                  </Text>
+                  <Text fontFamily="body" fontSize="xs" lineHeight="1.3">
+                    {SPECIES_MEANING[species]}
+                  </Text>
+                </VStack>
+              </HStack>
+            ))}
+          </HStack>
+          <MosaicPlot
+            spec={spec}
+            ariaLabel="BBN light element abundances vs baryon density"
+            height={PLOT_HEIGHT}
+          />
+        </VStack>
       }
       controls={
         <VStack align="stretch" gap={5}>
