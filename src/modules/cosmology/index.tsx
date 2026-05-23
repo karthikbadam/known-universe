@@ -1,31 +1,31 @@
-import type { ModuleMeta } from '../types';
+import type { ModuleMeta } from "../types";
 
-import { BAOFeature } from './plots/BAOFeature';
-import { BBNAbundances } from './plots/BBNAbundances';
-import { CMBMap } from './plots/CMBMap';
-import { CMBPowerSpectrum } from './plots/CMBPowerSpectrum';
-import { EHTShadow } from './plots/EHTShadow';
-import { GW150914 } from './plots/GW150914';
-import { HubbleDiagram } from './plots/HubbleDiagram';
-import { LCDMSynthesis } from './plots/LCDMSynthesis';
-import { RotationCurves } from './plots/RotationCurves';
-import { SupernovaHubble } from './plots/SupernovaHubble';
+import { BAOFeature } from "./plots/BAOFeature";
+import { BBNAbundances } from "./plots/BBNAbundances";
+import { CMBMap } from "./plots/CMBMap";
+import { CMBPowerSpectrum } from "./plots/CMBPowerSpectrum";
+import { EHTShadow } from "./plots/EHTShadow";
+import { GW150914 } from "./plots/GW150914";
+import { HubbleDiagram } from "./plots/HubbleDiagram";
+import { LCDMSynthesis } from "./plots/LCDMSynthesis";
+import { RotationCurves } from "./plots/RotationCurves";
+import { SupernovaHubble } from "./plots/SupernovaHubble";
 
 export const cosmologyModule: ModuleMeta = {
-  id: 'cosmology',
-  slug: 'cosmology',
-  title: 'Cosmology',
-  heroLabel: 'Module 01',
-  tagline: 'Ten plots build ΛCDM. Tune the parameters yourself.',
+  id: "cosmology",
+  slug: "cosmology",
+  title: "Cosmology",
+  heroLabel: "Module 01",
+  tagline: "Ten plots build ΛCDM. Tune the parameters yourself.",
   summary:
-    'Known Universe is an interactive journal of canonical visualizations in scientific fields. Cosmology is the first of many modules. One scroll through the visualizations that turned cosmology from philosophy into a six-parameter model. Each plot opens with the scientific question it answers, then shows the math, then the data, then sliders so you can see what changes when a parameter moves.',
-  status: 'live',
+    "Cosmology turned from a philosophy into a six-parameter ΛCDM model in modern times. Let's explore the fundamental questions that guide a deep understanding in this field. The sections below represent some of my understanding as I learn the fundamentals of this field, hence interpret with caution.",
+  status: "live",
   cover: {
-    kind: 'gradient',
-    from: '#fef3c7',
-    to: '#c7d2fe',
-    fromDark: '#0a0a0a',
-    toDark: '#1a1a2e',
+    kind: "gradient",
+    from: "#fef3c7",
+    to: "#c7d2fe",
+    fromDark: "#0a0a0a",
+    toDark: "#1a1a2e",
   },
   sections: () => [
     <HubbleDiagram key="hubble" />,
