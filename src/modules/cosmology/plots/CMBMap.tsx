@@ -108,6 +108,15 @@ export function CMBMap() {
     [],
   );
 
+  const labelsAbove = useMemo(
+    () => projectedLandmarks.filter((lm) => lm.latDeg < 75),
+    [projectedLandmarks],
+  );
+  const labelsBelow = useMemo(
+    () => projectedLandmarks.filter((lm) => lm.latDeg >= 75),
+    [projectedLandmarks],
+  );
+
   const spec = useMemo(
     () => [
       vgX.raster(vg.from(TABLES.cmbMollweide.name), {
@@ -126,11 +135,20 @@ export function CMBMap() {
         strokeWidth: 1.5,
         title: "name",
       }),
-      vgX.text(projectedLandmarks, {
+      vgX.text(labelsAbove, {
         x: "x",
         y: "y",
         text: "name",
         dy: -14,
+        fill: palette.modelStroke,
+        fontSize: 11,
+        fontWeight: 500,
+      }),
+      vgX.text(labelsBelow, {
+        x: "x",
+        y: "y",
+        text: "name",
+        dy: 18,
         fill: palette.modelStroke,
         fontSize: 11,
         fontWeight: 500,
@@ -156,7 +174,7 @@ export function CMBMap() {
         plot.attributes.style = "background: transparent;";
       },
     ],
-    [tempClipUK, projectedLandmarks, palette],
+    [tempClipUK, projectedLandmarks, labelsAbove, labelsBelow, palette],
   );
 
   return (
