@@ -7,6 +7,7 @@ import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
 import { PlotError } from "../../../components/PlotError";
+import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -19,6 +20,19 @@ import { useChartPalette } from "../../../theme/palette";
 
 const MODEL_SAMPLES = 600;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
+
+const COLOR_DATA = "#e6c84a";
+const COLOR_MODEL = "#4c8bf5";
+
+const vgX = vg as unknown as {
+  text: (source: unknown, options: Record<string, unknown>) => unknown;
+};
+
+const PEAK_LANDMARKS = [
+  { name: "1st peak", x: 220, y: 5800 },
+  { name: "2nd peak", x: 540, y: 2700 },
+  { name: "3rd peak", x: 810, y: 2500 },
+];
 
 export function CMBPowerSpectrum() {
   const palette = useChartPalette();
@@ -47,10 +61,19 @@ export function CMBPowerSpectrum() {
       }),
       vg.dot(vg.from(TABLES.planckDl.name), {
         x: "ell", y: "Dl", r: 3,
-        fill: palette.dataFill, stroke: palette.dataStroke, strokeWidth: 1,
+        fill: COLOR_DATA, stroke: COLOR_DATA, strokeWidth: 1,
       }),
       vg.line(modelCurve, {
-        x: "ell", y: "Dl", stroke: palette.modelStroke, strokeWidth: 2,
+        x: "ell", y: "Dl", stroke: COLOR_MODEL, strokeWidth: 2,
+      }),
+      vg.dot(PEAK_LANDMARKS, {
+        x: "x", y: "y", r: 7,
+        fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5,
+        title: "name",
+      }),
+      vgX.text(PEAK_LANDMARKS, {
+        x: "x", y: "y", text: "name",
+        dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500,
       }),
       ...vgFrame({
         xLabel: "Multipole ℓ →",
@@ -72,7 +95,17 @@ export function CMBPowerSpectrum() {
         <MathBlock ariaLabel="Definition of D_ell">{`D_\\ell \\;=\\; \\frac{\\ell(\\ell+1)}{2\\pi}\\, C_\\ell \\qquad\\text{where}\\qquad \\langle a_{\\ell m} a^{*}_{\\ell' m'}\\rangle = C_\\ell\\, \\delta_{\\ell\\ell'}\\delta_{mm'}`}</MathBlock>
         <Text fontFamily="body" fontSize="sm" lineHeight="1.7"><MathInline>{`C_\\ell`}</MathInline> is the variance of the ℓ-th multipole of the temperature map; multiplying by <MathInline>{`\\ell(\\ell+1)/2\\pi`}</MathInline> gives a curve whose features sit at roughly the same <MathInline>{`D_\\ell`}</MathInline> across many decades of ℓ. The first peak position <MathInline>{`\\ell_1 \\approx 220`}</MathInline> sets the angular size of the sound horizon at last scattering and therefore the geometry of the universe; the peak ratios fix the baryon density.</Text>
       </>}
-      plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel="CMB angular power spectrum: binned Dℓ data with error bars and ΛCDM theory line" height={PLOT_HEIGHT} />}
+      plot={error !== null ? <PlotError message={error} /> : (
+        <VStack align="stretch" gap={3}>
+          <PlotLegend
+            items={[
+              { name: "Planck data", description: "Binned Dℓ with 1σ error bars (TT spectrum)", color: COLOR_DATA },
+              { name: "ΛCDM theory", description: "Parameterized analytical fit; slider-controlled", color: COLOR_MODEL },
+            ]}
+          />
+          <MosaicPlot spec={spec} enabled={ready} ariaLabel="CMB angular power spectrum: binned Dℓ data with error bars and ΛCDM theory line" height={PLOT_HEIGHT} />
+        </VStack>
+      )}
       controls={
         <VStack align="stretch" gap={5}>
           <ParamSlider label="Hubble constant H₀" unit="km/s/Mpc" description="Higher H₀ shrinks the angular-diameter distance, shifting peaks left." min={50} max={90} step={0.1} value={H0} onChange={setH0} />

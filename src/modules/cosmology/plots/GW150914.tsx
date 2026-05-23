@@ -7,6 +7,7 @@ import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
 import { PlotError } from "../../../components/PlotError";
+import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -20,6 +21,18 @@ import { useChartPalette } from "../../../theme/palette";
 const T_C = GW150914_FIDUCIAL.tc;
 const SAMPLES = 600;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
+
+const COLOR_STRAIN = "#e6c84a";
+const COLOR_MODEL = "#4c8bf5";
+const COLOR_GUIDE = "#f06a5d";
+
+const vgX = vg as unknown as {
+  text: (source: unknown, options: Record<string, unknown>) => unknown;
+};
+
+const GW_LANDMARKS = [
+  { name: "Merger", x: T_C, y: 1.5 },
+];
 
 export function GW150914() {
   const palette = useChartPalette();
@@ -43,21 +56,30 @@ export function GW150914() {
       vg.line(vg.from(TABLES.gw150914.name), {
         x: "t_s",
         y: "strain",
-        stroke: palette.errorStroke,
+        stroke: COLOR_STRAIN,
         strokeWidth: 0.6,
-        strokeOpacity: 0.7,
+        strokeOpacity: 0.8,
       }),
       vg.line(modelLine, {
         x: "t",
         y: "h",
-        stroke: palette.dataFill,
+        stroke: COLOR_MODEL,
         strokeWidth: 2,
       }),
       vg.ruleX([{ x: T_C }], {
         x: "x",
-        stroke: palette.dataStroke,
-        strokeOpacity: 0.5,
+        stroke: COLOR_GUIDE,
+        strokeOpacity: 0.7,
         strokeDasharray: "4,3",
+      }),
+      vg.dot(GW_LANDMARKS, {
+        x: "x", y: "y", r: 7,
+        fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5,
+        title: "name",
+      }),
+      vgX.text(GW_LANDMARKS, {
+        x: "x", y: "y", text: "name",
+        dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500,
       }),
       ...vgFrame({
         xLabel: "Time (s) →",
@@ -104,12 +126,21 @@ export function GW150914() {
         error !== null ? (
           <PlotError message={error} />
         ) : (
-          <MosaicPlot
-            spec={spec}
-            enabled={ready}
-            ariaLabel="GW150914 strain time series with chirp model overlay"
-            height={PLOT_HEIGHT}
-          />
+          <VStack align="stretch" gap={3}>
+            <PlotLegend
+              items={[
+                { name: "LIGO strain", description: "Hanford detector, whitened + bandpassed 35–350 Hz", color: COLOR_STRAIN },
+                { name: "Chirp model", description: "Leading-order inspiral waveform; slider-controlled M_c", color: COLOR_MODEL },
+                { name: "Merger time", description: "Vertical guide at t_c where the inspiral terminates", color: COLOR_GUIDE, dashed: true },
+              ]}
+            />
+            <MosaicPlot
+              spec={spec}
+              enabled={ready}
+              ariaLabel="GW150914 strain time series with chirp model overlay"
+              height={PLOT_HEIGHT}
+            />
+          </VStack>
         )
       }
       controls={

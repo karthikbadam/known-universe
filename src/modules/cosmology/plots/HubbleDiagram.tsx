@@ -7,6 +7,7 @@ import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
 import { PlotError } from "../../../components/PlotError";
+import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -19,11 +20,28 @@ import { hubbleTimeGyr } from "../physics/friedmann";
 import { CHART_HEIGHT } from "../../../theme/chartDimensions";
 import { useChartPalette } from "../../../theme/palette";
 
-
 const MAX_DISTANCE_MPC = 2.2;
 const MODEL_GRID_TABLE = "hubble_model_grid";
 const MODEL_GRID_POINTS = 45;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
+const HUBBLE_1929_H0 = 500;
+
+const COLOR_DATA = "#e6c84a";
+const COLOR_MODERN = "#4c8bf5";
+const COLOR_1929 = "#f06a5d";
+
+const vgX = vg as unknown as {
+  text: (source: unknown, options: Record<string, unknown>) => unknown;
+};
+
+const LANDMARKS = [
+  {
+    name: "Hubble's farthest",
+    note: "NGC 4884 in the Coma Cluster — Hubble's most distant 1929 sample.",
+    x: 1.9,
+    y: 1090,
+  },
+];
 
 export function HubbleDiagram() {
   const palette = useChartPalette();
@@ -62,15 +80,41 @@ export function HubbleDiagram() {
         x: "distance_mpc",
         y: "velocity_km_s",
         r: 4,
-        fill: palette.dataFill,
-        stroke: palette.dataStroke,
+        fill: COLOR_DATA,
+        stroke: COLOR_DATA,
         strokeWidth: 1,
       }),
       vg.line(vg.from(MODEL_GRID_TABLE), {
         x: "d",
+        y: vg.sql`${HUBBLE_1929_H0} * d`,
+        stroke: COLOR_1929,
+        strokeWidth: 1.5,
+        strokeDasharray: "4,3",
+      }),
+      vg.line(vg.from(MODEL_GRID_TABLE), {
+        x: "d",
         y: vg.sql`${h0} * d`,
-        stroke: palette.modelStroke,
+        stroke: COLOR_MODERN,
         strokeWidth: 2,
+      }),
+      vg.dot(LANDMARKS, {
+        x: "x",
+        y: "y",
+        r: 7,
+        fill: "transparent",
+        stroke: palette.modelStroke,
+        strokeWidth: 1.5,
+        title: "name",
+      }),
+      vgX.text(LANDMARKS, {
+        x: "x",
+        y: "y",
+        text: "name",
+        dy: -14,
+        fill: palette.modelStroke,
+        fontSize: 11,
+        fontWeight: 500,
+        textAnchor: "end",
       }),
       vg.ruleY([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
       vg.ruleX([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
@@ -92,11 +136,12 @@ export function HubbleDiagram() {
       summary={
         <Text>
           Hubble's 24 galaxies show velocity rising roughly linearly with
-          distance. That single line, fitted by eye to a noisy cloud,           is the first evidence that the universe is expanding. The slope is
-          the Hubble constant <MathInline>{`H_0`}</MathInline>.
-          Drag the slider to see why Hubble himself read off{" "}
-          <MathInline>{`H_0 \\approx 500`}</MathInline> km/s/Mpc (a distance
-          scale wrong by a factor of seven, the modern value sits near 70).
+          distance. That single line, fitted by eye to a noisy cloud, is the
+          first evidence that the universe is expanding. The slope is the Hubble
+          constant <MathInline>{`H_0`}</MathInline>. Drag the slider to see why
+          Hubble himself read off <MathInline>{`H_0 \\approx 500`}</MathInline>{" "}
+          km/s/Mpc (a distance scale wrong by a factor of seven, the modern{" "}
+          <MathInline>{`H_0`}</MathInline> value sits near 70).
         </Text>
       }
       math={
@@ -105,12 +150,11 @@ export function HubbleDiagram() {
           <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
             <MathInline>{`v`}</MathInline> is recession velocity (km/s),{" "}
             <MathInline>{`d`}</MathInline> is distance (Mpc),{" "}
-            <MathInline>{`H_0`}</MathInline> is the Hubble constant in
-            km/s/Mpc. Inverting it gives a rough age of the universe, the
-            Hubble time{" "}
+            <MathInline>{`H_0`}</MathInline> is the Hubble constant in km/s/Mpc.
+            Inverting it gives a rough age of the universe, the Hubble time{" "}
             <MathInline>{`t_H = 1/H_0`}</MathInline> ≈{" "}
-            {hubbleTimeGyr(h0Value).toFixed(2)} Gyr for your current slider
-            position.
+            {hubbleTimeGyr(h0Value).toFixed(2)} billion years for your current
+            slider position.
           </Text>
         </>
       }
@@ -118,12 +162,34 @@ export function HubbleDiagram() {
         error !== null ? (
           <PlotError message={error} />
         ) : (
-          <MosaicPlot
-            spec={spec}
-            enabled={gridReady}
-            ariaLabel="Scatter plot of recession velocity vs distance for Hubble's 24 galaxies, with a model line overlaid"
-            height={PLOT_HEIGHT}
-          />
+          <VStack align="stretch" gap={3}>
+            <PlotLegend
+              items={[
+                {
+                  name: "1929 galaxies",
+                  description: "Hubble's 24 nebulae, distance vs. velocity",
+                  color: COLOR_DATA,
+                },
+                {
+                  name: "Modern H₀",
+                  description: "Slope from your slider; today's value ≈ 70",
+                  color: COLOR_MODERN,
+                },
+                {
+                  name: "Hubble 1929",
+                  description: "Hubble's own eyeballed fit, H₀ ≈ 500",
+                  color: COLOR_1929,
+                  dashed: true,
+                },
+              ]}
+            />
+            <MosaicPlot
+              spec={spec}
+              enabled={gridReady}
+              ariaLabel="Scatter plot of recession velocity vs distance for Hubble's 24 galaxies, with a model line overlaid"
+              height={PLOT_HEIGHT}
+            />
+          </VStack>
         )
       }
       controls={
@@ -163,8 +229,8 @@ export function HubbleDiagram() {
               Extra-Galactic Nebulae
             </em>
             . PNAS, 15(3), 168–173. doi:10.1073/pnas.15.3.168 (public domain).
-            Transcribed directly from Tables I + II of the original paper
-            into <Code>/public/data/hubble1929.csv</Code>.
+            Transcribed directly from Tables I + II of the original paper into{" "}
+            <Code>/public/data/hubble1929.csv</Code>.
           </Text>
           <Text mt={2}>
             See{" "}

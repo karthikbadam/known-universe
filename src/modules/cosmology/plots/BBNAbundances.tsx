@@ -1,4 +1,4 @@
-import { Box, Code, HStack, Link, Text, VStack } from "@chakra-ui/react";
+import { Code, Link, Text, VStack } from "@chakra-ui/react";
 import * as vg from "@uwdata/vgplot";
 import { useMemo, useState } from "react";
 
@@ -6,6 +6,7 @@ import { Citation } from "../../../components/Citation";
 import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
+import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -180,34 +181,14 @@ export function BBNAbundances() {
         </>
       }
       plot={
-        <VStack align="stretch" gap={6}>
-          <HStack gap={6} flexWrap="wrap" pl={1}>
-            {SPECIES_ORDER.map((species) => (
-              <HStack key={species} gap={2} align="flex-start">
-                <Box
-                  w="10px"
-                  h="10px"
-                  mt="5px"
-                  borderRadius="full"
-                  bg={SPECIES_COLOR[species]}
-                  flexShrink={0}
-                />
-                <VStack align="flex-start" gap={0}>
-                  <Text
-                    fontFamily="mono"
-                    fontSize="xs"
-                    color="fg"
-                    letterSpacing="0.04em"
-                  >
-                    {species}
-                  </Text>
-                  <Text fontFamily="body" fontSize="xs" lineHeight="1.3">
-                    {SPECIES_MEANING[species]}
-                  </Text>
-                </VStack>
-              </HStack>
-            ))}
-          </HStack>
+        <VStack align="stretch" gap={3}>
+          <PlotLegend
+            items={SPECIES_ORDER.map((species) => ({
+              name: species,
+              description: SPECIES_MEANING[species],
+              color: SPECIES_COLOR[species],
+            }))}
+          />
           <MosaicPlot
             spec={spec}
             ariaLabel="BBN light element abundances vs baryon density"

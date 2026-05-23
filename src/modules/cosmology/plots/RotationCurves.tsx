@@ -7,6 +7,7 @@ import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
 import { PlotError } from "../../../components/PlotError";
+import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -18,6 +19,19 @@ import { CHART_HEIGHT } from "../../../theme/chartDimensions";
 import { useChartPalette } from "../../../theme/palette";
 
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
+
+const KIND_ORDER = ["total", "baryonic", "dark halo"] as const;
+const KIND_COLOR: Record<(typeof KIND_ORDER)[number], string> = {
+  total: "#4c8bf5",
+  baryonic: "#e6c84a",
+  "dark halo": "#f06a5d",
+};
+const KIND_MEANING: Record<(typeof KIND_ORDER)[number], string> = {
+  total: "Combined: baryons + NFW halo (quadrature)",
+  baryonic: "Visible mass only (disk + gas + bulge)",
+  "dark halo": "NFW dark-matter halo contribution",
+};
+const COLOR_DATA = "#fff";
 
 interface GalaxyDefaults {
   diskMassSolar: number; scaleKpc: number; rsKpc: number;
@@ -69,6 +83,10 @@ export function RotationCurves() {
       xDomain: [0, defaults.rMaxKpc],
       yDomain: [0, defaults.vMax],
     }),
+    (plot: { attributes: Record<string, unknown> }) => {
+      plot.attributes.colorDomain = [...KIND_ORDER];
+      plot.attributes.colorRange = KIND_ORDER.map((k) => KIND_COLOR[k]);
+    },
   ], [modelLines, defaults, palette]);
 
   return (
@@ -81,7 +99,21 @@ export function RotationCurves() {
         <MathBlock ariaLabel="Newtonian rotation velocity">{`v(r) \\;=\\; \\sqrt{\\frac{G M(<r)}{r}} \\qquad M_{\\rm NFW}(<r) \\;=\\; 4\\pi\\rho_s r_s^3 \\left[\\ln(1+x) - \\frac{x}{1+x}\\right]`}</MathBlock>
         <Text fontFamily="body" fontSize="sm" lineHeight="1.7"><MathInline>{`x = r/r_s`}</MathInline>. The total enclosed mass is the baryonic disk plus an NFW halo. The two sliders pick the halo scale radius and characteristic density; the total curve is the quadrature sum of baryonic and DM contributions.</Text>
       </>}
-      plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel={`Rotation curve of ${galaxy} with model decomposition`} height={PLOT_HEIGHT} />}
+      plot={error !== null ? <PlotError message={error} /> : (
+        <VStack align="stretch" gap={3}>
+          <PlotLegend
+            items={[
+              { name: "V_obs", description: "Observed orbital speeds (SPARC, with 1σ bars)", color: COLOR_DATA },
+              ...KIND_ORDER.map((kind) => ({
+                name: `V_${kind.replace(" halo", "")}`,
+                description: KIND_MEANING[kind],
+                color: KIND_COLOR[kind],
+              })),
+            ]}
+          />
+          <MosaicPlot spec={spec} enabled={ready} ariaLabel={`Rotation curve of ${galaxy} with model decomposition`} height={PLOT_HEIGHT} />
+        </VStack>
+      )}
       controls={
         <VStack align="stretch" gap={5}>
           <Box>

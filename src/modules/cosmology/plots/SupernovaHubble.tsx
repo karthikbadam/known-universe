@@ -7,6 +7,7 @@ import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
 import { PlotError } from "../../../components/PlotError";
+import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -19,6 +20,23 @@ import { useChartPalette } from "../../../theme/palette";
 
 const SAMPLES = 240;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
+
+const COLOR_DATA = "#e6c84a";
+const COLOR_LCDM = "#4c8bf5";
+const COLOR_MATTER = "#f06a5d";
+
+const vgX = vg as unknown as {
+  text: (source: unknown, options: Record<string, unknown>) => unknown;
+};
+
+const SN_LANDMARKS = [
+  {
+    name: "Acceleration begins",
+    note: "Around z ≈ 0.6: at higher z the universe was matter-dominated and decelerating; at lower z, Λ takes over.",
+    x: 0.6,
+    y: 42.6,
+  },
+];
 
 export function SupernovaHubble() {
   const palette = useChartPalette();
@@ -40,17 +58,38 @@ export function SupernovaHubble() {
       .map((row) => ({ z: row.z, mu: row.mu })),
     [params],
   );
+  const matterOnlyCurve = useMemo(
+    () =>
+      muCurve(
+        { H0: params.H0, omegaM: 1, omegaLambda: 0 },
+        { zMin: 0.005, zMax: 2.3, samples: SAMPLES },
+      ).map((row) => ({ z: row.z, mu: row.mu })),
+    [params.H0],
+  );
   const spec = useMemo(
     () => [
       vg.dot(vg.from(TABLES.pantheonPlus.name), {
         x: "z",
         y: "mu",
         r: 2,
-        fill: palette.dataFill,
+        fill: COLOR_DATA,
         fillOpacity: 0.55,
       }),
+      vg.line(matterOnlyCurve, {
+        x: "z", y: "mu",
+        stroke: COLOR_MATTER, strokeWidth: 1.5, strokeDasharray: "4,3",
+      }),
       vg.line(modelCurve, {
-        x: "z", y: "mu", stroke: palette.modelStroke, strokeWidth: 2,
+        x: "z", y: "mu", stroke: COLOR_LCDM, strokeWidth: 2,
+      }),
+      vg.dot(SN_LANDMARKS, {
+        x: "x", y: "y", r: 7,
+        fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5,
+        title: "name",
+      }),
+      vgX.text(SN_LANDMARKS, {
+        x: "x", y: "y", text: "name",
+        dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500,
       }),
       ...vgFrame({
         xLabel: "Redshift z (log) →",
@@ -60,7 +99,7 @@ export function SupernovaHubble() {
         margins: { left: 85 },
       }),
     ],
-    [modelCurve, palette],
+    [modelCurve, matterOnlyCurve, palette],
   );
 
   return (
@@ -99,12 +138,21 @@ export function SupernovaHubble() {
         error !== null ? (
           <PlotError message={error} />
         ) : (
-          <MosaicPlot
-            spec={spec}
-            enabled={ready}
-            ariaLabel="Hubble diagram of Type Ia supernovae"
-            height={PLOT_HEIGHT}
-          />
+          <VStack align="stretch" gap={3}>
+            <PlotLegend
+              items={[
+                { name: "Pantheon+ SNe", description: "1619 Type Ia supernovae, distance vs. redshift", color: COLOR_DATA },
+                { name: "ΛCDM model", description: "Best fit with dark energy (Ω_Λ ≠ 0)", color: COLOR_LCDM },
+                { name: "Matter only", description: "Ω_Λ = 0, Ω_m = 1 — sits below the data at high z", color: COLOR_MATTER, dashed: true },
+              ]}
+            />
+            <MosaicPlot
+              spec={spec}
+              enabled={ready}
+              ariaLabel="Hubble diagram of Type Ia supernovae"
+              height={PLOT_HEIGHT}
+            />
+          </VStack>
         )
       }
       controls={

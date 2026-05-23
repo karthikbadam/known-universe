@@ -1,4 +1,4 @@
-import { Link, Stack, Text } from "@chakra-ui/react";
+import { Link, Stack, Text, VStack } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
@@ -7,6 +7,7 @@ import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
 import { PlotError } from "../../../components/PlotError";
+import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -19,6 +20,18 @@ import { useChartPalette } from "../../../theme/palette";
 
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
+const COLOR_DATA = "#e6c84a";
+const COLOR_MODEL = "#4c8bf5";
+const COLOR_GUIDE = "#f06a5d";
+
+const vgX = vg as unknown as {
+  text: (source: unknown, options: Record<string, unknown>) => unknown;
+};
+
+const BAO_LANDMARKS = [
+  { name: "BAO bump", x: 150, y: 0.0048 },
+];
+
 export function BAOFeature() {
   const palette = useChartPalette();
   const { ready, error } = useDataTable(TABLES.bossXi.name, TABLES.bossXi.url, { skipHeaderLines: TABLES.bossXi.skipHeaderLines });
@@ -29,9 +42,11 @@ export function BAOFeature() {
   );
   const spec = useMemo(() => [
     vg.ruleX(vg.from(TABLES.bossXi.name), { x: "s_mpc", y1: "xi_lower", y2: "xi_upper", stroke: palette.errorStroke, strokeWidth: 1.2, strokeOpacity: 0.7 }),
-    vg.dot(vg.from(TABLES.bossXi.name), { x: "s_mpc", y: "xi", r: 4, fill: palette.dataFill, stroke: palette.dataStroke }),
-    vg.line(modelCurve, { x: "s", y: "xi", stroke: palette.modelStroke, strokeWidth: 2 }),
-    vg.ruleX([{ x: rd }], { x: "x", stroke: palette.highlightStroke, strokeWidth: 1.2, strokeDasharray: "4,3", strokeOpacity: 0.7 }),
+    vg.dot(vg.from(TABLES.bossXi.name), { x: "s_mpc", y: "xi", r: 4, fill: COLOR_DATA, stroke: COLOR_DATA }),
+    vg.line(modelCurve, { x: "s", y: "xi", stroke: COLOR_MODEL, strokeWidth: 2 }),
+    vg.ruleX([{ x: rd }], { x: "x", stroke: COLOR_GUIDE, strokeWidth: 1.2, strokeDasharray: "4,3", strokeOpacity: 0.8 }),
+    vg.dot(BAO_LANDMARKS, { x: "x", y: "y", r: 7, fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5, title: "name" }),
+    vgX.text(BAO_LANDMARKS, { x: "x", y: "y", text: "name", dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500 }),
     vg.ruleY([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
     ...vgFrame({
       xLabel: "Separation s (Mpc) →",
@@ -52,7 +67,18 @@ export function BAOFeature() {
         <MathBlock ariaLabel="comoving distance integral">{`r_d \\;=\\; \\int_{z_{\\rm drag}}^{\\infty} \\frac{c_s(z)}{H(z)} \\, dz`}</MathBlock>
         <Text fontFamily="body" fontSize="sm" lineHeight="1.7"><MathInline>{`c_s`}</MathInline> is the photon-baryon plasma sound speed; <MathInline>{`H(z)`}</MathInline> the Hubble rate. The integral gives the sound horizon at the drag epoch (z ≈ 1060). At late times it appears as the dashed vertical guide moving with the slider.</Text>
       </>}
-      plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel="BAO correlation function with a bump near 150 Mpc" height={PLOT_HEIGHT} />}
+      plot={error !== null ? <PlotError message={error} /> : (
+        <VStack align="stretch" gap={3}>
+          <PlotLegend
+            items={[
+              { name: "BOSS ξ(s)", description: "DR12 galaxy two-point correlation, 1σ error bars", color: COLOR_DATA },
+              { name: "ΛCDM theory", description: "Acoustic-bump model, slider-controlled r_d", color: COLOR_MODEL },
+              { name: "r_d guide", description: "Vertical line tracking the slider's sound-horizon value", color: COLOR_GUIDE, dashed: true },
+            ]}
+          />
+          <MosaicPlot spec={spec} enabled={ready} ariaLabel="BAO correlation function with a bump near 150 Mpc" height={PLOT_HEIGHT} />
+        </VStack>
+      )}
       controls={
         <Stack direction={{ base: "column", md: "row" }} gap={6}>
           <ParamSlider label="Sound horizon r_d" unit="Mpc" description="Where the BAO bump sits. Planck prefers ~147.8 Mpc; varying it slides the dashed guide and theory curve." min={120} max={180} step={0.5} value={rd} onChange={setRd} />
