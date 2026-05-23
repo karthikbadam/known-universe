@@ -52,12 +52,6 @@ const LANDMARKS: ReadonlyArray<Landmark> = [
     latDeg: 48,
     note: "Direction of the Sun's motion through the CMB rest frame (~370 km/s). The dipole signal itself is subtracted from this map.",
   },
-  {
-    name: "N. Galactic Pole",
-    lonDeg: 0,
-    latDeg: 90,
-    note: "Cleanest sky for cosmological measurements; least Galactic contamination.",
-  },
 ];
 
 function mollweideForward(
@@ -108,14 +102,6 @@ export function CMBMap() {
     [],
   );
 
-  const labelsAbove = useMemo(
-    () => projectedLandmarks.filter((lm) => lm.latDeg < 75),
-    [projectedLandmarks],
-  );
-  const labelsBelow = useMemo(
-    () => projectedLandmarks.filter((lm) => lm.latDeg >= 75),
-    [projectedLandmarks],
-  );
 
   const spec = useMemo(
     () => [
@@ -135,20 +121,11 @@ export function CMBMap() {
         strokeWidth: 1.5,
         title: "name",
       }),
-      vgX.text(labelsAbove, {
+      vgX.text(projectedLandmarks, {
         x: "x",
         y: "y",
         text: "name",
         dy: -14,
-        fill: palette.modelStroke,
-        fontSize: 11,
-        fontWeight: 500,
-      }),
-      vgX.text(labelsBelow, {
-        x: "x",
-        y: "y",
-        text: "name",
-        dy: 18,
         fill: palette.modelStroke,
         fontSize: 11,
         fontWeight: 500,
@@ -174,7 +151,7 @@ export function CMBMap() {
         plot.attributes.style = "background: transparent;";
       },
     ],
-    [tempClipUK, projectedLandmarks, labelsAbove, labelsBelow, palette],
+    [tempClipUK, projectedLandmarks, palette],
   );
 
   return (
