@@ -7,7 +7,6 @@ import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
 import { PlotError } from "../../../components/PlotError";
-import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -22,7 +21,12 @@ const MODEL_SAMPLES = 600;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 const COLOR_DATA = "#e6c84a";
-const COLOR_MODEL = "#4c8bf5";
+const COLOR_MODEL = "#ff7a1a";
+
+const CURVE_LABELS = [
+  { x: 1900, y: 800, name: "ΛCDM theory", color: COLOR_MODEL },
+  { x: 220, y: 6200, name: "Planck data", color: COLOR_DATA },
+];
 
 const vgX = vg as unknown as {
   text: (source: unknown, options: Record<string, unknown>) => unknown;
@@ -75,6 +79,10 @@ export function CMBPowerSpectrum() {
         x: "x", y: "y", text: "name",
         dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500,
       }),
+      vgX.text(CURVE_LABELS, {
+        x: "x", y: "y", text: "name", fill: "color",
+        fontSize: 11, fontWeight: 600,
+      }),
       ...vgFrame({
         xLabel: "Multipole ℓ →",
         yLabel: "↑ Dℓ = ℓ(ℓ+1)Cℓ/2π  (μK²)",
@@ -95,17 +103,7 @@ export function CMBPowerSpectrum() {
         <MathBlock ariaLabel="Definition of D_ell">{`D_\\ell \\;=\\; \\frac{\\ell(\\ell+1)}{2\\pi}\\, C_\\ell \\qquad\\text{where}\\qquad \\langle a_{\\ell m} a^{*}_{\\ell' m'}\\rangle = C_\\ell\\, \\delta_{\\ell\\ell'}\\delta_{mm'}`}</MathBlock>
         <Text fontFamily="body" fontSize="sm" lineHeight="1.7"><MathInline>{`C_\\ell`}</MathInline> is the variance of the ℓ-th multipole of the temperature map; multiplying by <MathInline>{`\\ell(\\ell+1)/2\\pi`}</MathInline> gives a curve whose features sit at roughly the same <MathInline>{`D_\\ell`}</MathInline> across many decades of ℓ. The first peak position <MathInline>{`\\ell_1 \\approx 220`}</MathInline> sets the angular size of the sound horizon at last scattering and therefore the geometry of the universe; the peak ratios fix the baryon density.</Text>
       </>}
-      plot={error !== null ? <PlotError message={error} /> : (
-        <VStack align="stretch" gap={3}>
-          <PlotLegend
-            items={[
-              { name: "Planck data", description: "Binned Dℓ with 1σ error bars (TT spectrum)", color: COLOR_DATA },
-              { name: "ΛCDM theory", description: "Parameterized analytical fit; slider-controlled", color: COLOR_MODEL },
-            ]}
-          />
-          <MosaicPlot spec={spec} enabled={ready} ariaLabel="CMB angular power spectrum: binned Dℓ data with error bars and ΛCDM theory line" height={PLOT_HEIGHT} />
-        </VStack>
-      )}
+      plot={error !== null ? <PlotError message={error} /> : <MosaicPlot spec={spec} enabled={ready} ariaLabel="CMB angular power spectrum: binned Dℓ data with error bars and ΛCDM theory line" height={PLOT_HEIGHT} />}
       controls={
         <VStack align="stretch" gap={5}>
           <ParamSlider label="Hubble constant H₀" unit="km/s/Mpc" description="Higher H₀ shrinks the angular-diameter distance, shifting peaks left." min={50} max={90} step={0.1} value={H0} onChange={setH0} />

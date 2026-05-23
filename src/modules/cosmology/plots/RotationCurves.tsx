@@ -22,9 +22,9 @@ const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 const KIND_ORDER = ["total", "baryonic", "dark halo"] as const;
 const KIND_COLOR: Record<(typeof KIND_ORDER)[number], string> = {
-  total: "#4c8bf5",
+  total: "#ff7a1a",
   baryonic: "#e6c84a",
-  "dark halo": "#f06a5d",
+  "dark halo": "#9aa0a6",
 };
 const KIND_MEANING: Record<(typeof KIND_ORDER)[number], string> = {
   total: "Combined: baryons + NFW halo (quadrature)",
@@ -103,11 +103,12 @@ export function RotationCurves() {
         <VStack align="stretch" gap={3}>
           <PlotLegend
             items={[
-              { name: "V_obs", description: "Observed orbital speeds (SPARC, with 1σ bars)", color: COLOR_DATA },
+              { name: "V_obs", description: "Observed orbital speeds (SPARC, with 1σ bars)", color: COLOR_DATA, mark: "dot" },
               ...KIND_ORDER.map((kind) => ({
                 name: `V_${kind.replace(" halo", "")}`,
                 description: KIND_MEANING[kind],
                 color: KIND_COLOR[kind],
+                mark: "line" as const,
               })),
             ]}
           />

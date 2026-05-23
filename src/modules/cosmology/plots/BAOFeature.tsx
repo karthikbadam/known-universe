@@ -21,8 +21,8 @@ import { useChartPalette } from "../../../theme/palette";
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 const COLOR_DATA = "#e6c84a";
-const COLOR_MODEL = "#4c8bf5";
-const COLOR_GUIDE = "#f06a5d";
+const COLOR_MODEL = "#ff7a1a";
+const COLOR_GUIDE = "#9aa0a6";
 
 const vgX = vg as unknown as {
   text: (source: unknown, options: Record<string, unknown>) => unknown;
@@ -71,9 +71,9 @@ export function BAOFeature() {
         <VStack align="stretch" gap={3}>
           <PlotLegend
             items={[
-              { name: "BOSS ξ(s)", description: "DR12 galaxy two-point correlation, 1σ error bars", color: COLOR_DATA },
-              { name: "ΛCDM theory", description: "Acoustic-bump model, slider-controlled r_d", color: COLOR_MODEL },
-              { name: "r_d guide", description: "Vertical line tracking the slider's sound-horizon value", color: COLOR_GUIDE, dashed: true },
+              { name: "BOSS ξ(s)", description: "DR12 galaxy two-point correlation, 1σ error bars", color: COLOR_DATA, mark: "dot" },
+              { name: "ΛCDM theory", description: "Acoustic-bump model, slider-controlled r_d", color: COLOR_MODEL, mark: "line" },
+              { name: "r_d guide", description: "Vertical line tracking the slider's sound-horizon value", color: COLOR_GUIDE, mark: "dashed-line" },
             ]}
           />
           <MosaicPlot spec={spec} enabled={ready} ariaLabel="BAO correlation function with a bump near 150 Mpc" height={PLOT_HEIGHT} />

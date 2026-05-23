@@ -23,8 +23,8 @@ const SAMPLES = 600;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
 const COLOR_STRAIN = "#e6c84a";
-const COLOR_MODEL = "#4c8bf5";
-const COLOR_GUIDE = "#f06a5d";
+const COLOR_MODEL = "#ff7a1a";
+const COLOR_GUIDE = "#9aa0a6";
 
 const vgX = vg as unknown as {
   text: (source: unknown, options: Record<string, unknown>) => unknown;
@@ -129,9 +129,9 @@ export function GW150914() {
           <VStack align="stretch" gap={3}>
             <PlotLegend
               items={[
-                { name: "LIGO strain", description: "Hanford detector, whitened + bandpassed 35–350 Hz", color: COLOR_STRAIN },
-                { name: "Chirp model", description: "Leading-order inspiral waveform; slider-controlled M_c", color: COLOR_MODEL },
-                { name: "Merger time", description: "Vertical guide at t_c where the inspiral terminates", color: COLOR_GUIDE, dashed: true },
+                { name: "LIGO strain", description: "Hanford detector, whitened + bandpassed 35–350 Hz", color: COLOR_STRAIN, mark: "line" },
+                { name: "Chirp model", description: "Leading-order inspiral waveform; slider-controlled M_c", color: COLOR_MODEL, mark: "line" },
+                { name: "Merger time", description: "Vertical guide at t_c where the inspiral terminates", color: COLOR_GUIDE, mark: "dashed-line" },
               ]}
             />
             <MosaicPlot

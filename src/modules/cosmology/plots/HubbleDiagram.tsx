@@ -7,7 +7,6 @@ import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
 import { PlotError } from "../../../components/PlotError";
-import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -27,8 +26,8 @@ const PLOT_HEIGHT = CHART_HEIGHT.standard;
 const HUBBLE_1929_H0 = 500;
 
 const COLOR_DATA = "#e6c84a";
-const COLOR_MODERN = "#4c8bf5";
-const COLOR_1929 = "#f06a5d";
+const COLOR_MODERN = "#ff7a1a";
+const COLOR_1929 = "#9aa0a6";
 
 const vgX = vg as unknown as {
   text: (source: unknown, options: Record<string, unknown>) => unknown;
@@ -42,6 +41,8 @@ const LANDMARKS = [
     y: 1090,
   },
 ];
+
+const CURVE_LABELS_1929 = [{ x: 2.05, y: 1025, name: "Hubble 1929" }];
 
 export function HubbleDiagram() {
   const palette = useChartPalette();
@@ -97,6 +98,24 @@ export function HubbleDiagram() {
         stroke: COLOR_MODERN,
         strokeWidth: 2,
       }),
+      vgX.text([{ x: 2.05, y: h0Value * 2.05 + 50, name: `Your H₀` }], {
+        x: "x",
+        y: "y",
+        text: "name",
+        fill: COLOR_MODERN,
+        fontSize: 11,
+        fontWeight: 600,
+        textAnchor: "end",
+      }),
+      vgX.text(CURVE_LABELS_1929, {
+        x: "x",
+        y: "y",
+        text: "name",
+        fill: COLOR_1929,
+        fontSize: 11,
+        fontWeight: 600,
+        textAnchor: "end",
+      }),
       vg.dot(LANDMARKS, {
         x: "x",
         y: "y",
@@ -125,7 +144,7 @@ export function HubbleDiagram() {
         yDomain: [-400, 1300],
       }),
     ],
-    [h0, palette],
+    [h0, h0Value, palette],
   );
 
   return (
@@ -162,34 +181,12 @@ export function HubbleDiagram() {
         error !== null ? (
           <PlotError message={error} />
         ) : (
-          <VStack align="stretch" gap={3}>
-            <PlotLegend
-              items={[
-                {
-                  name: "1929 galaxies",
-                  description: "Hubble's 24 nebulae, distance vs. velocity",
-                  color: COLOR_DATA,
-                },
-                {
-                  name: "Modern H₀",
-                  description: "Slope from your slider; today's value ≈ 70",
-                  color: COLOR_MODERN,
-                },
-                {
-                  name: "Hubble 1929",
-                  description: "Hubble's own eyeballed fit, H₀ ≈ 500",
-                  color: COLOR_1929,
-                  dashed: true,
-                },
-              ]}
-            />
-            <MosaicPlot
-              spec={spec}
-              enabled={gridReady}
-              ariaLabel="Scatter plot of recession velocity vs distance for Hubble's 24 galaxies, with a model line overlaid"
-              height={PLOT_HEIGHT}
-            />
-          </VStack>
+          <MosaicPlot
+            spec={spec}
+            enabled={gridReady}
+            ariaLabel="Scatter plot of recession velocity vs distance for Hubble's 24 galaxies, with a model line overlaid"
+            height={PLOT_HEIGHT}
+          />
         )
       }
       controls={

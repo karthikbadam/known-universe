@@ -187,6 +187,7 @@ export function BBNAbundances() {
               name: species,
               description: SPECIES_MEANING[species],
               color: SPECIES_COLOR[species],
+              mark: "line" as const,
             }))}
           />
           <MosaicPlot
