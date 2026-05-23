@@ -8,6 +8,14 @@ interface Props {
   ariaLabel: string;
   /** Intrinsic plot height in pixels. Also seeds the responsive minH so SSR/first paint match. */
   height: number;
+  /**
+   * Optional CSS aspect ratio (width / height). When set, the container's
+   * height is derived from its observed width via CSS `aspect-ratio`, so
+   * the plot stays correctly proportioned at any viewport size. The `height`
+   * prop is then only used as a first-paint fallback before ResizeObserver
+   * reports a real height.
+   */
+  aspectRatio?: number;
 }
 
 interface ChartDimensions {
@@ -22,7 +30,13 @@ interface ChartDimensions {
  * while the ResizeObserver feeds the actual measured width to vgplot so the
  * SVG fills the container without stretching past the declared aspect.
  */
-export function MosaicPlot({ spec, enabled = true, ariaLabel, height }: Props) {
+export function MosaicPlot({
+  spec,
+  enabled = true,
+  ariaLabel,
+  height,
+  aspectRatio,
+}: Props) {
   const hostRef = useRef<HTMLDivElement | null>(null);
 
   const [dimensions, setDimensions] = useState<ChartDimensions>({
@@ -37,15 +51,18 @@ export function MosaicPlot({ spec, enabled = true, ariaLabel, height }: Props) {
     const resizeObserver = new ResizeObserver((entries) => {
       const entry = entries[0];
       if (!entry) return;
-      const { width } = entry.contentRect;
+      const { width, height: observedHeight } = entry.contentRect;
+      const nextHeight = aspectRatio ? observedHeight : height;
       setDimensions((prev) =>
-        prev.width === width ? prev : { width, height },
+        prev.width === width && prev.height === nextHeight
+          ? prev
+          : { width, height: nextHeight },
       );
     });
 
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
-  }, [height]);
+  }, [height, aspectRatio]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -66,7 +83,9 @@ export function MosaicPlot({ spec, enabled = true, ariaLabel, height }: Props) {
       ref={hostRef}
       w="100%"
       mx="auto"
-      h={`${height}px`}
+      {...(aspectRatio
+        ? { style: { aspectRatio: `${aspectRatio} / 1` } }
+        : { h: `${height}px` })}
       aria-label={ariaLabel}
       role="img"
     />

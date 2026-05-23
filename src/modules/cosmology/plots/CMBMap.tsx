@@ -136,7 +136,7 @@ export function CMBMap() {
         fontWeight: 500,
       }),
       vg.xDomain([-2.05, 2.05]),
-      vg.yDomain([-1.05, 1.05]),
+      vg.yDomain([-1.15, 1.15]),
       vg.marginLeft(0),
       vg.marginRight(0),
       vg.marginTop(0),
@@ -195,6 +195,7 @@ export function CMBMap() {
             enabled={ready}
             ariaLabel="Planck SMICA CMB temperature anomaly, Mollweide projection"
             height={PLOT_HEIGHT}
+            aspectRatio={2}
           />
         )
       }
