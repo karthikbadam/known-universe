@@ -111,27 +111,50 @@ export function GW150914() {
       question="Can two black holes nine billion light years away ring spacetime loudly enough to hear?"
       summary={
         <Text>
-          On 14 September 2015 LIGO (the Laser Interferometer Gravitational-Wave
-          Observatory) detected a tenth-of-a-second gravitational-wave (GW)
-          chirp, strain rising from ~10⁻²² to 10⁻²¹ as the frequency swept from
-          35 to 250 Hz before flat-lining at merger. Slide M_c to fit the model
-          line against the noisy strain; the published chirp mass is ≈ 30 M_☉,
-          implying two 30-M_☉ BHs spiralling together.
+          General relativity predicts that any accelerating mass radiates
+          gravitational waves — ripples in the curvature of spacetime
+          itself, traveling outward at the speed of light and stretching
+          and squeezing space as they pass. The waves carry energy away
+          from their source, but the strain (the fractional length change
+          they induce in a detector) falls off with distance. For a pair
+          of black holes spiraling together billions of light-years away,
+          the predicted strain at Earth is on the order of 10⁻²¹: a
+          fractional length change of one part in a thousand billion
+          billion. On 14 September 2015, LIGO (the Laser Interferometer
+          Gravitational-Wave Observatory) made the first direct
+          measurement of such a wave — a tenth-of-a-second chirp whose
+          frequency swept from 35 Hz to 250 Hz before flat-lining at the
+          moment of merger.
         </Text>
       }
       math={
         <>
           <MathBlock ariaLabel="chirp frequency evolution">{`f_{\\rm gw}(t) \\;=\\; \\frac{1}{\\pi}\\left(\\frac{5}{256}\\right)^{3/8}\\left(\\frac{G M_c}{c^3}\\right)^{-5/8} (t_c - t)^{-3/8}`}</MathBlock>
-          <Text
-            fontFamily="body"
-            fontSize="sm"
-            color="fg.muted"
-            lineHeight="1.7"
-          >
-            <MathInline>{`M_c = (m_1 m_2)^{3/5}/(m_1+m_2)^{1/5}`}</MathInline>{" "}
-            is the "chirp mass", the only combination of the binary masses the
-            inspiral waveform depends on at leading PN order. Fitting it
-            measures the source mass without ever resolving the two components.
+          <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
+            <MathInline>{`f_{\\rm gw}(t)`}</MathInline> is the
+            gravitational-wave frequency in Hz as a function of time before
+            the merger.{" "}
+            <MathInline>{`t_c`}</MathInline> is the coalescence time
+            (when the inspiral terminates and the two black holes merge);{" "}
+            <MathInline>{`G`}</MathInline> is the gravitational constant
+            and <MathInline>{`c`}</MathInline> is the speed of light. The
+            mass combination{" "}
+            <MathInline>{`M_c = (m_1 m_2)^{3/5} / (m_1 + m_2)^{1/5}`}</MathInline>{" "}
+            is called the chirp mass, and is the only combination of the
+            two black-hole masses{" "}
+            <MathInline>{`m_1, m_2`}</MathInline> that the leading-order
+            inspiral waveform depends on. That means fitting the chirp
+            measures the source mass without ever needing to resolve the
+            two components individually. On the plot, the x-axis is time
+            in seconds and the y-axis is strain (the fractional length
+            change at the detector) scaled by{" "}
+            <MathInline>{`10^{21}`}</MathInline> for legibility. The thin
+            orange trace is the actual LIGO Hanford strain (whitened and
+            band-passed to 35–350 Hz), while the heavier orange line is
+            the model inspiral waveform at the slider's current chirp
+            mass. The dashed grey vertical guide marks the coalescence
+            time <MathInline>{`t_c`}</MathInline> where the analytical
+            inspiral formula breaks down.
           </Text>
         </>
       }
@@ -139,22 +162,22 @@ export function GW150914() {
         error !== null ? (
           <PlotError message={error} />
         ) : (
-          <VStack align="stretch" gap={3}>
-            <PlotLegend
-              items={[
-                { name: "LIGO strain", description: "Hanford detector, whitened + bandpassed 35–350 Hz", color: palette.modelStroke, mark: "line" },
-                { name: "Chirp model", description: "Leading-order inspiral waveform; slider-controlled M_c", color: COLOR_MODEL, mark: "line" },
-                { name: "Merger time", description: "Vertical guide at t_c where the inspiral terminates", color: COLOR_GUIDE, mark: "dashed-line" },
-              ]}
-            />
-            <MosaicPlot
-              spec={spec}
-              enabled={ready}
-              ariaLabel="GW150914 strain time series with chirp model overlay"
-              height={PLOT_HEIGHT}
-            />
-          </VStack>
+          <MosaicPlot
+            spec={spec}
+            enabled={ready}
+            ariaLabel="GW150914 strain time series with chirp model overlay"
+            height={PLOT_HEIGHT}
+          />
         )
+      }
+      legend={
+        <PlotLegend
+          items={[
+            { name: "LIGO strain", description: "Hanford detector, whitened + bandpassed 35–350 Hz", color: palette.modelStroke, mark: "line" },
+            { name: "Chirp model", description: "Leading-order inspiral waveform; slider-controlled M_c", color: COLOR_MODEL, mark: "line" },
+            { name: "Merger time", description: "Vertical guide at t_c where the inspiral terminates", color: COLOR_GUIDE, mark: "dashed-line" },
+          ]}
+        />
       }
       controls={
         <VStack align="stretch" gap={5}>
@@ -202,16 +225,36 @@ export function GW150914() {
       rules={
         <RulesInOut
           rulesIn={[
-            "Two compact masses (≈ 30 M_☉ each) inspiralling and merging at the speed of light.",
-            "Gravitational waves carry energy, strain falls as 1/D, observed at D ≈ 410 Mpc.",
-            "General relativity in the strong, dynamical regime.",
+            "Two compact masses of roughly 30 solar masses each, inspiraling and merging at speeds approaching the speed of light.",
+            "Gravitational waves carry energy and have strain that falls as 1/distance; this source is at roughly 410 megaparsecs (~1.3 billion light-years).",
+            "General relativity in the strong-field, dynamical regime — the same theory that fits the EHT shadow now fits a relativistic two-body merger.",
           ]}
           rulesOut={[
-            "Newtonian gravity (cannot produce GW emission).",
-            "Sources at galactic distances (nearby strain would be much larger).",
-            "Non-BH compact objects of this mass (no neutron stars > 3 M_☉).",
+            "Newtonian gravity, which has no mechanism for producing gravitational radiation.",
+            "Galactic-distance sources, which would produce strains many orders of magnitude larger.",
+            "Non-black-hole compact objects at this mass, since stable neutron stars are limited to roughly 2–3 solar masses.",
           ]}
         />
+      }
+      takeaway={
+        <Text>
+          Fitting the inspiral waveform to the strain data measures{" "}
+          <MathInline>{`M_c \\approx 30.6`}</MathInline> solar masses. The
+          near-equal masses needed to produce that chirp mass place each
+          component at roughly 30 solar masses, consistent with stellar-
+          origin black holes. The strain amplitude pins the distance to
+          the source at roughly 410 megaparsecs (about 1.3 billion
+          light-years), which means the chirp now visible at Earth was
+          radiated when the universe was about 10 billion years old. Since
+          GW150914, the LIGO–Virgo–KAGRA network has detected more than
+          90 compact binary mergers across three observing runs, and the
+          resulting population — black hole and neutron star binaries
+          spanning two orders of magnitude in mass — has opened a new
+          observational channel into stellar end-states and a new
+          standard-siren method for measuring{" "}
+          <MathInline>{`H_0`}</MathInline> independent of the
+          electromagnetic distance ladder.
+        </Text>
       }
       citation={
         <Citation title="Data source & provenance">
