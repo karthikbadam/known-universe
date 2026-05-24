@@ -143,37 +143,37 @@ export function HubbleDiagram() {
         error !== null ? (
           <PlotError message={error} />
         ) : (
-          <VStack align="stretch" gap={3}>
-            <PlotLegend
-              items={[
-                {
-                  name: "1929 galaxies",
-                  description: "Hubble's 24 nebulae, distance vs. velocity",
-                  color: palette.modelStroke,
-                  mark: "dot",
-                },
-                {
-                  name: "Modern H₀",
-                  description: "Slope from your slider; today's value ≈ 70",
-                  color: COLOR_MODERN,
-                  mark: "line",
-                },
-                {
-                  name: "Hubble 1929",
-                  description: "Hubble's own eyeballed fit, H₀ ≈ 500",
-                  color: COLOR_1929,
-                  mark: "dashed-line",
-                },
-              ]}
-            />
-            <MosaicPlot
-              spec={spec}
-              enabled={gridReady}
-              ariaLabel="Scatter plot of recession velocity vs distance for Hubble's 24 galaxies, with a model line overlaid"
-              height={PLOT_HEIGHT}
-            />
-          </VStack>
+          <MosaicPlot
+            spec={spec}
+            enabled={gridReady}
+            ariaLabel="Scatter plot of recession velocity vs distance for Hubble's 24 galaxies, with a model line overlaid"
+            height={PLOT_HEIGHT}
+          />
         )
+      }
+      legend={
+        <PlotLegend
+          items={[
+            {
+              name: "1929 galaxies",
+              description: "Hubble's 24 nebulae, distance vs. velocity",
+              color: palette.modelStroke,
+              mark: "dot",
+            },
+            {
+              name: "Modern H₀",
+              description: "Slope from your slider; today's value ≈ 70",
+              color: COLOR_MODERN,
+              mark: "line",
+            },
+            {
+              name: "Hubble 1929",
+              description: "Hubble's own eyeballed fit, H₀ ≈ 500",
+              color: COLOR_1929,
+              mark: "dashed-line",
+            },
+          ]}
+        />
       }
       controls={
         <VStack align="stretch" gap={6}>

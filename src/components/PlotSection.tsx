@@ -17,6 +17,7 @@ interface Props {
   math: ReactNode;
   plot: ReactNode;
   controls: ReactNode;
+  legend?: ReactNode;
   rules: ReactNode;
   takeaway?: ReactNode;
   citation: ReactNode;
@@ -30,6 +31,7 @@ export function PlotSection({
   math,
   plot,
   controls,
+  legend,
   rules,
   takeaway,
   citation,
@@ -37,12 +39,12 @@ export function PlotSection({
   return (
     <Box
       as="section"
-      py={{ base: 16, md: 24 }}
+      py={12}
       px={{ base: 6, md: 8 }}
       borderTopWidth="1px"
       borderColor="border"
     >
-      <VStack align="stretch" gap={8} maxW="4xl" mx="auto">
+      <VStack align="stretch" gap={4} maxW="4xl" mx="auto">
         <HStack align="baseline" gap={4} flexWrap="wrap">
           <Text
             color="fg.subtle"
@@ -78,7 +80,7 @@ export function PlotSection({
           {summary}
         </Box>
         <Box>{math}</Box>
-        {controls ? (
+        {controls || legend ? (
           <Stack
             direction={{ base: "column", md: "row" }}
             align="flex-start"
@@ -94,6 +96,9 @@ export function PlotSection({
             >
               <VStack align="stretch" gap={4}>
                 {controls}
+                {legend ? (
+                  <Box mt={controls ? 6 : 0}>{legend}</Box>
+                ) : null}
               </VStack>
             </Box>
           </Stack>

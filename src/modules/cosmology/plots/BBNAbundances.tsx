@@ -184,21 +184,21 @@ export function BBNAbundances() {
         </>
       }
       plot={
-        <VStack align="stretch" gap={3}>
-          <PlotLegend
-            items={SPECIES_ORDER.map((species) => ({
-              name: species,
-              description: SPECIES_MEANING[species],
-              color: SPECIES_COLOR[species],
-              mark: "line" as const,
-            }))}
-          />
-          <MosaicPlot
-            spec={spec}
-            ariaLabel="BBN light element abundances vs baryon density"
-            height={PLOT_HEIGHT}
-          />
-        </VStack>
+        <MosaicPlot
+          spec={spec}
+          ariaLabel="BBN light element abundances vs baryon density"
+          height={PLOT_HEIGHT}
+        />
+      }
+      legend={
+        <PlotLegend
+          items={SPECIES_ORDER.map((species) => ({
+            name: species,
+            description: SPECIES_MEANING[species],
+            color: SPECIES_COLOR[species],
+            mark: "line" as const,
+          }))}
+        />
       }
       controls={
         <VStack align="stretch" gap={5}>
