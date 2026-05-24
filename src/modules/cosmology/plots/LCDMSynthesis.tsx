@@ -19,35 +19,64 @@ const THUMB_HEIGHT = CHART_HEIGHT.thumb;
 
 interface ParamDescriptor {
   name: string;
+  meaning: string;
   controls: string;
 }
 
 const PARAM_DESCRIPTIONS: ReadonlyArray<ParamDescriptor> = [
   {
     name: "Ω_b h²",
-    controls: "BBN curves; CMB peak heights; baryon ruler in BAO.",
+    meaning: "physical density of baryons (ordinary matter)",
+    controls: "primordial light-element abundances (BBN); CMB acoustic peak heights; BAO ruler length.",
   },
   {
     name: "Ω_c h²",
-    controls: "Sound horizon size; CMB peak positions; rotation-curve halos.",
+    meaning: "physical density of cold dark matter",
+    controls: "early-universe structure growth; CMB peak positions and envelope; galactic rotation curves.",
   },
   {
     name: "H₀",
-    controls: "Hubble line slope; SN distance ladder; CMB peak ℓ_1 placement.",
+    meaning: "present-day Hubble expansion rate (km/s/Mpc)",
+    controls: "Hubble line slope; supernova distance ladder; angular position of the first CMB peak.",
   },
   {
     name: "τ",
-    controls:
-      "Optical depth to reionization; CMB low-ℓ polarization amplitude.",
+    meaning: "optical depth from us to the surface of last scattering",
+    controls: "low-multipole CMB polarization amplitude; encodes when the first stars reionized the universe.",
   },
   {
     name: "ln(10¹⁰ A_s)",
-    controls: "Overall amplitude of primordial perturbations.",
+    meaning: "amplitude of the primordial power spectrum",
+    controls: "overall normalization of the CMB peak heights and the matter power spectrum.",
   },
   {
     name: "n_s",
-    controls:
-      "Spectral tilt; CMB high-ℓ tail; tilts the matter power spectrum.",
+    meaning: "tilt of the primordial power spectrum",
+    controls: "balance between large-scale and small-scale power; tilts the CMB high-ℓ tail and the matter spectrum.",
+  },
+];
+
+interface WhatIf {
+  if: string;
+  then: string;
+}
+
+const WHAT_IFS: ReadonlyArray<WhatIf> = [
+  {
+    if: "Ω_b h² were doubled to ~0.044",
+    then: "BBN would predict less primordial deuterium and more helium, breaking the agreement with quasar-absorption D/H measurements; the CMB second acoustic peak would rise relative to the first; the BAO ruler would shift.",
+  },
+  {
+    if: "Ω_c h² were zero (no cold dark matter)",
+    then: "Early-universe density perturbations would not have grown into structure by recombination; CMB peaks would lose their characteristic envelope shape; galaxy rotation curves would fall as 1/√r beyond the visible disk.",
+  },
+  {
+    if: "n_s = 1 exactly (perfectly scale-invariant)",
+    then: "The CMB high-multipole tail would have a flatter slope than observed; Planck has measured n_s ≈ 0.965, which differs from 1 at over 8σ and is a key prediction of inflationary models.",
+  },
+  {
+    if: "τ were much higher (~0.1 vs ~0.054)",
+    then: "Reionization would have begun earlier in cosmic history; the CMB large-scale E-mode polarization would have a higher amplitude, which constrains when the first stars and galaxies formed.",
   },
 ];
 
@@ -156,13 +185,24 @@ export function LCDMSynthesis() {
             color="fg.muted"
             lineHeight="1.75"
           >
-            Every observation above, the Hubble line, the BBN abundances, the
-            CMB peaks, the supernova distances, the BAO ruler, the rotation
-            curves, sits in the same parameter space, the six-parameter
-            ΛCDM (Lambda-Cold Dark Matter) model. Drag any of the sliders
-            below and the CMB power spectrum and supernova Hubble line shift
-            to match. The other plots scale the same way (re-mount this page
-            to compose them).
+            Every observation in the previous nine sections — Hubble's
+            expansion of nearby galaxies, the primordial element abundances
+            from Big Bang Nucleosynthesis, the acoustic peaks in the CMB
+            temperature spectrum, the brightness of distant Type Ia
+            supernovae, the BAO bump in galaxy clustering, the flat
+            rotation curves of disk galaxies — fits within a single
+            framework called ΛCDM, the Lambda-Cold-Dark-Matter model.
+            ΛCDM uses general relativity to describe the expansion and
+            geometry of the universe, populates it with three ingredients
+            (ordinary matter, cold dark matter, and a cosmological-constant
+            dark energy), and lets a primordial inflation epoch supply the
+            initial density fluctuations. The whole model is parameterized
+            by six numbers: Ω_b h² (baryon density), Ω_c h² (cold-dark-
+            matter density), H₀ (Hubble rate), τ (reionization optical
+            depth), A_s (initial perturbation amplitude), and n_s (initial
+            perturbation tilt). Adjusting the six sliders below shifts the
+            CMB power spectrum and the supernova distance-redshift curve
+            in real time; the other plots scale the same way.
           </Text>
         </VStack>
 
@@ -225,15 +265,21 @@ export function LCDMSynthesis() {
         <Text
           fontFamily="body"
           fontSize="md"
-          color="fg.muted"
           lineHeight="1.7"
           mb={6}
         >
-          Plus the derived{" "}
-          <MathInline>{`\\Omega_m = (\\Omega_b h^2 + \\Omega_c h^2)/h^2`}</MathInline>
-          , currently {omegaM.toFixed(3)}, and{" "}
-          <MathInline>{`\\Omega_\\Lambda = 1 - \\Omega_m`}</MathInline> for a
-          flat universe.
+          The six fitted parameters above are the inputs. Every other
+          cosmological quantity is derived from them by the equations of
+          ΛCDM. The total matter density{" "}
+          <MathInline>{`\\Omega_m = (\\Omega_b h^2 + \\Omega_c h^2) / h^2`}</MathInline>{" "}
+          (with <MathInline>{`h = H_0/100`}</MathInline>) is currently{" "}
+          {omegaM.toFixed(3)} at the slider values. Assuming spatial
+          flatness (consistent with the CMB to the percent level), the
+          dark-energy density is{" "}
+          <MathInline>{`\\Omega_\\Lambda = 1 - \\Omega_m`}</MathInline>.
+          The age of the universe, the comoving sound horizon, the
+          luminosity distance to any redshift, the matter power spectrum
+          at any scale — all follow.
         </Text>
 
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
@@ -305,33 +351,117 @@ export function LCDMSynthesis() {
             letterSpacing="0.04em"
             textTransform="uppercase"
           >
-            How each parameter touches the other plots
+            What each parameter means, and where it appears
           </Heading>
-          <VStack align="stretch" gap={3}>
+          <VStack align="stretch" gap={4}>
             {PARAM_DESCRIPTIONS.map((p) => (
-              <Text
-                key={p.name}
-                fontFamily="body"
-                fontSize="md"
-                color="fg"
-                lineHeight="1.6"
-              >
-                <Code
-                  bg="bg.canvas"
-                  color="accent"
-                  fontFamily="mono"
-                  px={1.5}
-                  py={0.5}
-                >
-                  {p.name}
-                </Code>
-                {", "}
-                <Text as="span" color="fg.muted">
-                  {p.controls}
+              <Box key={p.name}>
+                <Text fontFamily="body" fontSize="md" lineHeight="1.6">
+                  <Code
+                    bg="bg.canvas"
+                    color="accent"
+                    fontFamily="mono"
+                    px={1.5}
+                    py={0.5}
+                  >
+                    {p.name}
+                  </Code>
+                  {" — "}
+                  {p.meaning}.
                 </Text>
-              </Text>
+                <Text
+                  fontFamily="body"
+                  fontSize="sm"
+                  color="fg.muted"
+                  lineHeight="1.6"
+                  mt={1}
+                  ml={4}
+                >
+                  Controls: {p.controls}
+                </Text>
+              </Box>
             ))}
           </VStack>
+        </Box>
+
+        <Box mt={10} pt={6} borderTopWidth="1px" borderColor="border">
+          <Heading
+            as="h3"
+            fontFamily="heading"
+            fontSize="sm"
+            fontWeight="medium"
+            mb={4}
+            color="fg"
+            letterSpacing="0.04em"
+            textTransform="uppercase"
+          >
+            Counterfactuals — what would the universe look like if a parameter were different?
+          </Heading>
+          <VStack align="stretch" gap={4}>
+            {WHAT_IFS.map((wi) => (
+              <Box key={wi.if}>
+                <Text fontFamily="body" fontSize="md" lineHeight="1.6">
+                  <Text as="span" color="fg" fontWeight="medium">
+                    If {wi.if}:
+                  </Text>
+                </Text>
+                <Text
+                  fontFamily="body"
+                  fontSize="sm"
+                  color="fg.muted"
+                  lineHeight="1.6"
+                  mt={1}
+                  ml={4}
+                >
+                  {wi.then}
+                </Text>
+              </Box>
+            ))}
+          </VStack>
+        </Box>
+
+        <Box mt={10} pt={6} borderTopWidth="1px" borderColor="border">
+          <Heading
+            as="h3"
+            fontFamily="heading"
+            fontSize="sm"
+            fontWeight="medium"
+            mb={4}
+            color="fg"
+            letterSpacing="0.04em"
+            textTransform="uppercase"
+          >
+            Takeaway
+          </Heading>
+          <Text fontFamily="body" fontSize="md" lineHeight="1.75">
+            ΛCDM fits the heterogeneous data shown across this module —
+            cosmic expansion, primordial element abundances, the CMB
+            temperature map and its power spectrum, supernova distances,
+            the BAO ruler, galaxy rotation — using six free parameters
+            and the standard physics of general relativity, cold dark
+            matter, and a cosmological constant. The model is the working
+            baseline that every new cosmological measurement is compared
+            against. The joint fit to Planck CMB + BAO + Type Ia supernova
+            data converges on{" "}
+            <MathInline>{`\\Omega_b h^2 \\approx 0.022`}</MathInline>,{" "}
+            <MathInline>{`\\Omega_c h^2 \\approx 0.12`}</MathInline>,{" "}
+            <MathInline>{`H_0 \\approx 67`}</MathInline> km/s/Mpc,{" "}
+            <MathInline>{`\\tau \\approx 0.054`}</MathInline>,{" "}
+            <MathInline>{`A_s \\approx 2.1 \\times 10^{-9}`}</MathInline>,
+            and <MathInline>{`n_s \\approx 0.965`}</MathInline>. From those
+            six numbers and the equations of the model, the entire 13.8-
+            billion-year history of the observable universe is recovered:
+            an inflationary epoch supplying near-scale-invariant initial
+            fluctuations, three minutes of nucleosynthesis producing
+            primordial hydrogen and helium, 380,000 years of an opaque
+            photon-baryon plasma, recombination and the release of the
+            CMB, the slow gravitational growth of structure across
+            billions of years, and a late-time epoch of accelerated
+            expansion driven by the cosmological constant. The agreement
+            of a six-parameter description with this much heterogeneous
+            data is the strongest empirical test of any cosmological
+            model.
+          </Text>
         </Box>
       </Box>
     </Box>
