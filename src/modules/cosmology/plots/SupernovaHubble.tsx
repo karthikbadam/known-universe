@@ -83,31 +83,54 @@ export function SupernovaHubble() {
     <PlotSection
       index={5}
       title="Pantheon+, supernovae prefer a flat, accelerating universe"
-      question="Why do high-z Type Ia supernovae sit above the matter-only line?"
+      question="Why do distant Type Ia supernovae appear too faint for a decelerating universe?"
       summary={
         <Text>
-          Each dot is one Type Ia supernova: a stellar furnace fusion-bomb of
-          calibrated luminosity. Plotted against redshift, their distance moduli
-          trace the integrated expansion history. A matter-only universe
-          predicts the dim straight asymptote at high z; the data sits above it.
-          The best fit needs a non-zero{" "}
-          <MathInline>{`\\Omega_\\Lambda`}</MathInline>, the dark-energy
-          discovery of 1998.
+          Type Ia supernovae are the explosions of white dwarf stars that
+          have accreted matter from a companion and crossed a critical mass
+          threshold. Because the threshold is universal, every Type Ia
+          supernova releases nearly the same amount of light at peak — they
+          are standard candles, objects of known intrinsic brightness. By
+          comparing how bright they appear to how bright they actually are,
+          you measure how far away they are, and plotting distance against
+          redshift traces the expansion history of the universe. In a
+          universe whose expansion is decelerating under the gravity of
+          matter alone, supernovae at a given redshift should sit at a
+          specific brightness. In the late 1990s the most distant Type Ia
+          supernovae were measured to be fainter than that — meaning farther
+          away than gravity-only physics predicts.
         </Text>
       }
       math={
         <>
           <MathBlock ariaLabel="distance modulus and luminosity distance">{`\\mu(z) \\;=\\; 5\\log_{10}\\!\\left(\\frac{d_L(z)}{10\\text{ pc}}\\right) \\qquad d_L(z) \\;=\\; (1+z)\\,\\frac{c}{H_0}\\int_0^z \\frac{dz'}{E(z')}`}</MathBlock>
-          <Text
-            fontFamily="body"
-            fontSize="sm"
-            color="fg.muted"
-            lineHeight="1.7"
-          >
-            <MathInline>{`E(z) = \\sqrt{\\Omega_m(1+z)^3 + \\Omega_\\Lambda + \\Omega_k(1+z)^2}`}</MathInline>
-            . We integrate this with Simpson's rule (80 steps) in{" "}
-            <Code>src/physics/luminosity.ts</Code>; curvature is folded in
-            exactly via the sinh/sin closing.
+          <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
+            <MathInline>{`\\mu(z)`}</MathInline> is the distance modulus: the
+            difference between a supernova's apparent magnitude and its
+            absolute magnitude, which directly encodes the logarithm of its
+            luminosity distance{" "}
+            <MathInline>{`d_L(z)`}</MathInline> in units of 10 parsecs.{" "}
+            <MathInline>{`z`}</MathInline> is the cosmological redshift, a
+            dimensionless measure of how much the universe has expanded
+            between emission and observation.{" "}
+            <MathInline>{`c`}</MathInline> is the speed of light and{" "}
+            <MathInline>{`H_0`}</MathInline> is the Hubble constant (the
+            present-day expansion rate). The integral{" "}
+            <MathInline>{`E(z) = \\sqrt{\\Omega_m(1+z)^3 + \\Omega_\\Lambda + \\Omega_k(1+z)^2}`}</MathInline>{" "}
+            is the normalized Hubble parameter as a function of redshift,
+            with <MathInline>{`\\Omega_m`}</MathInline> the matter density,{" "}
+            <MathInline>{`\\Omega_\\Lambda`}</MathInline> the dark-energy
+            (cosmological constant) density, and{" "}
+            <MathInline>{`\\Omega_k`}</MathInline> the curvature contribution,
+            all expressed as fractions of the critical density. On the plot,
+            the x-axis is redshift (log scale) and the y-axis is distance
+            modulus in magnitudes. Each small dot is one Type Ia supernova
+            from the Pantheon+ catalog. The solid orange line is the
+            best-fit ΛCDM model at the sliders' current values; the dashed
+            grey line is the counterfactual matter-only universe (
+            <MathInline>{`\\Omega_m = 1, \\Omega_\\Lambda = 0`}</MathInline>)
+            at the same <MathInline>{`H_0`}</MathInline>, which sits below
+            the data at high redshift.
           </Text>
         </>
       }
@@ -115,22 +138,22 @@ export function SupernovaHubble() {
         error !== null ? (
           <PlotError message={error} />
         ) : (
-          <VStack align="stretch" gap={3}>
-            <PlotLegend
-              items={[
-                { name: "Pantheon+ SNe", description: "1619 Type Ia supernovae, distance vs. redshift", color: palette.modelStroke, mark: "dot" },
-                { name: "ΛCDM model", description: "Best fit with dark energy (Ω_Λ ≠ 0)", color: COLOR_LCDM, mark: "line" },
-                { name: "Matter only", description: "Ω_Λ = 0, Ω_m = 1 — sits below the data at high z", color: COLOR_MATTER, mark: "dashed-line" },
-              ]}
-            />
-            <MosaicPlot
-              spec={spec}
-              enabled={ready}
-              ariaLabel="Hubble diagram of Type Ia supernovae"
-              height={PLOT_HEIGHT}
-            />
-          </VStack>
+          <MosaicPlot
+            spec={spec}
+            enabled={ready}
+            ariaLabel="Hubble diagram of Type Ia supernovae"
+            height={PLOT_HEIGHT}
+          />
         )
+      }
+      legend={
+        <PlotLegend
+          items={[
+            { name: "Pantheon+ SNe", description: "1619 Type Ia supernovae, distance vs. redshift", color: palette.modelStroke, mark: "dot" },
+            { name: "ΛCDM model", description: "Best fit with dark energy (Ω_Λ ≠ 0)", color: COLOR_LCDM, mark: "line" },
+            { name: "Matter only", description: "Ω_Λ = 0, Ω_m = 1 — sits below the data at high z", color: COLOR_MATTER, mark: "dashed-line" },
+          ]}
+        />
       }
       controls={
         <VStack align="stretch" gap={5}>
@@ -200,24 +223,47 @@ export function SupernovaHubble() {
       rules={
         <RulesInOut
           rulesIn={[
-            "Dark energy: Ω_Λ ≈ 0.7 fits supernovae + CMB + BAO simultaneously.",
-            "A flat, accelerating universe, Ω_k ≈ 0, dμ/d(ln z) flattens at high z.",
-            "Distance modulus as a standard candle, same SN type, same intrinsic luminosity within ~0.1 mag.",
+            "A dark-energy component with Ω_Λ ≈ 0.7, fitted jointly to supernovae, CMB, and BAO.",
+            "A spatially flat, currently accelerating universe — the distance–redshift curve flattens at high z in exactly the predicted way.",
+            "Type Ia supernovae as reliable standard candles, with intrinsic brightness consistent within ~0.1 magnitudes after light-curve calibration.",
           ]}
           rulesOut={[
-            "Matter-only universes (μ would lie ~0.3 mag below the data at z=0.5).",
-            "Coasting models (open Ω_m = 0 universes), the curve shape is wrong.",
-            "Strongly curved universes, disfavoured by joint SN + CMB fits.",
+            "A matter-only universe — its prediction sits ~0.3 magnitudes below the data at z ≈ 0.5.",
+            "Coasting models (open Ω_m = 0 universes) — the curve shape is wrong at all redshifts.",
+            "Strongly curved universes — disfavored by joint supernova + CMB fits.",
           ]}
         />
+      }
+      takeaway={
+        <Text>
+          The signal that distant Type Ia supernovae are fainter than a
+          matter-only universe predicts is the basis of the 1998 dark-energy
+          discovery. Fitting the equation above to the data requires{" "}
+          <MathInline>{`\\Omega_\\Lambda \\neq 0`}</MathInline>; the joint
+          best fit is{" "}
+          <MathInline>{`\\Omega_m \\approx 0.3`}</MathInline> and{" "}
+          <MathInline>{`\\Omega_\\Lambda \\approx 0.7`}</MathInline>. This
+          same parameter pair is independently required by the CMB acoustic
+          peak positions (previous two sections) and by the BAO ruler (the
+          next section), and all three data sets converge on the same
+          values. "Dark energy" is the name given to the component with
+          negative pressure that drives the late-time acceleration; its
+          equation-of-state parameter <MathInline>{`w`}</MathInline> is
+          measured to be consistent with{" "}
+          <MathInline>{`-1`}</MathInline>, the value expected for a
+          cosmological constant. Whether{" "}
+          <MathInline>{`\\Omega_\\Lambda`}</MathInline> is truly a constant
+          or a slowly evolving field is the question that current and
+          upcoming surveys (DESI, Euclid, Roman) are designed to answer.
+        </Text>
       }
       citation={
         <Citation title="Data source & provenance">
           <Text>
             Pantheon+SH0ES distance-modulus catalogue (Brout et al. 2022), 1619
             spectroscopically-confirmed Type Ia SNe with calibrator galaxies
-            excluded and z ≥ 0.005. Real source: Brout et al. (2022) ApJ 938,
-            110; data file <Code>Pantheon+SH0ES.dat</Code>. See{" "}
+            excluded and z ≥ 0.005. Source: Brout et al. (2022) ApJ 938, 110;
+            data file <Code>Pantheon+SH0ES.dat</Code>. See{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/pantheon.md"
               target="_blank"
