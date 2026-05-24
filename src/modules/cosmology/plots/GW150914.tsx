@@ -37,7 +37,7 @@ const GW_LABEL = [{ name: "Merger", x: T_C, y: 1.65 }];
 const STRAIN_SAMPLE_RATE_HZ = 512;
 
 interface ChirpAudio {
-  play: () => Promise<void>;
+  play: () => void;
   playing: boolean;
   ready: boolean;
 }
@@ -45,19 +45,43 @@ interface ChirpAudio {
 function useChirpAudio(csvUrl: string): ChirpAudio {
   const ctxRef = useRef<AudioContext | null>(null);
   const bufferRef = useRef<AudioBuffer | null>(null);
+  const strainRef = useRef<Float32Array | null>(null);
   const sourceRef = useRef<AudioBufferSourceNode | null>(null);
   const [playing, setPlaying] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+    fetch(csvUrl)
+      .then((r) => r.text())
+      .then((text) => {
+        if (cancelled) return;
+        const lines = text.split("\n");
+        const strain: number[] = [];
+        for (const raw of lines) {
+          const line = raw.trim();
+          if (!line || line.startsWith("#") || line.startsWith("t_s")) continue;
+          const parts = line.split(",");
+          const v = parseFloat(parts[1] ?? "");
+          if (Number.isFinite(v)) strain.push(v);
+        }
+        if (strain.length === 0) return;
+        strainRef.current = Float32Array.from(strain);
+        setReady(true);
+      })
+      .catch(() => {});
     return () => {
+      cancelled = true;
       sourceRef.current?.stop();
       ctxRef.current?.close().catch(() => {});
     };
-  }, []);
+  }, [csvUrl]);
 
-  const play = useCallback(async () => {
+  const play = useCallback(() => {
     if (playing) return;
+    const strain = strainRef.current;
+    if (!strain || strain.length === 0) return;
+
     if (!ctxRef.current) {
       const AudioCtx =
         window.AudioContext ??
@@ -66,41 +90,36 @@ function useChirpAudio(csvUrl: string): ChirpAudio {
       ctxRef.current = new AudioCtx();
     }
     const ctx = ctxRef.current!;
-    if (ctx.state === "suspended") await ctx.resume();
+    if (ctx.state === "suspended") {
+      void ctx.resume();
+    }
 
     if (!bufferRef.current) {
-      const text = await fetch(csvUrl).then((r) => r.text());
-      const lines = text.split("\n");
-      const strain: number[] = [];
-      for (const line of lines) {
-        if (!line || line.startsWith("#") || line.startsWith("t_s")) continue;
-        const parts = line.split(",");
-        const v = parseFloat(parts[1] ?? "");
-        if (Number.isFinite(v)) strain.push(v);
-      }
-      if (strain.length === 0) return;
-
       const duration = strain.length / STRAIN_SAMPLE_RATE_HZ;
       const sampleRate = ctx.sampleRate;
-      const total = Math.floor(duration * sampleRate);
+      const total = Math.max(1, Math.floor(duration * sampleRate));
       const buffer = ctx.createBuffer(1, total, sampleRate);
       const channel = buffer.getChannelData(0);
-      const peak = strain.reduce((m, v) => Math.max(m, Math.abs(v)), 0) || 1;
+      let peak = 0;
+      for (let i = 0; i < strain.length; i++) {
+        const a = Math.abs(strain[i]!);
+        if (a > peak) peak = a;
+      }
+      if (peak === 0) peak = 1;
+      const gain = 0.9 / peak;
       const fadeSamples = Math.floor(0.015 * sampleRate);
+      const denom = total - 1 || 1;
       for (let i = 0; i < total; i++) {
-        const t = (i / (total - 1)) * (strain.length - 1);
+        const t = (i / denom) * (strain.length - 1);
         const lo = Math.floor(t);
         const hi = Math.min(lo + 1, strain.length - 1);
         const frac = t - lo;
-        let v = (strain[lo]! * (1 - frac) + strain[hi]! * frac) / peak;
-        v *= 0.85;
+        let v = (strain[lo]! * (1 - frac) + strain[hi]! * frac) * gain;
         if (i < fadeSamples) v *= i / fadeSamples;
-        else if (i > total - fadeSamples)
-          v *= (total - i) / fadeSamples;
+        else if (i > total - fadeSamples) v *= (total - i) / fadeSamples;
         channel[i] = v;
       }
       bufferRef.current = buffer;
-      setReady(true);
     }
 
     const source = ctx.createBufferSource();
@@ -113,7 +132,7 @@ function useChirpAudio(csvUrl: string): ChirpAudio {
     sourceRef.current = source;
     setPlaying(true);
     source.start();
-  }, [csvUrl, playing]);
+  }, [playing]);
 
   return { play, playing, ready };
 }
@@ -230,10 +249,8 @@ export function GW150914() {
               size="sm"
               variant="solid"
               colorPalette="orange"
-              onClick={() => {
-                void audio.play();
-              }}
-              disabled={audio.playing}
+              onClick={audio.play}
+              disabled={audio.playing || !audio.ready}
             >
               {audio.playing ? "Playing…" : "▶ Play merger"}
             </Button>
