@@ -129,7 +129,8 @@ export function SupernovaHubble() {
             the x-axis is redshift (log scale) and the y-axis is distance
             modulus in magnitudes. Each small dot is one Type Ia supernova
             from the Pantheon+ catalog. The solid orange line is the
-            best-fit ΛCDM model at the sliders' current values; the dashed
+            best-fit ΛCDM (Lambda-Cold-Dark-Matter) model at the sliders'
+            current values; the dashed
             grey line is the counterfactual matter-only universe (
             <MathInline>{`\\Omega_m = 1, \\Omega_\\Lambda = 0`}</MathInline>)
             at the same <MathInline>{`H_0`}</MathInline>, which sits below
@@ -227,14 +228,14 @@ export function SupernovaHubble() {
       rules={
         <RulesInOut
           rulesIn={[
-            "A dark-energy component with Ω_Λ ≈ 0.7, fitted jointly to supernovae, CMB, and BAO.",
+            "A dark-energy component with Ω_Λ ≈ 0.7, fitted jointly to supernovae, the cosmic microwave background, and baryon acoustic oscillations.",
             "A spatially flat, currently accelerating universe — the distance–redshift curve flattens at high z in exactly the predicted way.",
             "Type Ia supernovae as reliable standard candles, with intrinsic brightness consistent within ~0.1 magnitudes after light-curve calibration.",
           ]}
           rulesOut={[
             "A matter-only universe — its prediction sits ~0.3 magnitudes below the data at z ≈ 0.5.",
             "Coasting models (open Ω_m = 0 universes) — the curve shape is wrong at all redshifts.",
-            "Strongly curved universes — disfavored by joint supernova + CMB fits.",
+            "Strongly curved universes — disfavored by joint supernova plus cosmic-microwave-background fits.",
           ]}
         />
       }
@@ -247,10 +248,10 @@ export function SupernovaHubble() {
           best fit is{" "}
           <MathInline>{`\\Omega_m \\approx 0.3`}</MathInline> and{" "}
           <MathInline>{`\\Omega_\\Lambda \\approx 0.7`}</MathInline>. This
-          same parameter pair is independently required by the CMB acoustic
-          peak positions (previous two sections) and by the BAO ruler (the
-          next section), and all three data sets converge on the same
-          values. "Dark energy" is the name given to the component with
+          same parameter pair is independently required by the cosmic
+          microwave background acoustic peak positions (previous two
+          sections) and by the baryon-acoustic-oscillation ruler (the next
+          section), and all three data sets converge on the same values. "Dark energy" is the name given to the component with
           negative pressure that drives the late-time acceleration; its
           equation-of-state parameter <MathInline>{`w`}</MathInline> is
           measured to be consistent with{" "}

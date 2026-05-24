@@ -187,11 +187,12 @@ export function LCDMSynthesis() {
           >
             Every observation in the previous nine sections — Hubble's
             expansion of nearby galaxies, the primordial element abundances
-            from Big Bang Nucleosynthesis, the acoustic peaks in the CMB
-            temperature spectrum, the brightness of distant Type Ia
-            supernovae, the BAO bump in galaxy clustering, the flat
-            rotation curves of disk galaxies — fits within a single
-            framework called ΛCDM, the Lambda-Cold-Dark-Matter model.
+            from Big Bang Nucleosynthesis, the acoustic peaks in the
+            cosmic microwave background (CMB) temperature spectrum, the
+            brightness of distant Type Ia supernovae, the baryon acoustic
+            oscillation (BAO) bump in galaxy clustering, the flat rotation
+            curves of disk galaxies — fits within a single framework
+            called ΛCDM, the Lambda-Cold-Dark-Matter model.
             ΛCDM uses general relativity to describe the expansion and
             geometry of the universe, populates it with three ingredients
             (ordinary matter, cold dark matter, and a cosmological-constant

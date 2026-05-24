@@ -138,7 +138,7 @@ export function BBNAbundances() {
   return (
     <PlotSection
       index={2}
-      title="BBN, three numbers from the first three minutes"
+      title="Big Bang Nucleosynthesis: three numbers from the first three minutes"
       question="Why is the universe mostly hydrogen and helium, with only trace deuterium and lithium?"
       summary={
         <Text>
@@ -146,9 +146,10 @@ export function BBNAbundances() {
           enough to fuse nuclei together. Then it cooled past the threshold
           and the chemistry froze. What survived was almost entirely hydrogen
           and helium, with a trace of deuterium and lithium and essentially
-          nothing heavier. The abundance of each light isotope depends on one
-          number — how many protons and neutrons there were per photon. That
-          single number fixes the entire primordial chemistry.
+          nothing heavier. This episode is called Big Bang Nucleosynthesis
+          (BBN), and the abundance of each light isotope it produced depends
+          on one number — how many protons and neutrons there were per
+          photon. That single number fixes the entire primordial chemistry.
         </Text>
       }
       math={
@@ -165,7 +166,8 @@ export function BBNAbundances() {
             100 km/s/Mpc, so the combination{" "}
             <MathInline>{`\\Omega_b h^2`}</MathInline> absorbs the{" "}
             <MathInline>{`H_0`}</MathInline> dependence and is the quantity
-            BBN directly constrains. On the plot, the x-axis is{" "}
+            BBN directly constrains (with <MathInline>{`H_0`}</MathInline> the
+            Hubble constant). On the plot, the x-axis is{" "}
             <MathInline>{`\\Omega_b h^2`}</MathInline> (controlled by the
             slider) and the y-axis is the abundance relative to hydrogen on a
             log scale. The three curves are theoretical yields from solving
@@ -225,7 +227,7 @@ export function BBNAbundances() {
       rules={
         <RulesInOut
           rulesIn={[
-            "A baryon density Ω_b h² ≈ 0.022, the same value the CMB gives independently.",
+            "A baryon density Ω_b h² ≈ 0.022, the same value the cosmic microwave background gives independently (see the next two sections).",
             "Three light neutrino species; values of N_eff much above 4 or below 2 break the helium fit.",
             "A standard hot Big Bang: temperatures above ~10⁹ K were once everywhere.",
           ]}

@@ -132,7 +132,9 @@ export function RotationCurves() {
             <MathInline>{`x = r/r_s`}</MathInline>. On the plot, the x-axis
             is galactocentric radius in kiloparsecs (one kpc ≈ 3,260
             light-years) and the y-axis is rotation velocity in km/s. The
-            orange dots are SPARC observations of the selected galaxy, with
+            orange dots are observations of the selected galaxy from the
+            Spitzer Photometry & Accurate Rotation Curves (SPARC) survey,
+            with
             vertical 1σ uncertainty bars. The three curves decompose the
             model: yellow is the baryonic contribution (visible disk + gas
             + bulge), grey is the NFW dark-halo contribution, and orange is
@@ -197,11 +199,12 @@ export function RotationCurves() {
           clusters, the X-ray-emitting gas (most of the ordinary matter)
           is offset from the gravitational mass (mapped via weak lensing),
           which means the gravitating mass is something other than the gas.
-          Together with the CMB acoustic-peak amplitudes that fix{" "}
+          Together with the cosmic-microwave-background acoustic-peak
+          amplitudes that fix{" "}
           <MathInline>{`\\Omega_c h^2 \\approx 0.12`}</MathInline> at
           recombination, rotation curves and the Bullet Cluster make cold
-          dark matter the most strongly constrained component of the ΛCDM
-          model after baryons themselves. What dark matter actually is — a
+          dark matter the most strongly constrained component of the
+          ΛCDM (Lambda-Cold-Dark-Matter) model after baryons themselves. What dark matter actually is — a
           weakly interacting massive particle, an axion, a sterile
           neutrino, primordial black holes — remains an open question being
           attacked by direct-detection, collider, and astrophysical

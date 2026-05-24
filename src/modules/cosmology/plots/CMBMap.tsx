@@ -157,7 +157,7 @@ export function CMBMap() {
   return (
     <PlotSection
       index={3}
-      title="CMB map: the photograph of the early universe"
+      title="Cosmic Microwave Background: a photograph of the early universe"
       question="What does the oldest light in the universe look like, and what causes its tiny temperature variations?"
       summary={
         <Text>

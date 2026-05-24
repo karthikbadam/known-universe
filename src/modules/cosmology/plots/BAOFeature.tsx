@@ -75,7 +75,7 @@ export function BAOFeature() {
   return (
     <PlotSection
       index={7}
-      title="BAO, the universe's standard ruler"
+      title="Baryon Acoustic Oscillations: the universe's standard ruler"
       question="Why does the distribution of galaxies show a preferred separation of about 500 million light-years?"
       summary={
         <Text>
@@ -160,8 +160,8 @@ export function BAOFeature() {
       rules={
         <RulesInOut
           rulesIn={[
-            "A standard ruler at ~150 Mpc imprinted by baryon-photon coupling in the early universe — a low-redshift cross-check on the CMB-anchored distance scale.",
-            "The same photon-baryon plasma that produced the CMB acoustic peaks: BAO and CMB are two views of one physical process.",
+            "A standard ruler at ~150 megaparsecs imprinted by baryon-photon coupling in the early universe — a low-redshift cross-check on the cosmic-microwave-background distance scale.",
+            "The same photon-baryon plasma that produced the cosmic microwave background acoustic peaks: BAO and the CMB are two views of one physical process.",
           ]}
           rulesOut={[
             "Universes with no baryons coupled to photons — no acoustic phase, no bump.",

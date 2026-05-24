@@ -68,20 +68,21 @@ export function CMBPowerSpectrum() {
   return (
     <PlotSection
       index={4}
-      title="CMB power spectrum, six numbers, seven peaks"
-      question="Why does the CMB temperature show a regular pattern of peaks at specific angular scales?"
+      title="Cosmic microwave background power spectrum: six numbers, seven peaks"
+      question="Why does the cosmic microwave background show a regular pattern of peaks at specific angular scales?"
       summary={
         <Text>
-          The previous section showed the all-sky CMB temperature map.
-          Decompose that map into spherical harmonics and the variance at
-          each angular scale forms a curve — the angular power spectrum —
-          that is not flat. It shows a sequence of sharply defined peaks at
-          specific multipoles (specific angular scales on the sky). The
-          peaks are not an artifact of any particular line of sight: they
-          are a global property of the temperature field, and their
-          positions and heights encode the geometry and composition of the
-          universe at recombination. Why are there peaks at all, and why at
-          those particular scales?
+          The previous section showed the all-sky cosmic microwave
+          background (CMB) temperature map. Decompose that map into
+          spherical harmonics and the variance at each angular scale forms
+          a curve — the angular power spectrum — that is not flat. It
+          shows a sequence of sharply defined peaks at specific multipoles
+          (specific angular scales on the sky). The peaks are not an
+          artifact of any particular line of sight: they are a global
+          property of the temperature field, and their positions and
+          heights encode the geometry and composition of the universe at
+          recombination. Why are there peaks at all, and why at those
+          particular scales?
         </Text>
       }
       math={
@@ -109,8 +110,8 @@ export function CMBPowerSpectrum() {
             Each dot is a band of Planck's measurement averaged over a range
             of <MathInline>{`\\ell`}</MathInline> values, with vertical bars
             showing the 1σ uncertainty. The orange line is the theoretical
-            prediction for the six-parameter ΛCDM model at the sliders' current
-            values. The peaks themselves are acoustic oscillations: before
+            prediction for the six-parameter ΛCDM (Lambda-Cold-Dark-Matter)
+            model at the sliders' current values. The peaks themselves are acoustic oscillations: before
             recombination, the photon-baryon plasma supported pressure waves
             whose phase at recombination became frozen into the temperature
             pattern. Modes that caught a full compression became the
@@ -168,7 +169,8 @@ export function CMBPowerSpectrum() {
           universe. The ratio of the second peak height to the first fixes
           the baryon density{" "}
           <MathInline>{`\\Omega_b h^2`}</MathInline>, and that value matches
-          the independent measurement from BBN (the previous section). The
+          the independent measurement from Big Bang Nucleosynthesis (the
+          previous section). The
           overall amplitude of the peak envelope relative to the large-scale
           plateau fixes the cold-dark-matter density{" "}
           <MathInline>{`\\Omega_c h^2`}</MathInline>. The slope of the

@@ -129,7 +129,7 @@ export function EHTShadow() {
   return (
     <PlotSection
       index={8}
-      title="EHT: photographing the photon ring"
+      title="Event Horizon Telescope: photographing the photon ring"
       question="What does the size of M87's black hole shadow reveal about its mass?"
       summary={
         <Text>
