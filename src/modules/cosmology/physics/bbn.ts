@@ -54,7 +54,7 @@ export function bbnLi7overH(omegaBh2: number, nEff: number = N_EFF_STANDARD): nu
   );
 }
 
-/** Sample theory curves over an Ω_b h² grid. Used by simulate + plot. */
+/** Sample theory curves over an Ω_b h² grid. */
 export function bbnGrid(
   nEff: number,
   options: { omegaBh2Min?: number; omegaBh2Max?: number; samples?: number } = {},

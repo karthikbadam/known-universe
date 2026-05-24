@@ -10,8 +10,7 @@ export const SPEED_OF_LIGHT_KM_S = 299_792.458;
 /**
  * Hubble's law: recession velocity (km/s) for a given distance (Mpc)
  * and Hubble constant (km/s/Mpc). Trivially linear; defined as a
- * function so the model curve, the simulate script, and any later fit
- * all go through one place.
+ * function so the model curve and any later fit share one path.
  */
 export function hubbleVelocity(distanceMpc: number, hubbleConstant: number): number {
   return hubbleConstant * distanceMpc;

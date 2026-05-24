@@ -36,12 +36,3 @@ bbn_observed.csv: species,value,sigma,source
 ```
 
 Both prepended with the 6-line `#` provenance block.
-
-## Re-run the simulate path
-
-```sh
-npm run simulate:bbn
-```
-
-The simulate script writes both files in one pass using the analytical
-fits in `/src/physics/bbn.ts`.

@@ -1,4 +1,4 @@
-// Seeded RNG (mulberry32) for reproducible simulated data. Pure.
+// Seeded RNG (mulberry32) for reproducible pseudo-random draws. Pure.
 export function mulberry32(seed: number): () => number {
   let t = seed >>> 0;
   return () => {

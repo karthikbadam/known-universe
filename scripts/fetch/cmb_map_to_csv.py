@@ -3,9 +3,7 @@
 Requirements:
     pip install healpy numpy astropy
 
-The output CSV schema matches /scripts/simulate/cmb_map.ts, so the
-React component (src/modules/cosmology/plots/CMBMap.tsx) reads either
-file interchangeably.
+Output is read by src/modules/cosmology/plots/CMBMap.tsx.
 
 Inputs:
     COM_CMB_IQU-smica_2048_R3.00_full.fits  (~600 MB, Planck Legacy Archive)

@@ -23,17 +23,3 @@ s_mpc,xi,xi_lower,xi_upper,sigma
 ```
 
 with a 6-line `#` provenance header. Units: Mpc.
-
-## Flip the UI
-
-```ts
-const dataStatus: DataStatus = "simulated";  // → "real"
-```
-
-In `/src/plots/BAOFeature.tsx`.
-
-## Re-run the simulate path
-
-```sh
-npm run simulate:bao
-```

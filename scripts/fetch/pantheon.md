@@ -22,17 +22,3 @@ The file has ~1700 SNe with columns including `zCMB`, `MU_SH0ES`,
 ```
 z,mu,sigma
 ```
-
-## Flip the UI
-
-```ts
-const dataStatus: DataStatus = "simulated";  // → "real"
-```
-
-In `/src/plots/SupernovaHubble.tsx`.
-
-## Re-run the simulate path
-
-```sh
-npm run simulate:pantheon
-```

@@ -8,25 +8,13 @@
 
 The famous all-sky temperature map is from the SMICA component-separation
 pipeline. We render it in-browser as a Mosaic raster mark; the renderer
-reads `/public/data/cmb_mollweide.csv` regardless of whether it was
-produced from the real Planck FITS or from the JS placeholder.
+reads `/public/data/cmb_mollweide.csv`.
 
 ## CSV schema
 
 Columns: `x` (Mollweide, −2..2), `y` (Mollweide, −1..1), `t_uk`
 (temperature anomaly in microkelvin). Only points inside the Mollweide
 ellipse `(x/2)² + y² ≤ 1` are emitted. Grid is 480 × 240.
-
-## Placeholder (no Planck data needed)
-
-```sh
-npx tsx scripts/simulate/cmb_map.ts
-# → public/data/cmb_mollweide.csv  (procedural CMB-like field, ~1.9 MB)
-```
-
-The procedural fallback in `src/modules/cosmology/physics/cmbMap.ts`
-generates a CMB-statistics-look-alike field (smooth large-scale blobs +
-Gaussian speckle). Suitable for dev and CI; **not** real Planck data.
 
 ## Real Planck SMICA (Python)
 

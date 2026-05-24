@@ -18,17 +18,3 @@ name,r_kpc,v_kms,sigma_kms,v_baryonic_kms
 
 The SPARC tables provide `Rad` (kpc), `Vobs` (km/s), `errV` (km/s), and
 the baryonic component already decomposed; copy them and re-name.
-
-## Flip the UI
-
-```ts
-const dataStatus: DataStatus = "simulated";  // → "real"
-```
-
-In `/src/plots/RotationCurves.tsx`.
-
-## Re-run the simulate path
-
-```sh
-npm run simulate:sparc
-```

@@ -18,9 +18,9 @@ in `/src/mosaic/coordinator.ts`) expects:
 ell,Dl,Dl_lower,Dl_upper,sigma
 ```
 
-with a 6-line `#`-prefixed provenance header above the column row. Use the
-header from `/scripts/simulate/cmb_powerspectrum.ts` as the template, same six fields, swap `# SIMULATED DATA …` for `# REAL DATA, Planck
-2018 TT binned`. Units: μK² (multiplied by ℓ(ℓ+1)/2π).
+with a 6-line `#`-prefixed provenance header above the column row whose
+first line reads `# REAL DATA, Planck 2018 TT binned`. Units: μK²
+(multiplied by ℓ(ℓ+1)/2π).
 
 ## Option A, Planck Legacy Archive (requires registration)
 
@@ -34,32 +34,6 @@ The file has 215 binned ℓ entries. Columns are `ℓ`, `Dℓ` (μK²), `-Δ`,
 `Dl_upper = Dl + Δ_plus`, and `sigma = (Δ_minus + Δ_plus) / 2`. Strip
 the comment header, prepend our six-line provenance block, and save as
 `/public/data/planck_dl.csv`.
-
-## Flip the UI from simulated to real
-
-In `/src/plots/CMBPowerSpectrum.tsx`, change the one line:
-
-```ts
-const dataStatus: DataStatus = "simulated";
-```
-
-to:
-
-```ts
-const dataStatus: DataStatus = "real";
-```
-
-That's the only code change. The plot, math, and slider behavior are
-identical between simulated and real.
-
-## Re-run the simulate path
-
-If you tweak the simulate parameters (binning, fiducial cosmology,
-noise model), regenerate via:
-
-```sh
-npm run simulate:cmb
-```
 
 ## Upgrading the theory curve from analytical → CAMB
 

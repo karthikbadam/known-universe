@@ -21,9 +21,8 @@ The downstream code (`/src/data/loaders.ts`, the Mosaic `loadCSV` call in
 name,distance_mpc,velocity_km_s
 ```
 
-with a 6-line `#`-prefixed provenance header above the column row. Use the
-header format from `/scripts/simulate/hubble1929.ts` as the template, same
-6 fields, swap `# SIMULATED DATA …` for `# REAL DATA, Hubble 1929 Table I+II`.
+with a 6-line `#`-prefixed provenance header above the column row whose
+first line reads `# REAL DATA, Hubble 1929 Table I+II`.
 
 ## Option A, pull from the Astropy tutorials data mirror
 
@@ -77,29 +76,3 @@ scatter plot exactly.
 
 Transcribe into a CSV with the 6-line header (using `# REAL DATA, Hubble
 1929 Table I+II` as the first line), save as `/public/data/hubble1929.csv`.
-
-## Flip the UI from simulated to real
-
-In `/src/plots/HubbleDiagram.tsx`, change the one line:
-
-```ts
-const dataStatus: DataStatus = "simulated";
-```
-
-to:
-
-```ts
-const dataStatus: DataStatus = "real";
-```
-
-That's the only code change. The plot, the math, and the slider behavior
-are identical between simulated and real.
-
-## Re-run the simulate path
-
-If you want to regenerate the simulated fallback (after editing the
-simulate parameters, for example):
-
-```sh
-npm run simulate:hubble
-```
