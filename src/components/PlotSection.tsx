@@ -84,6 +84,7 @@ export function PlotSection({
             align="flex-start"
             gap={8}
             w="100%"
+            mt={4}
           >
             <Box flex="1" minW={0} w={{ base: "100%", md: "auto" }}>{plot}</Box>
             <Box
@@ -97,7 +98,7 @@ export function PlotSection({
             </Box>
           </Stack>
         ) : (
-          <Box w="100%">{plot}</Box>
+          <Box w="100%" mt={4}>{plot}</Box>
         )}
         {rules}
         {takeaway ? (

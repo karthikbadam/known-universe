@@ -21,7 +21,7 @@ const config = defineConfig({
       fill: "var(--chakra-colors-fg) !important",
     },
     ".plot .tick text": {
-      fill: "var(--chakra-colors-fg-muted) !important",
+      fill: "var(--chakra-colors-fg-subtle) !important",
     },
     ".plot .tick line": {
       stroke: "var(--chakra-colors-fg-subtle) !important",
