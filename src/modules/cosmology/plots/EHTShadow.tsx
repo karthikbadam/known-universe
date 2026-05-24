@@ -1,12 +1,17 @@
-import { Box, Code, Link, Stat, Text, VStack } from "@chakra-ui/react";
+import { Code, Link, Stat, Text, VStack } from "@chakra-ui/react";
+import * as vg from "@uwdata/vgplot";
 import { useMemo, useState } from "react";
-import { useTheme } from "next-themes";
 
 import { Citation } from "../../../components/Citation";
 import { MathBlock, MathInline } from "../../../components/MathBlock";
+import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
+import { PlotError } from "../../../components/PlotError";
+import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
+import { TABLES } from "../data/tables";
+import { useDataTable } from "../../../mosaic/useDataTable";
 import { CHART_HEIGHT } from "../../../theme/chartDimensions";
 import { useChartPalette } from "../../../theme/palette";
 
@@ -16,18 +21,41 @@ import {
   shadowDiameterUas,
 } from "../physics/blackHoleShadow";
 
-const REAL_IMAGE_URL = `${import.meta.env.BASE_URL}data/eht_m87.jpg`;
-// The ESO EHT image renders the bright ring (~42 μas across) roughly
-// centred within the frame; ~0.4 of the image's vertical extent is filled
-// by the ring. We size the background image accordingly.
-const REAL_IMAGE_SCALE_UAS = 100;
-const VIEW_BOX_UAS = 80;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
+const FOV_UAS = 100;
+const COLOR_PREDICTED = "#ff7a1a";
+const COLOR_OBSERVED = "#9aa0a6";
+
+const vgX = vg as unknown as {
+  raster: (source: unknown, options: Record<string, unknown>) => unknown;
+  max: (col: string) => unknown;
+  text: (source: unknown, options: Record<string, unknown>) => unknown;
+};
+
+function circlePoints(
+  radiusUas: number,
+  n = 180,
+): ReadonlyArray<{ x: number; y: number }> {
+  const out: { x: number; y: number }[] = [];
+  for (let i = 0; i <= n; i++) {
+    const t = (i / n) * 2 * Math.PI;
+    out.push({ x: radiusUas * Math.cos(t), y: radiusUas * Math.sin(t) });
+  }
+  return out;
+}
+
+const OBSERVED_CIRCLE = circlePoints(M87_OBSERVED.shadowDiameterUas / 2);
+const SCALE_BAR_Y = -42;
+const SCALE_BAR_X1 = -40;
+const SCALE_BAR_X2 = -20;
 
 export function EHTShadow() {
   const palette = useChartPalette();
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const { ready, error } = useDataTable(
+    TABLES.ehtM87.name,
+    TABLES.ehtM87.url,
+    { skipHeaderLines: TABLES.ehtM87.skipHeaderLines },
+  );
   const [massBillionSun, setMassBillionSun] = useState<number>(
     M87_OBSERVED.massSolar / 1e9,
   );
@@ -44,13 +72,70 @@ export function EHTShadow() {
     );
   }, [massBillionSun, distanceMpc, inclinationDeg]);
 
-  const radiusInView = predictedDiameterUas / 2;
   const matches =
     Math.abs(predictedDiameterUas - M87_OBSERVED.shadowDiameterUas) <
     M87_OBSERVED.shadowSigmaUas;
 
-  const targetStroke = matches ? palette.dataFill : palette.modelStroke;
-  const scaleColor = isDark ? "#f5f5f5" : "#111111";
+  const predictedCircle = useMemo(
+    () => circlePoints(predictedDiameterUas / 2),
+    [predictedDiameterUas],
+  );
+
+  const spec = useMemo(
+    () => [
+      vgX.raster(vg.from(TABLES.ehtM87.name), {
+        x: "x_uas",
+        y: "y_uas",
+        fill: vgX.max("intensity"),
+        interpolate: "none",
+        pixelSize: 1,
+      }),
+      vg.line(OBSERVED_CIRCLE, {
+        x: "x",
+        y: "y",
+        stroke: COLOR_OBSERVED,
+        strokeWidth: 1.2,
+        strokeDasharray: "4,3",
+      }),
+      vg.line(predictedCircle, {
+        x: "x",
+        y: "y",
+        stroke: COLOR_PREDICTED,
+        strokeWidth: 1.6,
+        strokeOpacity: matches ? 0.95 : 0.85,
+      }),
+      vg.ruleY([SCALE_BAR_Y], {
+        x1: SCALE_BAR_X1,
+        x2: SCALE_BAR_X2,
+        stroke: palette.modelStroke,
+        strokeWidth: 1.5,
+      }),
+      vgX.text([{ x: (SCALE_BAR_X1 + SCALE_BAR_X2) / 2, y: SCALE_BAR_Y - 3, name: "20 μas" }], {
+        x: "x",
+        y: "y",
+        text: "name",
+        fill: palette.modelStroke,
+        fontSize: 11,
+        fontWeight: 500,
+        textAnchor: "middle",
+      }),
+      vg.xDomain([-FOV_UAS / 2, FOV_UAS / 2]),
+      vg.yDomain([-FOV_UAS / 2, FOV_UAS / 2]),
+      vg.marginLeft(0),
+      vg.marginRight(0),
+      vg.marginTop(0),
+      vg.marginBottom(0),
+      (plot: { attributes: Record<string, unknown> }) => {
+        plot.attributes.colorScheme = "inferno";
+        plot.attributes.colorDomain = [0, 1];
+        plot.attributes.xAxis = null;
+        plot.attributes.yAxis = null;
+        plot.attributes.aspectRatio = 1;
+        plot.attributes.style = "background: transparent;";
+      },
+    ],
+    [predictedCircle, matches, palette],
+  );
 
   return (
     <PlotSection
@@ -86,59 +171,41 @@ export function EHTShadow() {
         </>
       }
       plot={
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          h={`${PLOT_HEIGHT}px`}
-        >
-          <svg
-            viewBox={`-${VIEW_BOX_UAS / 2} -${VIEW_BOX_UAS / 2} ${VIEW_BOX_UAS} ${VIEW_BOX_UAS}`}
-            style={{
-              width: `min(100%, ${PLOT_HEIGHT}px)`,
-              height: "100%",
-              maxWidth: "100%",
-              background: palette.background,
-            }}
-            role="img"
-            aria-label={`EHT black hole shadow, predicted diameter ${predictedDiameterUas.toFixed(1)} μas`}
-          >
-            <image
-              href={REAL_IMAGE_URL}
-              x={-REAL_IMAGE_SCALE_UAS / 2}
-              y={-REAL_IMAGE_SCALE_UAS / 2}
-              width={REAL_IMAGE_SCALE_UAS}
-              height={REAL_IMAGE_SCALE_UAS}
-              preserveAspectRatio="xMidYMid slice"
+        error !== null ? (
+          <PlotError message={error} />
+        ) : (
+          <VStack align="stretch" gap={3}>
+            <PlotLegend
+              items={[
+                {
+                  name: "M87* image",
+                  description: "EHT 2019 reconstruction, intensity rendered via inferno colormap",
+                  color: "#ffce5e",
+                  mark: "dot",
+                },
+                {
+                  name: "Predicted shadow",
+                  description: "Schwarzschild b_crit at your slider values",
+                  color: COLOR_PREDICTED,
+                  mark: "line",
+                },
+                {
+                  name: "Observed shadow",
+                  description: "EHT-measured 42 ± 3 μas reference",
+                  color: COLOR_OBSERVED,
+                  mark: "dashed-line",
+                },
+              ]}
             />
-            <circle
-              cx={0}
-              cy={0}
-              r={radiusInView}
-              fill="none"
-              stroke={targetStroke}
-              strokeWidth={0.4}
-              strokeOpacity={0.5}
+            <MosaicPlot
+              spec={spec}
+              enabled={ready}
+              ariaLabel={`EHT M87* image with predicted shadow at ${predictedDiameterUas.toFixed(1)} μas`}
+              height={PLOT_HEIGHT}
+              aspectRatio={1}
             />
-            <circle
-              cx={0}
-              cy={0}
-              r={M87_OBSERVED.shadowDiameterUas / 2}
-              fill="none"
-              stroke={targetStroke}
-              strokeWidth={0.6}
-              strokeDasharray="2,1.5"
-            />
-            <text
-              x={5}
-              y={36}
-              fill={scaleColor}
-              textAnchor="middle"
-            >
-              20 μas
-            </text>
-          </svg>
-        </Box>
+          </VStack>
+        )
       }
       controls={
         <VStack align="stretch" gap={5}>
@@ -208,18 +275,22 @@ export function EHTShadow() {
       citation={
         <Citation title="Data source & provenance">
           <Text>
-            Real EHT M87* April 2019 image from ESO (<Code>eso1907a.jpg</Code>),
-            overlaid with the dashed circle showing the predicted Schwarzschild
-            shadow at the current slider values. Real source: EHT Collaboration
-            (2019) ApJ 875, L1.{" "}
+            The intensity grid in <Code>/public/data/eht_m87.csv</Code> is the
+            published 2019 EHT M87* reconstruction, transcoded from the ESO
+            press-release JPG (<Code>eso1907a</Code>) into a 200×200 (x_uas,
+            y_uas, intensity) raster by{" "}
+            <Code>/scripts/fetch/eht_m87_to_csv.py</Code> and rendered in-browser
+            via Mosaic <Code>vg.raster</Code>. Real source: EHT Collaboration et
+            al. (2019) ApJL 875, L1.{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/eht_m87.md"
               target="_blank"
               rel="noopener noreferrer"
             >
               /scripts/fetch/eht_m87.md
-            </Link>
-            .
+            </Link>{" "}
+            documents the provenance and the path to upgrade to a true FITS via
+            the eht-imaging pipeline.
           </Text>
           <Text mt={2}>
             Shadow physics in <Code>src/physics/blackHoleShadow.ts</Code>:

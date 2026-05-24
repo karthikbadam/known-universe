@@ -10,4 +10,5 @@ export const TABLES = {
   bossXi: defineTable("boss_xi", "boss_xi.csv"),
   gw150914: defineTable("gw150914_strain", "gw150914_strain.csv"),
   cmbMollweide: defineTable("cmb_mollweide", "cmb_mollweide.csv"),
+  ehtM87: defineTable("eht_m87", "eht_m87.csv"),
 } as const;
