@@ -130,32 +130,54 @@ export function EHTShadow() {
     <PlotSection
       index={8}
       title="EHT: photographing the photon ring"
-      question="What's the apparent size of a billion-solar-mass black hole 17 Mpc away?"
+      question="What does the size of M87's black hole shadow reveal about its mass?"
       summary={
         <Text>
-          The Event Horizon Telescope assembled an Earth-sized radio
-          interferometer and resolved the photon ring of M87's central
-          supermassive black hole. The dark disk's apparent diameter on the sky
-          encodes only two numbers: the BH mass and its distance from us. Drag
-          the mass slider and watch the predicted shadow grow; aim for the EHT
-          measurement (42 ± 3 μas) and read off ~6.5 × 10⁹ M_☉.
+          A black hole bends light so strongly that any photon passing
+          within a critical distance of the event horizon spirals in and
+          is lost. Photons that pass just outside that critical radius
+          curve around the black hole and escape, forming a bright ring
+          of light around a dark central disk — the photon ring and the
+          shadow. The size of the shadow is set entirely by the black
+          hole's mass and its distance from us: more massive means a
+          bigger physical shadow, farther away means a smaller apparent
+          one. In 2019 the Event Horizon Telescope, a planet-spanning
+          radio interferometer, resolved the shadow of the supermassive
+          black hole at the center of the galaxy M87. Reading the mass
+          off the measured shadow size is the physics test this section
+          demonstrates.
         </Text>
       }
       math={
         <>
           <MathBlock ariaLabel="shadow diameter formula">{`\\theta_{\\rm sh} \\;=\\; \\frac{2 b_{\\rm crit}}{D} \\;=\\; \\frac{6\\sqrt{3}\\, G M}{c^2 D}`}</MathBlock>
-          <Text
-            fontFamily="body"
-            fontSize="sm"
-            color="fg.muted"
-            lineHeight="1.7"
-          >
-            <MathInline>{`b_{\\rm crit} = 3\\sqrt{3}\\, G M / c^2`}</MathInline>{" "}
-            is the critical impact parameter; light with smaller b is captured.
-            The Schwarzschild radius <MathInline>{`R_s = 2GM/c^2`}</MathInline>{" "}
-            is buried in there; the shadow is{" "}
-            <MathInline>{`5.196 R_s`}</MathInline> across. For Kerr, spin shifts
-            this by a few percent at modest inclinations.
+          <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
+            <MathInline>{`\\theta_{\\rm sh}`}</MathInline> is the angular
+            diameter of the shadow as measured in microarcseconds (μas);
+            one microarcsecond is one millionth of one sixty-thousandth of
+            a degree.{" "}
+            <MathInline>{`b_{\\rm crit} = 3\\sqrt{3}\\, GM/c^2`}</MathInline>{" "}
+            is the critical impact parameter: light passing the black hole
+            at this distance just barely escapes capture.{" "}
+            <MathInline>{`G`}</MathInline> is the gravitational constant,{" "}
+            <MathInline>{`M`}</MathInline> is the black-hole mass (in solar
+            masses), <MathInline>{`c`}</MathInline> is the speed of light,
+            and <MathInline>{`D`}</MathInline> is the distance from us to
+            the black hole. The shadow diameter is{" "}
+            <MathInline>{`5.196`}</MathInline> times the Schwarzschild
+            radius <MathInline>{`R_s = 2GM/c^2`}</MathInline> — that
+            constant of proportionality comes purely from general
+            relativity. For a spinning (Kerr) black hole, the shadow
+            shape changes by a few percent depending on the viewing
+            inclination, captured by the inclination slider. On the plot,
+            the x and y axes are angular position on the sky in
+            microarcseconds (μas) relative to the brightness centroid.
+            The orange-shaded image is the published EHT 2019
+            reconstruction of M87*. The solid orange circle is the shadow
+            diameter <MathInline>{`\\theta_{\\rm sh}`}</MathInline>{" "}
+            predicted by the equation at the slider's current mass,
+            distance, and inclination; the dashed grey circle is the EHT
+            measurement (42 ± 3 μas) for comparison.
           </Text>
         </>
       }
@@ -163,38 +185,38 @@ export function EHTShadow() {
         error !== null ? (
           <PlotError message={error} />
         ) : (
-          <VStack align="stretch" gap={3}>
-            <PlotLegend
-              items={[
-                {
-                  name: "M87* image",
-                  description: "EHT 2019 reconstruction; intensity rendered on an orange ramp",
-                  color: COLOR_PREDICTED,
-                  mark: "dot",
-                },
-                {
-                  name: "Predicted shadow",
-                  description: "Schwarzschild b_crit at your slider values",
-                  color: COLOR_PREDICTED,
-                  mark: "line",
-                },
-                {
-                  name: "Observed shadow",
-                  description: "EHT-measured 42 ± 3 μas reference",
-                  color: COLOR_OBSERVED,
-                  mark: "dashed-line",
-                },
-              ]}
-            />
-            <MosaicPlot
-              spec={spec}
-              enabled={ready}
-              ariaLabel={`EHT M87* image with predicted shadow at ${predictedDiameterUas.toFixed(1)} μas`}
-              height={PLOT_HEIGHT}
-              aspectRatio={1}
-            />
-          </VStack>
+          <MosaicPlot
+            spec={spec}
+            enabled={ready}
+            ariaLabel={`EHT M87* image with predicted shadow at ${predictedDiameterUas.toFixed(1)} μas`}
+            height={PLOT_HEIGHT}
+            aspectRatio={1}
+          />
         )
+      }
+      legend={
+        <PlotLegend
+          items={[
+            {
+              name: "M87* image",
+              description: "EHT 2019 reconstruction; intensity rendered on an orange ramp",
+              color: COLOR_PREDICTED,
+              mark: "dot",
+            },
+            {
+              name: "Predicted shadow",
+              description: "Schwarzschild b_crit at your slider values",
+              color: COLOR_PREDICTED,
+              mark: "line",
+            },
+            {
+              name: "Observed shadow",
+              description: "EHT-measured 42 ± 3 μas reference",
+              color: COLOR_OBSERVED,
+              mark: "dashed-line",
+            },
+          ]}
+        />
       }
       controls={
         <VStack align="stretch" gap={5}>
@@ -250,16 +272,37 @@ export function EHTShadow() {
       rules={
         <RulesInOut
           rulesIn={[
-            "General relativity at horizon scale: shadow size matches the GR prediction to ~10%.",
-            "M87's central object is a Schwarzschild-like BH with M ≈ 6.5 × 10⁹ M_☉.",
-            "No Newtonian source can produce a ring this compact.",
+            "General relativity at horizon scale — the measured shadow diameter matches the GR prediction to about 10%.",
+            "M87's central object is a Schwarzschild-like black hole with a mass of roughly 6.5 × 10⁹ solar masses.",
+            "No Newtonian or stellar-cluster source can reproduce a feature this dark, this circular, and this small.",
           ]}
           rulesOut={[
-            "Naked singularities (no event horizon means no dark central disk).",
-            "Wormholes with photon-trapping cross-sections inconsistent with EHT's circular ring.",
-            "Modified gravity theories that predict shadow size ≫ 5.2 R_s.",
+            "Naked singularities — no event horizon means no dark central disk.",
+            "Wormhole geometries with photon-trapping cross-sections that disagree with the observed circular ring.",
+            "Modified gravity theories that predict a shadow much larger than 5.2 Schwarzschild radii.",
           ]}
         />
+      }
+      takeaway={
+        <Text>
+          The Event Horizon Telescope test is unusual in cosmology because
+          it concerns a single object rather than a population, but the
+          inference is direct: setting the predicted{" "}
+          <MathInline>{`\\theta_{\\rm sh}`}</MathInline> equal to the
+          measured 42 ± 3 μas at M87's known distance of ≈16.8 megaparsecs
+          (~55 million light-years) gives a mass of{" "}
+          <MathInline>{`(6.5 \\pm 0.7) \\times 10^9`}</MathInline> solar
+          masses. This value agrees with two completely independent mass
+          estimates of M87's central black hole: stellar dynamics in the
+          galaxy's central cusp (Gebhardt et al. 2011) and gas-disk
+          dynamics (Walsh et al. 2013). The agreement constitutes a test
+          of general relativity in the strongest-field regime where it
+          has been observationally probed. The same EHT collaboration has
+          since imaged the much smaller (but much closer) supermassive
+          black hole at the center of our own Galaxy, Sgr A*, with the
+          same technique, and is now extending to polarimetric imaging
+          that maps the magnetic field geometry of the photon ring.
+        </Text>
       }
       citation={
         <Citation title="Data source & provenance">
@@ -268,9 +311,9 @@ export function EHTShadow() {
             published 2019 EHT M87* reconstruction, transcoded from the ESO
             press-release JPG (<Code>eso1907a</Code>) into a 200×200 (x_uas,
             y_uas, intensity) raster by{" "}
-            <Code>/scripts/fetch/eht_m87_to_csv.py</Code> and rendered in-browser
-            via Mosaic <Code>vg.raster</Code>. Real source: EHT Collaboration et
-            al. (2019) ApJL 875, L1.{" "}
+            <Code>/scripts/fetch/eht_m87_to_csv.py</Code> and rendered
+            in-browser via Mosaic <Code>vg.raster</Code>. Source: EHT
+            Collaboration et al. (2019) ApJL 875, L1.{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/eht_m87.md"
               target="_blank"
@@ -278,12 +321,13 @@ export function EHTShadow() {
             >
               /scripts/fetch/eht_m87.md
             </Link>{" "}
-            documents the provenance and the path to upgrade to a true FITS via
-            the eht-imaging pipeline.
+            documents the provenance and the path to upgrade to a true
+            FITS via the eht-imaging pipeline.
           </Text>
           <Text mt={2}>
             Shadow physics in <Code>src/physics/blackHoleShadow.ts</Code>:
-            Schwarzschild b_crit, with M87 mass and distance from the EHT paper.
+            Schwarzschild b_crit, with M87 mass and distance from the EHT
+            paper.
           </Text>
         </Citation>
       }
