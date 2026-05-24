@@ -1,14 +1,15 @@
 # /public/data, provenance, status, downsampling
 
 Every dataset bundled with this app declares its provenance in a 6-line
-`#`-prefixed header at the top of the file. The header tells you:
+`#`-prefixed header at the top of the file. All datasets are real
+measurements; the header tells you:
 
-  1. Whether the data is real or simulated
-  2. The source script (simulate path) or paper (real path)
+  1. The dataset name and `# REAL DATA` marker
+  2. The source paper or instrument release
   3. The fetch/replacement instructions
   4. The source citation
   5. The schema
-  6. Generation parameters or downsampling notes
+  6. Downsampling or processing notes
 
 ## File index, all gates
 

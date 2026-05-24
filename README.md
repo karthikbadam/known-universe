@@ -52,7 +52,6 @@ npm run build       # production build
 - `/src/theme`: Chakra theme (monochrome, light by default)
 - `/public/data`: data files; every file has a 6-line provenance header
 - `/scripts/fetch/<plot>.md`: instructions for fetching real data
-- `/scripts/simulate/<plot>.ts`: simulated fallback generators
 
 ## Adding a new module
 
@@ -71,7 +70,6 @@ npm run build       # production build
 ## Data policy
 
 Every dataset lives in `/public/data/<name>.{csv,json,png}` with a six-line
-`#`-prefixed provenance header declaring status (real or simulated),
-generating script or source paper, and schema. Replacement instructions live
-in `/scripts/fetch/<plot>.md`; simulated fallback generators live in
-`/scripts/simulate/<plot>.ts`.
+`#`-prefixed provenance header declaring source paper, fetch instructions,
+and schema. All datasets are real measurements; replacement instructions
+live in `/scripts/fetch/<plot>.md`.
