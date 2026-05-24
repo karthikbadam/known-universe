@@ -23,10 +23,7 @@ const config = defineConfig({
     ".plot g[aria-label$=\"tick label\"] text": {
       fill: "var(--chakra-colors-fg-subtle) !important",
     },
-    ".plot .tick line": {
-      stroke: "var(--chakra-colors-fg-subtle) !important",
-    },
-    ".plot .domain": {
+    ".plot g[aria-label$=\"-axis tick\"] path, .plot g[aria-label$=\"-axis tick\"] line": {
       stroke: "var(--chakra-colors-fg-subtle) !important",
     },
   },
