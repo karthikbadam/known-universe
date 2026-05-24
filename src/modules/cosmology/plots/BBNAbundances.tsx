@@ -139,44 +139,47 @@ export function BBNAbundances() {
     <PlotSection
       index={2}
       title="BBN, three numbers from the first three minutes"
-      question="How does the baryon density determine the universe's primordial light-element budget?"
+      question="Why is the universe mostly hydrogen and helium, with only trace deuterium and lithium?"
       summary={
-        <VStack align="stretch" gap={4}>
-          <Text>
-            When the universe was three minutes old, it briefly became a fusion
-            reactor, an episode known as Big Bang Nucleosynthesis (BBN). The
-            yields, deuterium, helium-4, lithium-7, all depend on one number:
-            the baryon density Ω_b h². Slide it and watch the curves shift. At
-            Ω_b h² ≈ 0.022 the D/H and Y_p dots sit right on their theory
-            curves, in perfect agreement with the Cosmic Microwave Background
-            (CMB) constraint that follows below. The ⁷Li/H dot intentionally
-            does not: theory predicts ~3× the observed abundance, the unsolved
-            "lithium problem".
-          </Text>
-          <Text>
-            <Text as="span" color="fg" fontWeight="medium">
-              Why the gap?
-            </Text>{" "}
-            Three candidates: old halo stars depleted their primordial ⁷Li via
-            diffusion or mixing (the dots are too low), an under-measured ⁷Be
-            destruction cross-section makes the prediction too high (the curve
-            is wrong), or new physics, decaying relics or modified expansion at
-            freeze-out, selectively burns ⁷Be (the model is wrong). Since BBN
-            has no free parameters once Ω_b h² is fixed, this 4–5σ anomaly is
-            one of the cleanest pointers we have to either under-modeled stellar
-            astrophysics or new physics in the 1 keV–100 MeV range where
-            dark-sector models live.
-          </Text>
-        </VStack>
+        <Text>
+          For about three minutes after the Big Bang, the universe was hot
+          enough to fuse nuclei together. Then it cooled past the threshold
+          and the chemistry froze. What survived was almost entirely hydrogen
+          and helium, with a trace of deuterium and lithium and essentially
+          nothing heavier. The abundance of each light isotope depends on one
+          number — how many protons and neutrons there were per photon. That
+          single number fixes the entire primordial chemistry.
+        </Text>
       }
       math={
         <>
-          <MathBlock ariaLabel="Saha-like ratio">{`\\frac{n_B}{n_\\gamma} \\equiv \\eta \\approx 273.5 \\cdot \\Omega_b h^2 \\cdot 10^{-10}`}</MathBlock>
+          <MathBlock ariaLabel="Baryon-to-photon ratio">{`\\frac{n_B}{n_\\gamma} \\equiv \\eta \\approx 273.5 \\cdot \\Omega_b h^2 \\cdot 10^{-10}`}</MathBlock>
           <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
-            More baryons (larger η) → less deuterium survives (it photoionises
-            into helium), more <MathInline>{`Y_p`}</MathInline>, more lithium.
-            The abundances come from solving Boltzmann/coupled rate equations
-            for the freeze-out of a dozen nuclear species.
+            <MathInline>{`\\eta`}</MathInline> (eta) is the baryon-to-photon
+            ratio — the number of baryons (protons and neutrons, collectively
+            ordinary matter) per photon, observed to be about one baryon per{" "}
+            <MathInline>{`10^9`}</MathInline> photons.{" "}
+            <MathInline>{`\\Omega_b`}</MathInline> is the fraction of the
+            universe's critical density made of baryons, and{" "}
+            <MathInline>{`h`}</MathInline> is the Hubble constant in units of
+            100 km/s/Mpc, so the combination{" "}
+            <MathInline>{`\\Omega_b h^2`}</MathInline> absorbs the{" "}
+            <MathInline>{`H_0`}</MathInline> dependence and is the quantity
+            BBN directly constrains. On the plot, the x-axis is{" "}
+            <MathInline>{`\\Omega_b h^2`}</MathInline> (controlled by the
+            slider) and the y-axis is the abundance relative to hydrogen on a
+            log scale. The three curves are theoretical yields from solving
+            the freeze-out kinetics across the relevant nuclear reactions:
+            blue for D/H (deuterium per hydrogen), yellow for{" "}
+            <MathInline>{`Y_p`}</MathInline> (the helium-4 mass fraction,
+            scaled by <MathInline>{`10^4`}</MathInline> to share the axes),
+            and red for ⁷Li/H (lithium-7 per hydrogen). The three dots are the
+            corresponding measured primordial abundances: D/H from absorption
+            against distant quasars, <MathInline>{`Y_p`}</MathInline> from H
+            II regions in metal-poor galaxies, ⁷Li/H from old halo stars in
+            the Milky Way. The vertical guide marks the current{" "}
+            <MathInline>{`\\Omega_b h^2`}</MathInline>; where it crosses each
+            curve is the predicted abundance at that slider value.
           </Text>
         </>
       }
@@ -222,16 +225,48 @@ export function BBNAbundances() {
       rules={
         <RulesInOut
           rulesIn={[
-            "A baryon density Ω_b h² ≈ 0.022, the same number the CMB gives.",
-            "Three real neutrino species, N_eff > 4 or < 2 wrecks Y_p.",
-            "Standard hot Big Bang: temperatures > 10⁹ K were once everywhere.",
+            "A baryon density Ω_b h² ≈ 0.022, the same value the CMB gives independently.",
+            "Three light neutrino species; values of N_eff much above 4 or below 2 break the helium fit.",
+            "A standard hot Big Bang: temperatures above ~10⁹ K were once everywhere.",
           ]}
           rulesOut={[
-            "Universes with much more or less baryonic matter (curves slide off-band).",
-            "Extra relativistic species (e.g. light sterile neutrino) at the >2σ level.",
-            "Trivially solved lithium problem: no Ω_b h² simultaneously matches all three with the simplest model.",
+            "Universes with much more or less baryonic matter — all three curves slide off the data band.",
+            "Extra relativistic species (e.g. a light sterile neutrino) at the level of one or more, at >2σ.",
+            "A trivially solved lithium problem — no single Ω_b h² matches all three abundances within the simplest model.",
           ]}
         />
+      }
+      takeaway={
+        <VStack align="stretch" gap={4}>
+          <Text>
+            Two things to take away. First, BBN and the cosmic microwave
+            background measure the same{" "}
+            <MathInline>{`\\Omega_b h^2`}</MathInline> through entirely
+            different physics, separated by 380,000 years of cosmic time. The
+            BBN measurement comes from the primordial deuterium and helium
+            yields: more baryons during freeze-out means deuterium gets more
+            efficiently fused into helium, leaving less of it behind. The CMB
+            measurement comes from the acoustic peaks of the temperature
+            spectrum: baryon loading of the photon-baryon plasma at
+            recombination changes how it oscillates, raising the height of
+            compression peaks (the odd-numbered ones, especially the third)
+            relative to rarefaction peaks. Two independent observations, two
+            independent forward models, and the same value{" "}
+            <MathInline>{`\\Omega_b h^2 \\approx 0.022`}</MathInline> falls
+            out.
+          </Text>
+          <Text>
+            Second, the predicted ⁷Li abundance is about three times the
+            observed value. Three explanations are actively considered:
+            depletion of lithium in old halo stars over their multi-billion-
+            year lifetimes, an under-measured nuclear cross-section for the
+            destruction of ⁷Be (the dominant production pathway for ⁷Li), or
+            new physics at the MeV energy scale where dark-sector models
+            live. BBN has no free parameters once{" "}
+            <MathInline>{`\\Omega_b h^2`}</MathInline> is fixed, so this gap
+            is a real empirical mismatch rather than a fitting artifact.
+          </Text>
+        </VStack>
       }
       citation={
         <Citation title="Data source & provenance">
