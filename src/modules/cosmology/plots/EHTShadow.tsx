@@ -26,10 +26,13 @@ const FOV_UAS = 100;
 const COLOR_PREDICTED = "#ff7a1a";
 const COLOR_OBSERVED = "#9aa0a6";
 
+const ORANGE_RAMP_DARK = ["#0a0a0a", "#5c1f00", "#ff7a1a", "#ffd089"];
+const ORANGE_RAMP_LIGHT = ["#ffffff", "#ffd089", "#ff7a1a", "#5c1f00"];
+const RAMP_DOMAIN = [0, 0.4, 0.7, 1];
+
 const vgX = vg as unknown as {
   raster: (source: unknown, options: Record<string, unknown>) => unknown;
   max: (col: string) => unknown;
-  text: (source: unknown, options: Record<string, unknown>) => unknown;
 };
 
 function circlePoints(
@@ -45,9 +48,6 @@ function circlePoints(
 }
 
 const OBSERVED_CIRCLE = circlePoints(M87_OBSERVED.shadowDiameterUas / 2);
-const SCALE_BAR_Y = -42;
-const SCALE_BAR_X1 = -40;
-const SCALE_BAR_X2 = -20;
 
 export function EHTShadow() {
   const palette = useChartPalette();
@@ -104,21 +104,6 @@ export function EHTShadow() {
         strokeWidth: 1.6,
         strokeOpacity: matches ? 0.95 : 0.85,
       }),
-      vg.ruleY([SCALE_BAR_Y], {
-        x1: SCALE_BAR_X1,
-        x2: SCALE_BAR_X2,
-        stroke: palette.modelStroke,
-        strokeWidth: 1.5,
-      }),
-      vgX.text([{ x: (SCALE_BAR_X1 + SCALE_BAR_X2) / 2, y: SCALE_BAR_Y - 3, name: "20 μas" }], {
-        x: "x",
-        y: "y",
-        text: "name",
-        fill: palette.modelStroke,
-        fontSize: 11,
-        fontWeight: 500,
-        textAnchor: "middle",
-      }),
       vg.xDomain([-FOV_UAS / 2, FOV_UAS / 2]),
       vg.yDomain([-FOV_UAS / 2, FOV_UAS / 2]),
       vg.marginLeft(0),
@@ -126,8 +111,12 @@ export function EHTShadow() {
       vg.marginTop(0),
       vg.marginBottom(0),
       (plot: { attributes: Record<string, unknown> }) => {
-        plot.attributes.colorScheme = "inferno";
-        plot.attributes.colorDomain = [0, 1];
+        const isDark = palette.background !== "#ffffff";
+        plot.attributes.colorScale = "linear";
+        plot.attributes.colorDomain = RAMP_DOMAIN;
+        plot.attributes.colorRange = isDark
+          ? ORANGE_RAMP_DARK
+          : ORANGE_RAMP_LIGHT;
         plot.attributes.xAxis = null;
         plot.attributes.yAxis = null;
         plot.attributes.aspectRatio = 1;
@@ -179,8 +168,8 @@ export function EHTShadow() {
               items={[
                 {
                   name: "M87* image",
-                  description: "EHT 2019 reconstruction, intensity rendered via inferno colormap",
-                  color: "#ffce5e",
+                  description: "EHT 2019 reconstruction; intensity rendered on an orange ramp",
+                  color: COLOR_PREDICTED,
                   mark: "dot",
                 },
                 {

@@ -13,40 +13,57 @@ interface Props {
   items: ReadonlyArray<LegendItem>;
 }
 
+const SWATCH_WIDTH = "16px";
+
 function Swatch({ color, mark }: { color: string; mark: LegendMark }) {
   if (mark === "line") {
     return (
       <Box
-        w="16px"
-        h="2px"
-        mt="9px"
-        bg={color}
+        w={SWATCH_WIDTH}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        h="14px"
+        mt="2px"
         flexShrink={0}
-      />
+      >
+        <Box w="100%" h="2px" bg={color} />
+      </Box>
     );
   }
   if (mark === "dashed-line") {
     return (
       <Box
-        w="16px"
-        h="2px"
-        mt="9px"
+        w={SWATCH_WIDTH}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        h="14px"
+        mt="2px"
         flexShrink={0}
-        backgroundImage={`linear-gradient(to right, ${color} 60%, transparent 0%)`}
-        backgroundSize="5px 2px"
-        backgroundRepeat="repeat-x"
-      />
+      >
+        <Box
+          w="100%"
+          h="2px"
+          backgroundImage={`linear-gradient(to right, ${color} 60%, transparent 0%)`}
+          backgroundSize="5px 2px"
+          backgroundRepeat="repeat-x"
+        />
+      </Box>
     );
   }
   return (
     <Box
-      w="10px"
-      h="10px"
-      mt="5px"
-      borderRadius="full"
-      bg={color}
+      w={SWATCH_WIDTH}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      h="14px"
+      mt="2px"
       flexShrink={0}
-    />
+    >
+      <Box w="10px" h="10px" borderRadius="full" bg={color} />
+    </Box>
   );
 }
 
