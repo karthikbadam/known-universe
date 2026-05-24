@@ -20,7 +20,7 @@ const config = defineConfig({
     ".plot text": {
       fill: "var(--chakra-colors-fg) !important",
     },
-    ".plot .tick text": {
+    ".plot g[aria-label$=\"tick label\"] text": {
       fill: "var(--chakra-colors-fg-subtle) !important",
     },
     ".plot .tick line": {
