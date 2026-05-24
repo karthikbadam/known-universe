@@ -31,7 +31,6 @@ const KIND_MEANING: Record<(typeof KIND_ORDER)[number], string> = {
   baryonic: "Visible mass only (disk + gas + bulge)",
   "dark halo": "NFW dark-matter halo contribution",
 };
-const COLOR_DATA = "#fff";
 
 interface GalaxyDefaults {
   diskMassSolar: number; scaleKpc: number; rsKpc: number;
@@ -74,7 +73,7 @@ export function RotationCurves() {
       stroke: palette.errorStroke, strokeWidth: 1, strokeOpacity: 0.5,
     }),
     vg.dot(vg.from(TABLES.sparcGalaxies.name), {
-      x: "r_kpc", y: "v_kms", r: 3, fill: palette.dataFill, stroke: palette.dataStroke,
+      x: "r_kpc", y: "v_kms", r: 3, fill: palette.modelStroke, stroke: palette.modelStroke,
     }),
     vg.line(modelLines, { x: "r", y: "v", stroke: "kind", strokeWidth: 2, z: "kind" }),
     ...vgFrame({
@@ -103,7 +102,7 @@ export function RotationCurves() {
         <VStack align="stretch" gap={3}>
           <PlotLegend
             items={[
-              { name: "V_obs", description: "Observed orbital speeds (SPARC, with 1σ bars)", color: COLOR_DATA, mark: "dot" },
+              { name: "V_obs", description: "Observed orbital speeds (SPARC, with 1σ bars)", color: palette.modelStroke, mark: "dot" },
               ...KIND_ORDER.map((kind) => ({
                 name: `V_${kind.replace(" halo", "")}`,
                 description: KIND_MEANING[kind],

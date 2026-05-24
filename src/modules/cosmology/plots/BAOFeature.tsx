@@ -20,7 +20,6 @@ import { useChartPalette } from "../../../theme/palette";
 
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
-const COLOR_DATA = "#e6c84a";
 const COLOR_MODEL = "#ff7a1a";
 const COLOR_GUIDE = "#9aa0a6";
 
@@ -42,7 +41,7 @@ export function BAOFeature() {
   );
   const spec = useMemo(() => [
     vg.ruleX(vg.from(TABLES.bossXi.name), { x: "s_mpc", y1: "xi_lower", y2: "xi_upper", stroke: palette.errorStroke, strokeWidth: 1.2, strokeOpacity: 0.7 }),
-    vg.dot(vg.from(TABLES.bossXi.name), { x: "s_mpc", y: "xi", r: 4, fill: COLOR_DATA, stroke: COLOR_DATA }),
+    vg.dot(vg.from(TABLES.bossXi.name), { x: "s_mpc", y: "xi", r: 4, fill: palette.modelStroke, stroke: palette.modelStroke }),
     vg.line(modelCurve, { x: "s", y: "xi", stroke: COLOR_MODEL, strokeWidth: 2 }),
     vg.ruleX([{ x: rd }], { x: "x", stroke: COLOR_GUIDE, strokeWidth: 1.2, strokeDasharray: "4,3", strokeOpacity: 0.8 }),
     vg.dot(BAO_LANDMARKS, { x: "x", y: "y", r: 7, fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5, title: "name" }),
@@ -71,7 +70,7 @@ export function BAOFeature() {
         <VStack align="stretch" gap={3}>
           <PlotLegend
             items={[
-              { name: "BOSS ξ(s)", description: "DR12 galaxy two-point correlation, 1σ error bars", color: COLOR_DATA, mark: "dot" },
+              { name: "BOSS ξ(s)", description: "DR12 galaxy two-point correlation, 1σ error bars", color: palette.modelStroke, mark: "dot" },
               { name: "ΛCDM theory", description: "Acoustic-bump model, slider-controlled r_d", color: COLOR_MODEL, mark: "line" },
               { name: "r_d guide", description: "Vertical line tracking the slider's sound-horizon value", color: COLOR_GUIDE, mark: "dashed-line" },
             ]}

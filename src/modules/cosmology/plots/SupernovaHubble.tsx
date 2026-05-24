@@ -7,6 +7,7 @@ import { MathBlock, MathInline } from "../../../components/MathBlock";
 import { MosaicPlot } from "../../../components/MosaicPlot";
 import { ParamSlider } from "../../../components/ParamSlider";
 import { PlotError } from "../../../components/PlotError";
+import { PlotLegend } from "../../../components/PlotLegend";
 import { PlotSection } from "../../../components/PlotSection";
 import { RulesInOut } from "../../../components/RulesInOut";
 
@@ -20,14 +21,8 @@ import { useChartPalette } from "../../../theme/palette";
 const SAMPLES = 240;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
-const COLOR_DATA = "#e6c84a";
 const COLOR_LCDM = "#ff7a1a";
 const COLOR_MATTER = "#9aa0a6";
-
-const CURVE_LABELS = [
-  { x: 1.7, y: 46.0, name: "ΛCDM", color: COLOR_LCDM },
-  { x: 1.7, y: 44.0, name: "Matter only", color: COLOR_MATTER },
-];
 
 const vgX = vg as unknown as {
   text: (source: unknown, options: Record<string, unknown>) => unknown;
@@ -76,7 +71,7 @@ export function SupernovaHubble() {
         x: "z",
         y: "mu",
         r: 2,
-        fill: COLOR_DATA,
+        fill: palette.modelStroke,
         fillOpacity: 0.55,
       }),
       vg.line(matterOnlyCurve, {
@@ -94,10 +89,6 @@ export function SupernovaHubble() {
       vgX.text(SN_LANDMARKS, {
         x: "x", y: "y", text: "name",
         dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500,
-      }),
-      vgX.text(CURVE_LABELS, {
-        x: "x", y: "y", text: "name", fill: "color",
-        fontSize: 11, fontWeight: 600,
       }),
       ...vgFrame({
         xLabel: "Redshift z (log) →",
@@ -146,12 +137,21 @@ export function SupernovaHubble() {
         error !== null ? (
           <PlotError message={error} />
         ) : (
-          <MosaicPlot
-            spec={spec}
-            enabled={ready}
-            ariaLabel="Hubble diagram of Type Ia supernovae"
-            height={PLOT_HEIGHT}
-          />
+          <VStack align="stretch" gap={3}>
+            <PlotLegend
+              items={[
+                { name: "Pantheon+ SNe", description: "1619 Type Ia supernovae, distance vs. redshift", color: palette.modelStroke, mark: "dot" },
+                { name: "ΛCDM model", description: "Best fit with dark energy (Ω_Λ ≠ 0)", color: COLOR_LCDM, mark: "line" },
+                { name: "Matter only", description: "Ω_Λ = 0, Ω_m = 1 — sits below the data at high z", color: COLOR_MATTER, mark: "dashed-line" },
+              ]}
+            />
+            <MosaicPlot
+              spec={spec}
+              enabled={ready}
+              ariaLabel="Hubble diagram of Type Ia supernovae"
+              height={PLOT_HEIGHT}
+            />
+          </VStack>
         )
       }
       controls={

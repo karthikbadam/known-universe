@@ -22,7 +22,6 @@ const T_C = GW150914_FIDUCIAL.tc;
 const SAMPLES = 600;
 const PLOT_HEIGHT = CHART_HEIGHT.standard;
 
-const COLOR_STRAIN = "#e6c84a";
 const COLOR_MODEL = "#ff7a1a";
 const COLOR_GUIDE = "#9aa0a6";
 
@@ -56,9 +55,9 @@ export function GW150914() {
       vg.line(vg.from(TABLES.gw150914.name), {
         x: "t_s",
         y: "strain",
-        stroke: COLOR_STRAIN,
+        stroke: palette.modelStroke,
         strokeWidth: 0.6,
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.7,
       }),
       vg.line(modelLine, {
         x: "t",
@@ -129,7 +128,7 @@ export function GW150914() {
           <VStack align="stretch" gap={3}>
             <PlotLegend
               items={[
-                { name: "LIGO strain", description: "Hanford detector, whitened + bandpassed 35–350 Hz", color: COLOR_STRAIN, mark: "line" },
+                { name: "LIGO strain", description: "Hanford detector, whitened + bandpassed 35–350 Hz", color: palette.modelStroke, mark: "line" },
                 { name: "Chirp model", description: "Leading-order inspiral waveform; slider-controlled M_c", color: COLOR_MODEL, mark: "line" },
                 { name: "Merger time", description: "Vertical guide at t_c where the inspiral terminates", color: COLOR_GUIDE, mark: "dashed-line" },
               ]}
