@@ -103,26 +103,39 @@ export function HubbleDiagram() {
       question="Are galaxy recession velocities proportional to distance?"
       summary={
         <Text>
-          Hubble's 24 galaxies show velocity rising roughly linearly with
-          distance. That single line, fitted by eye to a noisy cloud, is the
-          first evidence that the universe is expanding. The slope is the Hubble
-          constant <MathInline>{`H_0`}</MathInline>. Drag the slider to see why
-          Hubble himself read off <MathInline>{`H_0 \\approx 500`}</MathInline>{" "}
-          km/s/Mpc (a distance scale wrong by a factor of seven, the modern{" "}
-          <MathInline>{`H_0`}</MathInline> value sits near 70).
+          In 1929 Edwin Hubble plotted the distances and recession velocities
+          of 24 nearby galaxies and saw that the farther a galaxy was, the
+          faster it moved away. Through a noisy cloud of points, a clear
+          positive slope: distance tracking velocity. That observation was the
+          first direct evidence that the universe is expanding rather than
+          static. The question the equation answers is what the slope of that
+          line is — the constant of proportionality between distance and
+          recession velocity — and what it implies about the universe.
         </Text>
       }
       math={
         <>
           <MathBlock ariaLabel="Hubble's law">{`v = H_0 \\, d`}</MathBlock>
           <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
-            <MathInline>{`v`}</MathInline> is recession velocity (km/s),{" "}
-            <MathInline>{`d`}</MathInline> is distance (Mpc),{" "}
-            <MathInline>{`H_0`}</MathInline> is the Hubble constant in km/s/Mpc.
-            Inverting it gives a rough age of the universe, the Hubble time{" "}
+            <MathInline>{`v`}</MathInline> is the recession velocity in km/s,
+            inferred from how far a galaxy's spectral lines are shifted toward
+            red (cosmological redshift).{" "}
+            <MathInline>{`d`}</MathInline> is the distance to the galaxy in
+            megaparsecs, where one megaparsec (Mpc) is about 3.26 million
+            light-years. <MathInline>{`H_0`}</MathInline> is the Hubble
+            constant in km/s per Mpc, the slope of the relation and the
+            current rate of cosmic expansion. On the plot, the x-axis is
+            distance in Mpc and the y-axis is recession velocity in km/s.
+            Each dot is one of Hubble's 24 galaxies. The solid orange line is
+            the model{" "}
+            <MathInline>{`v = H_0 \\, d`}</MathInline> at the slider's current{" "}
+            <MathInline>{`H_0`}</MathInline>; the grey dashed line shows
+            Hubble's original 1929 fit of{" "}
+            <MathInline>{`H_0 \\approx 500`}</MathInline> km/s/Mpc. Inverting
+            the equation gives a rough age of the universe, the Hubble time{" "}
             <MathInline>{`t_H = 1/H_0`}</MathInline> ≈{" "}
-            {hubbleTimeGyr(h0Value).toFixed(2)} billion years for your current
-            slider position.
+            {hubbleTimeGyr(h0Value).toFixed(2)} billion years at the slider's
+            current position.
           </Text>
         </>
       }
@@ -179,16 +192,39 @@ export function HubbleDiagram() {
       rules={
         <RulesInOut
           rulesIn={[
-            "An expanding universe, the linear v–d relation is its signature.",
+            "An expanding universe — the linear velocity–distance relation is its signature.",
             "A finite age: 1/H₀ sets an upper bound on the time since expansion began.",
             "A roughly uniform expansion in this small local volume.",
           ]}
           rulesOut={[
             "A static universe (the line would be flat at v ≈ 0).",
             "A contracting universe (the slope would be negative).",
-            "Distance scale precision: Hubble's slope is 7× too steep, the points themselves can't tell you that.",
+            "Distance scale precision: Hubble's slope is 7× too steep, and the points themselves can't tell you that.",
           ]}
         />
+      }
+      takeaway={
+        <Text>
+          Hubble's slope was wrong by about a factor of seven because his
+          Cepheid distance calibration was off — Cepheids (pulsating stars
+          whose period correlates with their intrinsic luminosity) turned out
+          to come in two populations with different brightnesses, a
+          distinction unrecognized until the 1950s. Modern{" "}
+          <MathInline>{`H_0`}</MathInline> is measured along two independent
+          chains. The local distance ladder builds outward step by step:
+          trigonometric parallax to nearby stars calibrates Cepheids,
+          Cepheid-bearing galaxies calibrate Type Ia supernovae, and
+          supernovae extend out to galaxies in the Hubble flow, giving{" "}
+          <MathInline>{`H_0 \\approx 73`}</MathInline> km/s/Mpc. The inverse
+          ladder starts from the cosmic microwave background — the relic
+          radiation released when the universe became transparent ≈380,000
+          years after the Big Bang. The sound horizon imprinted at that epoch
+          is a known physical length, and the Planck satellite's measurement
+          of its angular size fixes{" "}
+          <MathInline>{`H_0 \\approx 67`}</MathInline> km/s/Mpc. The two
+          methods differ by about 5σ — a difference that current cosmology has
+          not yet resolved.
+        </Text>
       }
       citation={
         <Citation title="Data source & provenance">
