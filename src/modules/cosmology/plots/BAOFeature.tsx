@@ -27,9 +27,21 @@ const vgX = vg as unknown as {
   text: (source: unknown, options: Record<string, unknown>) => unknown;
 };
 
-const BAO_LANDMARKS = [
-  { name: "BAO bump", x: 150, y: 0.0048 },
-];
+function xiAtS(
+  curve: ReadonlyArray<{ s: number; xi: number }>,
+  s: number,
+): number {
+  let best = curve[0];
+  let bestDist = Infinity;
+  for (const p of curve) {
+    const d = Math.abs(p.s - s);
+    if (d < bestDist) {
+      bestDist = d;
+      best = p;
+    }
+  }
+  return best?.xi ?? 0;
+}
 
 export function BAOFeature() {
   const palette = useChartPalette();
@@ -39,13 +51,17 @@ export function BAOFeature() {
     () => baoCurve(rd, { sMinMpc: 50, sMaxMpc: 200, samples: 400 }).map((row) => ({ s: row.s, xi: row.xi })),
     [rd],
   );
+  const baoLandmarks = useMemo(
+    () => [{ name: "BAO bump", x: rd, y: xiAtS(modelCurve, rd) }],
+    [modelCurve, rd],
+  );
   const spec = useMemo(() => [
     vg.ruleX(vg.from(TABLES.bossXi.name), { x: "s_mpc", y1: "xi_lower", y2: "xi_upper", stroke: palette.errorStroke, strokeWidth: 1.2, strokeOpacity: 0.7 }),
     vg.dot(vg.from(TABLES.bossXi.name), { x: "s_mpc", y: "xi", r: 4, fill: palette.modelStroke, stroke: palette.modelStroke }),
     vg.line(modelCurve, { x: "s", y: "xi", stroke: COLOR_MODEL, strokeWidth: 2 }),
     vg.ruleX([{ x: rd }], { x: "x", stroke: COLOR_GUIDE, strokeWidth: 1.2, strokeDasharray: "4,3", strokeOpacity: 0.8 }),
-    vg.dot(BAO_LANDMARKS, { x: "x", y: "y", r: 7, fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5, title: "name" }),
-    vgX.text(BAO_LANDMARKS, { x: "x", y: "y", text: "name", dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500 }),
+    vg.dot(baoLandmarks, { x: "x", y: "y", r: 7, fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5, title: "name" }),
+    vgX.text(baoLandmarks, { x: "x", y: "y", text: "name", dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500 }),
     vg.ruleY([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
     ...vgFrame({
       xLabel: "Separation s (Mpc) →",
@@ -54,7 +70,7 @@ export function BAOFeature() {
       yDomain: [-0.001, 0.012],
       margins: { left: 90 },
     }),
-  ], [modelCurve, rd, palette]);
+  ], [modelCurve, rd, baoLandmarks, palette]);
 
   return (
     <PlotSection

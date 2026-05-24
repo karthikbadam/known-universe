@@ -27,11 +27,22 @@ const vgX = vg as unknown as {
   text: (source: unknown, options: Record<string, unknown>) => unknown;
 };
 
-const PEAK_LANDMARKS = [
-  { name: "1st peak", x: 220, y: 5800 },
-  { name: "2nd peak", x: 540, y: 2700 },
-  { name: "3rd peak", x: 810, y: 2500 },
-];
+const PEAK_ELLS = [220, 540, 810] as const;
+const PEAK_NAMES = ["1st peak", "2nd peak", "3rd peak"] as const;
+
+function localMaxY(
+  curve: ReadonlyArray<{ ell: number; Dl: number }>,
+  targetEll: number,
+  halfWidth = 60,
+): number {
+  let best = -Infinity;
+  for (const p of curve) {
+    if (Math.abs(p.ell - targetEll) <= halfWidth && p.Dl > best) {
+      best = p.Dl;
+    }
+  }
+  return Number.isFinite(best) ? best : 0;
+}
 
 export function CMBPowerSpectrum() {
   const palette = useChartPalette();
@@ -52,6 +63,16 @@ export function CMBPowerSpectrum() {
       .map((row) => ({ ell: row.ell, Dl: row.Dl }));
   }, [H0, omegaM, omegaBh2, nS]);
 
+  const peakLandmarks = useMemo(
+    () =>
+      PEAK_ELLS.map((ell, i) => ({
+        name: PEAK_NAMES[i]!,
+        x: ell,
+        y: localMaxY(modelCurve, ell),
+      })),
+    [modelCurve],
+  );
+
   const spec = useMemo(
     () => [
       vg.ruleX(vg.from(TABLES.planckDl.name), {
@@ -65,12 +86,12 @@ export function CMBPowerSpectrum() {
       vg.line(modelCurve, {
         x: "ell", y: "Dl", stroke: COLOR_MODEL, strokeWidth: 2,
       }),
-      vg.dot(PEAK_LANDMARKS, {
+      vg.dot(peakLandmarks, {
         x: "x", y: "y", r: 7,
         fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5,
         title: "name",
       }),
-      vgX.text(PEAK_LANDMARKS, {
+      vgX.text(peakLandmarks, {
         x: "x", y: "y", text: "name",
         dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500,
       }),
@@ -81,7 +102,7 @@ export function CMBPowerSpectrum() {
         yDomain: [0, 7000],
       }),
     ],
-    [modelCurve, palette],
+    [modelCurve, peakLandmarks, palette],
   );
 
   return (

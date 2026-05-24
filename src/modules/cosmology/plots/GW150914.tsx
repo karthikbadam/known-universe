@@ -29,9 +29,7 @@ const vgX = vg as unknown as {
   text: (source: unknown, options: Record<string, unknown>) => unknown;
 };
 
-const GW_LANDMARKS = [
-  { name: "Merger", x: T_C, y: 1.5 },
-];
+const GW_LABEL = [{ name: "Merger", x: T_C, y: 1.65 }];
 
 export function GW150914() {
   const palette = useChartPalette();
@@ -71,14 +69,9 @@ export function GW150914() {
         strokeOpacity: 0.7,
         strokeDasharray: "4,3",
       }),
-      vg.dot(GW_LANDMARKS, {
-        x: "x", y: "y", r: 7,
-        fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5,
-        title: "name",
-      }),
-      vgX.text(GW_LANDMARKS, {
+      vgX.text(GW_LABEL, {
         x: "x", y: "y", text: "name",
-        dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500,
+        fill: palette.modelStroke, fontSize: 11, fontWeight: 500,
       }),
       ...vgFrame({
         xLabel: "Time (s) →",

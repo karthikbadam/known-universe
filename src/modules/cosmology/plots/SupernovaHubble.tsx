@@ -28,14 +28,23 @@ const vgX = vg as unknown as {
   text: (source: unknown, options: Record<string, unknown>) => unknown;
 };
 
-const SN_LANDMARKS = [
-  {
-    name: "Acceleration begins",
-    note: "Around z ≈ 0.6: at higher z the universe was matter-dominated and decelerating; at lower z, Λ takes over.",
-    x: 0.6,
-    y: 42.6,
-  },
-];
+const ACCELERATION_Z = 0.6;
+
+function muAtZ(
+  curve: ReadonlyArray<{ z: number; mu: number }>,
+  z: number,
+): number {
+  let best = curve[0];
+  let bestDist = Infinity;
+  for (const p of curve) {
+    const d = Math.abs(p.z - z);
+    if (d < bestDist) {
+      bestDist = d;
+      best = p;
+    }
+  }
+  return best?.mu ?? 0;
+}
 
 export function SupernovaHubble() {
   const palette = useChartPalette();
@@ -65,6 +74,17 @@ export function SupernovaHubble() {
       ).map((row) => ({ z: row.z, mu: row.mu })),
     [params.H0],
   );
+  const snLandmarks = useMemo(
+    () => [
+      {
+        name: "Acceleration begins",
+        note: "Around z ≈ 0.6: matter-dominated deceleration above, Λ-driven acceleration below.",
+        x: ACCELERATION_Z,
+        y: muAtZ(modelCurve, ACCELERATION_Z),
+      },
+    ],
+    [modelCurve],
+  );
   const spec = useMemo(
     () => [
       vg.dot(vg.from(TABLES.pantheonPlus.name), {
@@ -81,12 +101,12 @@ export function SupernovaHubble() {
       vg.line(modelCurve, {
         x: "z", y: "mu", stroke: COLOR_LCDM, strokeWidth: 2,
       }),
-      vg.dot(SN_LANDMARKS, {
+      vg.dot(snLandmarks, {
         x: "x", y: "y", r: 7,
         fill: "transparent", stroke: palette.modelStroke, strokeWidth: 1.5,
         title: "name",
       }),
-      vgX.text(SN_LANDMARKS, {
+      vgX.text(snLandmarks, {
         x: "x", y: "y", text: "name",
         dy: -14, fill: palette.modelStroke, fontSize: 11, fontWeight: 500,
       }),
@@ -98,7 +118,7 @@ export function SupernovaHubble() {
         margins: { left: 85 },
       }),
     ],
-    [modelCurve, matterOnlyCurve, palette],
+    [modelCurve, matterOnlyCurve, snLandmarks, palette],
   );
 
   return (

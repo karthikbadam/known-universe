@@ -35,9 +35,9 @@ const vgX = vg as unknown as {
 
 const LANDMARKS = [
   {
-    name: "Hubble's farthest",
-    note: "NGC 4884 in the Coma Cluster — Hubble's most distant 1929 sample.",
-    x: 1.9,
+    name: "NGC 4649",
+    note: "Hubble's fastest-receding nebula (2.0 Mpc, 1090 km/s).",
+    x: 2.0,
     y: 1090,
   },
 ];
