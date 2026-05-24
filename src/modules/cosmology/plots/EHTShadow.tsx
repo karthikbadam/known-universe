@@ -26,9 +26,8 @@ const FOV_UAS = 100;
 const COLOR_PREDICTED = "#ff7a1a";
 const COLOR_OBSERVED = "#9aa0a6";
 
-const ORANGE_RAMP_DARK = ["#0a0a0a", "#5c1f00", "#ff7a1a", "#ffd089"];
-const ORANGE_RAMP_LIGHT = ["#ffffff", "#ffd089", "#ff7a1a", "#5c1f00"];
-const RAMP_DOMAIN = [0, 0.4, 0.7, 1];
+const ORANGE_RAMP_DARK = ["#0a0a0a", "#ff7a1a", "#ffd089"];
+const ORANGE_RAMP_LIGHT = ["#ffffff", "#ff7a1a", "#5c1f00"];
 
 const vgX = vg as unknown as {
   raster: (source: unknown, options: Record<string, unknown>) => unknown;
@@ -112,8 +111,9 @@ export function EHTShadow() {
       vg.marginBottom(0),
       (plot: { attributes: Record<string, unknown> }) => {
         const isDark = palette.background !== "#ffffff";
-        plot.attributes.colorScale = "linear";
-        plot.attributes.colorDomain = RAMP_DOMAIN;
+        plot.attributes.colorScale = "diverging";
+        plot.attributes.colorDomain = [0, 1];
+        plot.attributes.colorPivot = 0.5;
         plot.attributes.colorRange = isDark
           ? ORANGE_RAMP_DARK
           : ORANGE_RAMP_LIGHT;
