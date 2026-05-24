@@ -1,5 +1,5 @@
 import { Button, Code, HStack, Link, Text, VStack } from "@chakra-ui/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
 import { Citation } from "../../../components/Citation";
@@ -31,110 +31,24 @@ const vgX = vg as unknown as {
 
 const GW_LABEL = [{ name: "Merger", x: T_C, y: 1.65 }];
 
-// Original LIGO sample rate after the upstream decimation pipeline
-// (see /scripts/fetch/gw150914.md). Used to compute the real duration of
-// the strain when re-rendered into an audio buffer.
-const STRAIN_SAMPLE_RATE_HZ = 512;
+const CHIRP_WAV_URL = `${import.meta.env.BASE_URL}data/gw150914_chirp.wav`;
 
 interface ChirpAudio {
   play: () => void;
-  playing: boolean;
-  ready: boolean;
+  audioRef: React.RefObject<HTMLAudioElement | null>;
 }
 
-function useChirpAudio(csvUrl: string): ChirpAudio {
-  const ctxRef = useRef<AudioContext | null>(null);
-  const bufferRef = useRef<AudioBuffer | null>(null);
-  const strainRef = useRef<Float32Array | null>(null);
-  const sourceRef = useRef<AudioBufferSourceNode | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(csvUrl)
-      .then((r) => r.text())
-      .then((text) => {
-        if (cancelled) return;
-        const lines = text.split("\n");
-        const strain: number[] = [];
-        for (const raw of lines) {
-          const line = raw.trim();
-          if (!line || line.startsWith("#") || line.startsWith("t_s")) continue;
-          const parts = line.split(",");
-          const v = parseFloat(parts[1] ?? "");
-          if (Number.isFinite(v)) strain.push(v);
-        }
-        if (strain.length === 0) return;
-        strainRef.current = Float32Array.from(strain);
-        setReady(true);
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-      sourceRef.current?.stop();
-      ctxRef.current?.close().catch(() => {});
-    };
-  }, [csvUrl]);
+function useChirpAudio(): ChirpAudio {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const play = useCallback(() => {
-    if (playing) return;
-    const strain = strainRef.current;
-    if (!strain || strain.length === 0) return;
+    const el = audioRef.current;
+    if (!el) return;
+    el.currentTime = 0;
+    void el.play();
+  }, []);
 
-    if (!ctxRef.current) {
-      const AudioCtx =
-        window.AudioContext ??
-        (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext;
-      ctxRef.current = new AudioCtx();
-    }
-    const ctx = ctxRef.current!;
-    if (ctx.state === "suspended") {
-      void ctx.resume();
-    }
-
-    if (!bufferRef.current) {
-      const duration = strain.length / STRAIN_SAMPLE_RATE_HZ;
-      const sampleRate = ctx.sampleRate;
-      const total = Math.max(1, Math.floor(duration * sampleRate));
-      const buffer = ctx.createBuffer(1, total, sampleRate);
-      const channel = buffer.getChannelData(0);
-      let peak = 0;
-      for (let i = 0; i < strain.length; i++) {
-        const a = Math.abs(strain[i]!);
-        if (a > peak) peak = a;
-      }
-      if (peak === 0) peak = 1;
-      const gain = 0.9 / peak;
-      const fadeSamples = Math.floor(0.015 * sampleRate);
-      const denom = total - 1 || 1;
-      for (let i = 0; i < total; i++) {
-        const t = (i / denom) * (strain.length - 1);
-        const lo = Math.floor(t);
-        const hi = Math.min(lo + 1, strain.length - 1);
-        const frac = t - lo;
-        let v = (strain[lo]! * (1 - frac) + strain[hi]! * frac) * gain;
-        if (i < fadeSamples) v *= i / fadeSamples;
-        else if (i > total - fadeSamples) v *= (total - i) / fadeSamples;
-        channel[i] = v;
-      }
-      bufferRef.current = buffer;
-    }
-
-    const source = ctx.createBufferSource();
-    source.buffer = bufferRef.current;
-    source.connect(ctx.destination);
-    source.onended = () => {
-      setPlaying(false);
-      sourceRef.current = null;
-    };
-    sourceRef.current = source;
-    setPlaying(true);
-    source.start();
-  }, [playing]);
-
-  return { play, playing, ready };
+  return { play, audioRef };
 }
 
 export function GW150914() {
@@ -148,7 +62,7 @@ export function GW150914() {
     GW150914_FIDUCIAL.chirpMassSolar,
   );
   const [phaseOffset, setPhaseOffset] = useState<number>(0);
-  const audio = useChirpAudio(TABLES.gw150914.url);
+  const audio = useChirpAudio();
   const modelLine = useMemo(() => {
     const ts: number[] = [];
     for (let i = 0; i < SAMPLES; i++) ts.push((i / (SAMPLES - 1)) * 0.5);
@@ -250,10 +164,15 @@ export function GW150914() {
               variant="solid"
               colorPalette="orange"
               onClick={audio.play}
-              disabled={audio.playing || !audio.ready}
             >
-              {audio.playing ? "Playing…" : "▶ Play merger"}
+              ▶ Play merger
             </Button>
+            <audio
+              ref={audio.audioRef}
+              src={CHIRP_WAV_URL}
+              preload="auto"
+              style={{ display: "none" }}
+            />
             <Text fontSize="xs" color="fg.subtle" lineHeight="1.3">
               Real H1 strain, ~0.45 s. The chirp sweeps 35→250 Hz — audible without pitch-shifting.
             </Text>

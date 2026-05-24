@@ -10,7 +10,6 @@ import { vgFrame } from "../../../mosaic/vgHelpers";
 import { PLANCK_2018, cmbModelCurve } from "../physics/cmb";
 import { muCurve } from "../physics/luminosity";
 import { CHART_HEIGHT } from "../../../theme/chartDimensions";
-import { useChartPalette } from "../../../theme/palette";
 
 // Extra parameters not in the canonical CmbParams type (the CMB model
 // currently ignores tau and rolls As into the curve amplitude downstream).
@@ -53,7 +52,6 @@ const PARAM_DESCRIPTIONS: ReadonlyArray<ParamDescriptor> = [
 ];
 
 export function LCDMSynthesis() {
-  const palette = useChartPalette();
   const [H0, setH0] = useState<number>(PLANCK_2018.H0);
   const [omegaBh2, setOmegaBh2] = useState<number>(PLANCK_2018.omegaBh2);
   const [omegaCh2, setOmegaCh2] = useState<number>(0.12);
@@ -89,34 +87,34 @@ export function LCDMSynthesis() {
       vg.line(cmbScaled, {
         x: "ell",
         y: "Dl",
-        stroke: palette.dataFill,
+        stroke: "#ff7a1a",
         strokeWidth: 2,
       }),
       ...vgFrame({
-        xLabel: "Multipole ℓ →",
-        yLabel: "↑ Dℓ (μK²)",
+        xLabel: "Angular scale: multipole ℓ →",
+        yLabel: "↑ CMB temperature power Dℓ (μK²)",
         xDomain: [0, 2500],
         yDomain: [0, 8000],
-        margins: { left: 65, top: 35, bottom: 45 },
+        margins: { left: 75, top: 35, bottom: 45 },
       }),
     ],
-    [cmbScaled, palette],
+    [cmbScaled],
   );
 
   const snSpec = useMemo(
     () => [
       vg.line(snData, {
-        x: "z", y: "mu", stroke: palette.dataFill, strokeWidth: 2,
+        x: "z", y: "mu", stroke: "#ff7a1a", strokeWidth: 2,
       }),
       ...vgFrame({
-        xLabel: "Redshift z →",
-        yLabel: "↑ Distance modulus μ",
+        xLabel: "Redshift z (cosmic time) →",
+        yLabel: "↑ SN brightness: distance modulus μ (mag)",
         xDomain: [0.005, 2.3],
         yDomain: [30, 47],
-        margins: { left: 65, top: 35, bottom: 45 },
+        margins: { left: 75, top: 35, bottom: 45 },
       }),
     ],
-    [snData, palette],
+    [snData],
   );
 
   void tau;
@@ -171,13 +169,23 @@ export function LCDMSynthesis() {
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={8} mb={8}>
           <Box>
             <Text
-              fontFamily="mono"
-              color="fg.subtle"
+              fontFamily="heading"
+              color="fg"
+              fontSize="sm"
+              fontWeight="medium"
+              mb={1}
+            >
+              CMB acoustic peaks
+            </Text>
+            <Text
+              fontFamily="body"
+              color="fg.muted"
               fontSize="xs"
-              letterSpacing="0.08em"
+              lineHeight="1.4"
               mb={2}
             >
-              CMB Dℓ vs ℓ
+              How much temperature variance the early universe carried at each
+              angular scale on the sky. Higher = more "ripple" at that scale.
             </Text>
             <MosaicPlot
               spec={cmbSpec}
@@ -187,13 +195,23 @@ export function LCDMSynthesis() {
           </Box>
           <Box>
             <Text
-              fontFamily="mono"
-              color="fg.subtle"
+              fontFamily="heading"
+              color="fg"
+              fontSize="sm"
+              fontWeight="medium"
+              mb={1}
+            >
+              Supernova Hubble line
+            </Text>
+            <Text
+              fontFamily="body"
+              color="fg.muted"
               fontSize="xs"
-              letterSpacing="0.08em"
+              lineHeight="1.4"
               mb={2}
             >
-              SN Hubble diagram μ(z)
+              How dim a standard candle looks at each redshift. Higher μ = farther
+              away. Curve steepening at high z is the dark-energy signature.
             </Text>
             <MosaicPlot
               spec={snSpec}
