@@ -27,7 +27,7 @@ const COLOR_PREDICTED = "#ff7a1a";
 const COLOR_OBSERVED = "#9aa0a6";
 
 const ORANGE_RAMP_DARK = ["#0a0a0a", "#ff7a1a", "#ffd089"];
-const ORANGE_RAMP_LIGHT = ["#ffffff", "#ff7a1a", "#5c1f00"];
+const ORANGE_RAMP_LIGHT = ["#ffffff", "#ffd089", "#ff7a1a"];
 
 const vgX = vg as unknown as {
   raster: (source: unknown, options: Record<string, unknown>) => unknown;
