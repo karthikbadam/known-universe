@@ -83,22 +83,25 @@ export function SupernovaHubble() {
     <PlotSection
       index={5}
       title="Pantheon+, supernovae prefer a flat, accelerating universe"
-      question="Why do distant Type Ia supernovae appear too faint for a decelerating universe?"
+      question="Why are the most distant Type Ia supernovae fainter than gravity alone can explain?"
       summary={
         <Text>
           Type Ia supernovae are the explosions of white dwarf stars that
           have accreted matter from a companion and crossed a critical mass
           threshold. Because the threshold is universal, every Type Ia
-          supernova releases nearly the same amount of light at peak — they
-          are standard candles, objects of known intrinsic brightness. By
-          comparing how bright they appear to how bright they actually are,
-          you measure how far away they are, and plotting distance against
-          redshift traces the expansion history of the universe. In a
-          universe whose expansion is decelerating under the gravity of
-          matter alone, supernovae at a given redshift should sit at a
-          specific brightness. In the late 1990s the most distant Type Ia
-          supernovae were measured to be fainter than that — meaning farther
-          away than gravity-only physics predicts.
+          supernova releases nearly the same amount of light at peak —
+          they are standard candles, objects of known intrinsic
+          brightness. By comparing how bright a supernova appears to how
+          bright it actually is, you measure how far away it is, and
+          plotting distance against redshift traces the expansion history
+          of the universe. If the only ingredient in the universe were
+          matter, gravity would gradually slow the expansion over cosmic
+          time, and supernovae at a given redshift should sit at a
+          specific predicted brightness. In the late 1990s the most
+          distant Type Ia supernovae were measured to be fainter than that
+          — meaning they are farther away than gravity acting on matter
+          alone can produce, which means the expansion has not been
+          slowing down at all but accelerating.
         </Text>
       }
       math={

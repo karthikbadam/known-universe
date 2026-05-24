@@ -79,21 +79,32 @@ export function BAOFeature() {
       question="Why does the distribution of galaxies show a preferred separation of about 500 million light-years?"
       summary={
         <Text>
-          Before the universe became transparent, ordinary matter and
-          photons were a single coupled plasma that supported pressure
-          waves — the same acoustic oscillations that produced the CMB
-          peaks. Each density perturbation in the early universe launched
-          an outgoing spherical sound wave through this plasma. When
-          recombination froze the wave in place, every original
-          overdensity was left surrounded by a thin spherical shell of
-          ordinary matter at a fixed comoving radius. Galaxies eventually
-          formed preferentially both at the original overdensities and on
-          those shells, so today, if you measure the separation between
-          pairs of galaxies, you find a small excess at the shell radius —
-          about 150 megaparsecs, or roughly 500 million light-years. This
-          excess is the baryon acoustic oscillation (BAO) feature, and
-          because the shell radius is a known physical length, it can be
-          used as a standard ruler to measure cosmic distances.
+          In the first 380,000 years of the universe, temperatures were
+          high enough that protons and electrons could not combine into
+          neutral atoms — light scattered off the free electrons like fog,
+          and ordinary matter and photons were locked together as a single
+          fluid that could vibrate as one. Wherever this fluid had a
+          slight overdensity (a seed for a future galaxy), the extra
+          pressure pushed outward and launched a spherical sound wave —
+          like dropping a stone in a pond, except in three dimensions and
+          inside a hot plasma. The wave traveled outward at the speed of
+          sound in this fluid (about 60% of the speed of light) until the
+          universe cooled enough for atoms to form and photons to stop
+          scattering. At that moment the fluid stopped behaving as one,
+          and the sound wave froze in place. Every original overdensity
+          was left surrounded by a thin spherical shell of ordinary
+          matter at a fixed comoving distance — the distance the wave had
+          traveled by then, about 150 megaparsecs (~500 million
+          light-years). Over the next 13 billion years, galaxies formed
+          preferentially both at the original overdensities and on those
+          shells. So today, if you take every pair of galaxies in a large
+          survey and count how many pairs sit at each separation, you
+          find a small but real excess at the shell distance. That excess
+          is the baryon acoustic oscillation (BAO) feature, and because
+          the shell radius is a known physical length set by sound-speed
+          physics, it works as a standard ruler — a known length whose
+          observed size at any redshift directly measures the geometry of
+          the universe.
         </Text>
       }
       math={
