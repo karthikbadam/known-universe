@@ -18,6 +18,10 @@ interface Props {
   plot: ReactNode;
   controls: ReactNode;
   legend?: ReactNode;
+  // "controls" puts the legend below the slider stack in the right column;
+  // "above-plot" puts it directly above the chart. Default "controls" works
+  // for 1–2 sliders; switch to "above-plot" when the slider stack is tall.
+  legendPlacement?: "controls" | "above-plot";
   rules: ReactNode;
   takeaway?: ReactNode;
   citation: ReactNode;
@@ -32,10 +36,19 @@ export function PlotSection({
   plot,
   controls,
   legend,
+  legendPlacement = "controls",
   rules,
   takeaway,
   citation,
 }: Props) {
+  const legendBelowControls = legend && legendPlacement === "controls";
+  const legendAbovePlot = legend && legendPlacement === "above-plot";
+  const plotWithLegend = legendAbovePlot ? (
+    <VStack align="stretch" gap={3}>
+      {legend}
+      {plot}
+    </VStack>
+  ) : plot;
   return (
     <Box
       as="section"
@@ -80,7 +93,7 @@ export function PlotSection({
           {summary}
         </Box>
         <Box>{math}</Box>
-        {controls || legend ? (
+        {controls || legendBelowControls ? (
           <Stack
             direction={{ base: "column", md: "row" }}
             align="flex-start"
@@ -88,7 +101,9 @@ export function PlotSection({
             w="100%"
             mt={4}
           >
-            <Box flex="1" minW={0} w={{ base: "100%", md: "auto" }}>{plot}</Box>
+            <Box flex="1" minW={0} w={{ base: "100%", md: "auto" }}>
+              {plotWithLegend}
+            </Box>
             <Box
               w={{ base: "100%", md: "auto" }}
               maxW={{ base: "100%", md: "320px" }}
@@ -96,14 +111,14 @@ export function PlotSection({
             >
               <VStack align="stretch" gap={4}>
                 {controls}
-                {legend ? (
+                {legendBelowControls ? (
                   <Box mt={controls ? 6 : 0}>{legend}</Box>
                 ) : null}
               </VStack>
             </Box>
           </Stack>
         ) : (
-          <Box w="100%" mt={4}>{plot}</Box>
+          <Box w="100%" mt={4}>{plotWithLegend}</Box>
         )}
         {rules}
         {takeaway ? (

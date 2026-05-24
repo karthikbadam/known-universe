@@ -134,6 +134,7 @@ export function CMBPowerSpectrum() {
           ]}
         />
       }
+      legendPlacement="above-plot"
       controls={
         <VStack align="stretch" gap={5}>
           <ParamSlider label="Hubble constant H₀" unit="km/s/Mpc" description="Higher H₀ shrinks the angular-diameter distance, shifting peaks left." min={50} max={90} step={0.1} value={H0} onChange={setH0} />

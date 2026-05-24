@@ -218,6 +218,7 @@ export function EHTShadow() {
           ]}
         />
       }
+      legendPlacement="above-plot"
       controls={
         <VStack align="stretch" gap={5}>
           <ParamSlider
