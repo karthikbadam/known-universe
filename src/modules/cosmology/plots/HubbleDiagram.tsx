@@ -29,18 +29,6 @@ const HUBBLE_1929_H0 = 500;
 const COLOR_MODERN = "#ff7a1a";
 const COLOR_1929 = "#9aa0a6";
 
-const vgX = vg as unknown as {
-  text: (source: unknown, options: Record<string, unknown>) => unknown;
-};
-
-const LANDMARKS = [
-  {
-    name: "NGC 4649",
-    note: "Hubble's fastest-receding nebula (2.0 Mpc, 1090 km/s).",
-    x: 2.0,
-    y: 1090,
-  },
-];
 
 export function HubbleDiagram() {
   const palette = useChartPalette();
@@ -95,25 +83,6 @@ export function HubbleDiagram() {
         y: vg.sql`${h0} * d`,
         stroke: COLOR_MODERN,
         strokeWidth: 2,
-      }),
-      vg.dot(LANDMARKS, {
-        x: "x",
-        y: "y",
-        r: 7,
-        fill: "transparent",
-        stroke: palette.modelStroke,
-        strokeWidth: 1.5,
-        title: "name",
-      }),
-      vgX.text(LANDMARKS, {
-        x: "x",
-        y: "y",
-        text: "name",
-        dy: -14,
-        fill: palette.modelStroke,
-        fontSize: 11,
-        fontWeight: 500,
-        textAnchor: "end",
       }),
       vg.ruleY([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
       vg.ruleX([0], { stroke: palette.axisStroke, strokeOpacity: 0.4 }),
