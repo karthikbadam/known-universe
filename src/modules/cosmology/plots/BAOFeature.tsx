@@ -1,4 +1,4 @@
-import { Link, Stack, Text, VStack } from "@chakra-ui/react";
+import { Link, Stack, Text } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import * as vg from "@uwdata/vgplot";
 
@@ -76,31 +76,129 @@ export function BAOFeature() {
     <PlotSection
       index={7}
       title="BAO, the universe's standard ruler"
-      question="Why is there a 150 Mpc bump in galaxy correlations?"
-      summary={<Text>Before recombination, sound waves rippled through the photon-baryon plasma, baryon acoustic oscillations (BAO). At decoupling these waves froze in place at a comoving radius r_d ≈ 150 Mpc. Galaxies are slightly more likely to sit at that separation than at neighbouring scales, a feature you can measure today by counting pairs. The bump shifts left or right with r_d, giving an independent geometric ruler on the expansion history.</Text>}
-      math={<>
-        <MathBlock ariaLabel="comoving distance integral">{`r_d \\;=\\; \\int_{z_{\\rm drag}}^{\\infty} \\frac{c_s(z)}{H(z)} \\, dz`}</MathBlock>
-        <Text fontFamily="body" fontSize="sm" lineHeight="1.7"><MathInline>{`c_s`}</MathInline> is the photon-baryon plasma sound speed; <MathInline>{`H(z)`}</MathInline> the Hubble rate. The integral gives the sound horizon at the drag epoch (z ≈ 1060). At late times it appears as the dashed vertical guide moving with the slider.</Text>
-      </>}
+      question="Why does the distribution of galaxies show a preferred separation of about 500 million light-years?"
+      summary={
+        <Text>
+          Before the universe became transparent, ordinary matter and
+          photons were a single coupled plasma that supported pressure
+          waves — the same acoustic oscillations that produced the CMB
+          peaks. Each density perturbation in the early universe launched
+          an outgoing spherical sound wave through this plasma. When
+          recombination froze the wave in place, every original
+          overdensity was left surrounded by a thin spherical shell of
+          ordinary matter at a fixed comoving radius. Galaxies eventually
+          formed preferentially both at the original overdensities and on
+          those shells, so today, if you measure the separation between
+          pairs of galaxies, you find a small excess at the shell radius —
+          about 150 megaparsecs, or roughly 500 million light-years. This
+          excess is the baryon acoustic oscillation (BAO) feature, and
+          because the shell radius is a known physical length, it can be
+          used as a standard ruler to measure cosmic distances.
+        </Text>
+      }
+      math={
+        <>
+          <MathBlock ariaLabel="sound horizon integral">{`r_d \\;=\\; \\int_{z_{\\rm drag}}^{\\infty} \\frac{c_s(z)}{H(z)} \\, dz`}</MathBlock>
+          <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
+            <MathInline>{`r_d`}</MathInline> is the sound horizon at the
+            drag epoch — the comoving distance a sound wave could travel
+            through the photon-baryon plasma between the Big Bang and the
+            moment baryons decoupled from photons (drag epoch redshift{" "}
+            <MathInline>{`z_{\\rm drag} \\approx 1060`}</MathInline>, slightly
+            later than recombination).{" "}
+            <MathInline>{`c_s(z)`}</MathInline> is the sound speed of the
+            photon-baryon plasma at redshift{" "}
+            <MathInline>{`z`}</MathInline> (which depends on the baryon-to-
+            photon ratio and falls from{" "}
+            <MathInline>{`c/\\sqrt{3}`}</MathInline> at early times as
+            baryons load the plasma);{" "}
+            <MathInline>{`H(z)`}</MathInline> is the Hubble expansion rate
+            at that redshift. On the plot, the x-axis is the comoving
+            galaxy-pair separation{" "}
+            <MathInline>{`s`}</MathInline> in megaparsecs (Mpc), and the
+            y-axis is the two-point correlation function{" "}
+            <MathInline>{`\\xi(s)`}</MathInline> — the fractional excess
+            probability over random of finding two galaxies separated by{" "}
+            <MathInline>{`s`}</MathInline>. The orange dots are BOSS DR12
+            measurements of <MathInline>{`\\xi(s)`}</MathInline> with 1σ
+            error bars; the solid orange line is the ΛCDM theory model with
+            a bump centered at the slider's current{" "}
+            <MathInline>{`r_d`}</MathInline>; the dashed grey vertical
+            guide marks the slider position; and the small circle marks
+            the bump itself on the theory curve.
+          </Text>
+        </>
+      }
       plot={error !== null ? <PlotError message={error} /> : (
-        <VStack align="stretch" gap={3}>
-          <PlotLegend
-            items={[
-              { name: "BOSS ξ(s)", description: "DR12 galaxy two-point correlation, 1σ error bars", color: palette.modelStroke, mark: "dot" },
-              { name: "ΛCDM theory", description: "Acoustic-bump model, slider-controlled r_d", color: COLOR_MODEL, mark: "line" },
-              { name: "r_d guide", description: "Vertical line tracking the slider's sound-horizon value", color: COLOR_GUIDE, mark: "dashed-line" },
-            ]}
-          />
-          <MosaicPlot spec={spec} enabled={ready} ariaLabel="BAO correlation function with a bump near 150 Mpc" height={PLOT_HEIGHT} />
-        </VStack>
+        <MosaicPlot spec={spec} enabled={ready} ariaLabel="BAO correlation function with a bump near 150 Mpc" height={PLOT_HEIGHT} />
       )}
+      legend={
+        <PlotLegend
+          items={[
+            { name: "BOSS ξ(s)", description: "DR12 galaxy two-point correlation, 1σ error bars", color: palette.modelStroke, mark: "dot" },
+            { name: "ΛCDM theory", description: "Acoustic-bump model, slider-controlled r_d", color: COLOR_MODEL, mark: "line" },
+            { name: "r_d guide", description: "Vertical line tracking the slider's sound-horizon value", color: COLOR_GUIDE, mark: "dashed-line" },
+          ]}
+        />
+      }
       controls={
         <Stack direction={{ base: "column", md: "row" }} gap={6}>
           <ParamSlider label="Sound horizon r_d" unit="Mpc" description="Where the BAO bump sits. Planck prefers ~147.8 Mpc; varying it slides the dashed guide and theory curve." min={120} max={180} step={0.5} value={rd} onChange={setRd} />
         </Stack>
       }
-      rules={<RulesInOut rulesIn={["A standard ruler at 150 Mpc, independent of CMB → low-z cross-check.", "Early-universe baryon-photon coupling, same plasma that made the CMB peaks."]} rulesOut={["Pure dark-matter universes with no baryon-acoustic phase.", "Featureless ΛCDM-without-baryons correlation functions."]} />}
-      citation={<Citation title="Data source & provenance"><Text>BOSS DR12 post-reconstruction ξ(s) monopole (Ross et al. 2016, high-z CMASS bin), converted from Mpc/h to Mpc with h = 0.676 and cropped to s ∈ [50, 200] Mpc. Real source: Alam et al. (2017) MNRAS 470, 2617; doi:10.1093/mnras/stx721. <Link href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/bao.md" target="_blank" rel="noopener noreferrer">fetch.md</Link> has the BOSS data URL.</Text></Citation>}
+      rules={
+        <RulesInOut
+          rulesIn={[
+            "A standard ruler at ~150 Mpc imprinted by baryon-photon coupling in the early universe — a low-redshift cross-check on the CMB-anchored distance scale.",
+            "The same photon-baryon plasma that produced the CMB acoustic peaks: BAO and CMB are two views of one physical process.",
+          ]}
+          rulesOut={[
+            "Universes with no baryons coupled to photons — no acoustic phase, no bump.",
+            "Featureless correlation functions that do not encode a sound horizon.",
+          ]}
+        />
+      }
+      takeaway={
+        <Text>
+          The BAO bump is the late-universe counterpart of the CMB
+          acoustic peaks: the same sound waves, recorded in two different
+          physical observables, separated by 13 billion years of cosmic
+          time. The CMB measures the angular size of the sound horizon at
+          recombination from the position of the first acoustic peak; BAO
+          measures the comoving length of the sound horizon directly from
+          galaxy clustering at low redshift. The two are perpendicular
+          slices through the same geometry, and they agree. Combining BAO
+          with the CMB constrains the expansion history{" "}
+          <MathInline>{`H(z)`}</MathInline> over the redshift range{" "}
+          <MathInline>{`0 < z < 1100`}</MathInline> with sufficient
+          precision to determine the dark-energy density{" "}
+          <MathInline>{`\\Omega_\\Lambda`}</MathInline> independently of the
+          supernova distance ladder. The next generation of surveys (DESI,
+          Euclid) is measuring BAO across millions of galaxies to test
+          whether the dark-energy equation of state is exactly{" "}
+          <MathInline>{`w = -1`}</MathInline> or evolves with redshift.
+        </Text>
+      }
+      citation={
+        <Citation title="Data source & provenance">
+          <Text>
+            BOSS DR12 post-reconstruction <MathInline>{`\\xi(s)`}</MathInline>{" "}
+            monopole (Ross et al. 2016, high-z CMASS bin), converted from
+            Mpc/h to Mpc with <MathInline>{`h = 0.676`}</MathInline> and
+            cropped to <MathInline>{`s \\in [50, 200]`}</MathInline> Mpc.
+            Source: Alam et al. (2017) MNRAS 470, 2617;
+            doi:10.1093/mnras/stx721.{" "}
+            <Link
+              href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/bao.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              fetch.md
+            </Link>{" "}
+            has the BOSS data URL.
+          </Text>
+        </Citation>
+      }
     />
   );
 }
