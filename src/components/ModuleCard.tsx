@@ -13,7 +13,7 @@ function Cover({ meta }: Props) {
     <Box
       position="relative"
       w="100%"
-      aspectRatio={16 / 9}
+      aspectRatio={2}
       maxH={{ base: "auto", md: "240px" }}
       overflow="hidden"
       bg="bg.subtle"

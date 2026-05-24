@@ -59,7 +59,13 @@ function Header() {
 
 function Footer() {
   return (
-    <Box as="footer" borderTopWidth="1px" borderColor="border" py={8}>
+    <Box
+      as="footer"
+      borderTopWidth="1px"
+      borderColor="border"
+      py={8}
+      px={{ base: 6, md: 8 }}
+    >
       <Container maxW="4xl" px={0}>
         <VStack
           align="stretch"
