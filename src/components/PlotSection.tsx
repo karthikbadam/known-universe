@@ -18,6 +18,7 @@ interface Props {
   plot: ReactNode;
   controls: ReactNode;
   rules: ReactNode;
+  takeaway?: ReactNode;
   citation: ReactNode;
 }
 
@@ -30,6 +31,7 @@ export function PlotSection({
   plot,
   controls,
   rules,
+  takeaway,
   citation,
 }: Props) {
   return (
@@ -98,6 +100,11 @@ export function PlotSection({
           <Box w="100%">{plot}</Box>
         )}
         {rules}
+        {takeaway ? (
+          <Box fontFamily="body" fontSize="md" lineHeight="1.75">
+            {takeaway}
+          </Box>
+        ) : null}
         {citation}
       </VStack>
     </Box>
