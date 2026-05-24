@@ -12,14 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "node tests/e2e/smoke.mjs",
-    "simulate:hubble": "tsx scripts/simulate/hubble1929.ts",
-    "simulate:cmb": "tsx scripts/simulate/cmb_powerspectrum.ts",
-    "simulate:bbn": "tsx scripts/simulate/bbn.ts",
-    "simulate:bao": "tsx scripts/simulate/bao.ts",
-    "simulate:gw": "tsx scripts/simulate/gw150914.ts",
-    "simulate:pantheon": "tsx scripts/simulate/pantheon.ts",
-    "simulate:sparc": "tsx scripts/simulate/sparc.ts"
+    "test:e2e": "node tests/e2e/smoke.mjs"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.35.0",
