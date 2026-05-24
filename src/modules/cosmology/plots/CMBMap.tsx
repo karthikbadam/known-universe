@@ -158,26 +158,50 @@ export function CMBMap() {
     <PlotSection
       index={3}
       title="CMB map: the photograph of the early universe"
-      question="What does the sky look like at 2.725 K, and what are those red and blue patches?"
+      question="What does the oldest light in the universe look like, and what causes its tiny temperature variations?"
       summary={
         <Text>
-          A Mollweide projection of the cosmic microwave background (CMB),
-          with the mean temperature and dipole removed. Red regions are
-          slightly hotter than 2.725 K, blue slightly cooler; the typical
-          anisotropy is ~100 μK on top of the 2.7 K mean. These tiny ripples
-          are the seeds of every galaxy you've ever heard of: gravitational
-          growth from these initial overdensities built the cosmic web over
-          14 Gyr. A few famous spots are marked, hover for details.
+          If you point a sensitive enough radio antenna at any patch of empty
+          sky, you find a faint glow — the same temperature, 2.725 K above
+          absolute zero, in every direction. This is the cosmic microwave
+          background (CMB): relic light emitted when the universe first
+          became transparent, about 380,000 years after the Big Bang, and
+          stretched by cosmic expansion into microwave wavelengths. The
+          temperature is the same to about one part in 100,000 — but those
+          tiny variations are not noise. They are the imprint of slight
+          density differences in the early universe that, over the next 13.8
+          billion years, gravitationally grew into every galaxy, cluster,
+          and void.
         </Text>
       }
       math={
         <>
           <MathBlock ariaLabel="CMB spherical harmonic expansion">{`T(\\hat{n}) \\;=\\; \\sum_{\\ell, m} a_{\\ell m} \\, Y_{\\ell m}(\\hat{n}) \\qquad C_\\ell \\;=\\; \\langle |a_{\\ell m}|^2 \\rangle_m`}</MathBlock>
           <Text fontFamily="body" fontSize="sm" lineHeight="1.7">
-            <MathInline>{`Y_{\\ell m}`}</MathInline> are spherical harmonics;
-            the variance of the <MathInline>{`a_{\\ell m}`}</MathInline>{" "}
-            coefficients is the angular power spectrum{" "}
-            <MathInline>{`C_\\ell`}</MathInline> plotted in the next section.
+            <MathInline>{`T(\\hat{n})`}</MathInline> is the CMB temperature in
+            the direction <MathInline>{`\\hat{n}`}</MathInline> on the sky,
+            after the uniform 2.725 K background and the dipole from our own
+            motion have been subtracted. The function is decomposed into
+            spherical harmonics <MathInline>{`Y_{\\ell m}(\\hat{n})`}</MathInline>{" "}
+            — the natural basis for any field on a sphere, indexed by the
+            multipole <MathInline>{`\\ell`}</MathInline> (which sets the
+            angular scale ≈ 180°/<MathInline>{`\\ell`}</MathInline>) and the
+            azimuthal order <MathInline>{`m`}</MathInline>. The coefficients{" "}
+            <MathInline>{`a_{\\ell m}`}</MathInline> carry the strength of
+            each mode; the angular power spectrum{" "}
+            <MathInline>{`C_\\ell`}</MathInline> is the variance of those
+            coefficients across <MathInline>{`m`}</MathInline> at a given{" "}
+            <MathInline>{`\\ell`}</MathInline>, and is plotted in the next
+            section. On the plot itself, the all-sky map is shown in a
+            Mollweide projection — the standard equal-area projection that
+            takes the celestial sphere and flattens it into an ellipse. Red
+            regions are slightly hotter than the 2.725 K mean (the typical
+            excursion is ±100 μK, or 10⁻⁵ of the mean) and blue regions
+            slightly cooler. Three landmarks are highlighted: the Cold Spot
+            (an anomalously cold ~10° patch), the Galactic Center (residual
+            foreground emission from our own galaxy), and the Dipole apex
+            (the direction the Sun moves through the CMB rest frame at ~370
+            km/s, with that motion already subtracted from the map).
           </Text>
         </>
       }
@@ -247,16 +271,36 @@ export function CMBMap() {
       rules={
         <RulesInOut
           rulesIn={[
-            "Anisotropies at the 10⁻⁵ level on top of a 2.725 K monopole.",
-            "Statistical isotropy (no preferred direction beyond known foregrounds).",
-            "Adiabatic Gaussian initial conditions (the speckle is consistent with a Gaussian random field).",
+            "Anisotropies at the 10⁻⁵ level on top of a uniform 2.725 K background.",
+            "Statistical isotropy: no preferred direction beyond known galactic foregrounds.",
+            "Adiabatic Gaussian initial conditions — the spotty pattern is consistent with a Gaussian random field.",
           ]}
           rulesOut={[
-            "Topological-defect-seeded structure formation (pattern would be non-Gaussian).",
-            "Strong non-Gaussianity (limits from Planck < ~10⁻³ for f_NL).",
-            "A simple steady-state universe (would have no thermal background at 2.7 K).",
+            "Structure seeded by topological defects (which would imprint a non-Gaussian pattern).",
+            "Strong primordial non-Gaussianity (Planck constrains it to <10⁻³ in the standard amplitude parameter).",
+            "A steady-state universe with no hot early phase — there would be no thermal background at 2.7 K.",
           ]}
         />
+      }
+      takeaway={
+        <Text>
+          What you are looking at is the oldest electromagnetic signal in the
+          universe — a photograph of the cosmos at age 380,000 years, taken
+          when hot ionized plasma cooled enough for electrons and protons to
+          combine into neutral hydrogen and let photons free-stream for the
+          first time. Three layers have been stripped from the raw signal:
+          the 2.725 K uniform background (which would otherwise dominate any
+          contrast scale), the 3.4 mK dipole induced by the Sun's motion
+          through the CMB rest frame, and most of the foreground emission
+          from our own Galaxy (the SMICA pipeline combines Planck's frequency
+          channels to isolate the cosmological component). What remains are
+          the 10⁻⁵-level anisotropies — the seed density variations that
+          gravitational growth amplified into the present-day cosmic web. The
+          next section transforms this map into its angular power spectrum,
+          where the geometry of the universe, the matter content, and the
+          baryon fraction each leave distinct fingerprints in the heights
+          and positions of acoustic peaks.
+        </Text>
       }
       citation={
         <Citation title="Data source and provenance">
@@ -264,8 +308,8 @@ export function CMBMap() {
             Mollweide projection of the Planck 2018 SMICA all-sky temperature
             map, downsampled from the native HEALPix Nside=2048 grid to a
             720×360 (x, y) raster and rendered in-browser via Mosaic{" "}
-            <Code>vg.raster</Code>. Real source: Planck 2018 results IV,
-            A&amp;A 641, A4. The CSV at{" "}
+            <Code>vg.raster</Code>. Source: Planck 2018 results IV, A&amp;A
+            641, A4. The CSV at{" "}
             <Code>/public/data/cmb_mollweide.csv</Code> is produced by{" "}
             <Code>/scripts/fetch/cmb_map_to_csv.py</Code> from the SMICA FITS
             via <Code>healpy</Code>.
