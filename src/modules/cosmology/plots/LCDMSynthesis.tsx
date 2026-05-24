@@ -152,7 +152,7 @@ export function LCDMSynthesis() {
     <Box
       as="section"
       bg="bg.subtle"
-      py={{ base: 16, md: 24 }}
+      py={12}
       px={{ base: 6, md: 8 }}
       borderTopWidth="1px"
       borderColor="border"

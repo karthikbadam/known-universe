@@ -10,14 +10,14 @@ export function ModuleHero({ meta }: ModuleHeroProps) {
   return (
     <Box
       as="section"
-      pt={{ base: 8, md: 12 }}
-      pb={{ base: 10, md: 16 }}
+      pt={8}
+      pb={12}
       px={{ base: 6, md: 8 }}
     >
       <Container maxW="4xl" px={0}>
-        <VStack align="stretch" gap={6}>
+        <VStack align="stretch" gap={4}>
           <Text
-            color="fg.subtle"
+            color="fg.muted"
             fontFamily="mono"
             fontSize="xs"
             letterSpacing="0.12em"

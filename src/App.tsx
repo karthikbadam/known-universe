@@ -59,18 +59,11 @@ function Header() {
 
 function Footer() {
   return (
-    <Box
-      as="footer"
-      borderTopWidth="1px"
-      borderColor="border"
-      py={10}
-      px={{ base: 6, md: 8 }}
-      mt={20}
-    >
-      <Container maxW="3xl" px={0}>
+    <Box as="footer" borderTopWidth="1px" borderColor="border" py={8}>
+      <Container maxW="4xl" px={0}>
         <VStack
           align="stretch"
-          gap={2}
+          gap={1}
           fontSize="sm"
           color="fg.muted"
           fontFamily="body"
@@ -87,10 +80,7 @@ function Footer() {
           </Heading>
           <Text>
             All datasets ship in <code>/public/data</code> with a six-line
-            provenance header.
-          </Text>
-          <Text>
-            Source:{" "}
+            provenance header. Source:{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe"
               color="accent"
@@ -99,9 +89,9 @@ function Footer() {
               rel="noopener noreferrer"
             >
               github.com/karthikbadam/known-universe
-            </Link>
+            </Link>.
           </Text>
-          <Text fontSize="xs" color="fg.subtle" mt={2}>
+          <Text>
             Built with React 19, Chakra UI v3, Mosaic, DuckDB-WASM, and KaTeX.
           </Text>
         </VStack>

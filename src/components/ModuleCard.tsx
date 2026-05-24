@@ -1,6 +1,7 @@
 import { Box, Heading, Link, Text, VStack } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import type { ModuleMeta } from "../modules/types";
+import { CmbCover } from "./CmbCover";
 
 interface Props {
   meta: ModuleMeta;
@@ -39,6 +40,7 @@ function Cover({ meta }: Props) {
           }}
         />
       )}
+      {cover?.kind === "cmb" && <CmbCover />}
       {meta.status === "soon" && (
         <Box
           position="absolute"
@@ -94,8 +96,7 @@ function CardBody({ meta }: Props) {
         color="fg.muted"
         lineHeight="1.6"
         whiteSpace="nowrap"
-        overflow="hidden"
-        textOverflow="ellipsis"
+        lineClamp={4}
       >
         {meta.tagline}
       </Text>
@@ -119,7 +120,7 @@ export function ModuleCard({ meta }: Props) {
 
   if (isSoon) {
     return (
-      <Box {...cardSx} opacity={0.6} cursor="not-allowed">
+      <Box {...cardSx} opacity={0.8} cursor="not-allowed">
         <Cover meta={meta} />
         <CardBody meta={meta} />
       </Box>

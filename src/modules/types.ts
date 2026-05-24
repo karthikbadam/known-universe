@@ -10,7 +10,8 @@ export type ModuleCover =
       to: string;
       fromDark?: string;
       toDark?: string;
-    };
+    }
+  | { kind: 'cmb' };
 
 export interface ModuleMeta {
   id: string;

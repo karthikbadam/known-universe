@@ -8,7 +8,7 @@ interface Props {
 
 export function Citation({ title, children }: Props) {
   return (
-    <Accordion.Root collapsible my={2}>
+    <Accordion.Root collapsible>
       <Accordion.Item value="citation" border="none">
         <Accordion.ItemTrigger
           px={0}
@@ -25,7 +25,7 @@ export function Citation({ title, children }: Props) {
         <Accordion.ItemContent>
           <Accordion.ItemBody
             px={0}
-            py={2}
+            py={1}
             fontFamily="body"
             fontSize="sm"
             color="fg.muted"

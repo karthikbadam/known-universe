@@ -20,13 +20,7 @@ export const cosmologyModule: ModuleMeta = {
   summary:
     "Cosmology turned from a philosophy into a six-parameter ΛCDM model in modern times. Let's explore the fundamental questions that guide a deep understanding in this field. The sections below represent some of my understanding as I learn the fundamentals of this field, hence interpret with caution.",
   status: "live",
-  cover: {
-    kind: "gradient",
-    from: "#fef3c7",
-    to: "#c7d2fe",
-    fromDark: "#0a0a0a",
-    toDark: "#1a1a2e",
-  },
+  cover: { kind: "cmb" },
   sections: () => [
     <HubbleDiagram key="hubble" />,
     <BBNAbundances key="bbn" />,
