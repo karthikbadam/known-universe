@@ -211,8 +211,7 @@ export function HubbleDiagram() {
             >
               /scripts/fetch/hubble1929.md
             </Link>{" "}
-            for re-fetch instructions. A simulated fallback is available via{" "}
-            <Code>npm run simulate:hubble</Code>.
+            for re-fetch instructions.
           </Text>
         </Citation>
       }

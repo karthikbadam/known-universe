@@ -219,9 +219,9 @@ export function GW150914() {
             LIGO H1 strain around GW150914 from GWOSC (
             <Code>H-H1_LOSC_4_V2-1126259446-32.hdf5</Code>), whitened against
             the Welch PSD, Butterworth-bandpassed 35–350 Hz, decimated 4096 →
-            512 Hz, then rescaled so the noise standard deviation matches the
-            simulated convention. Real source: Abbott et al. (LIGO 2016) PRL
-            116, 061102. See{" "}
+            512 Hz, then scaled to units of 10⁻²¹ to match the published
+            strain amplitude. Source: Abbott et al. (LIGO 2016) PRL 116,
+            061102. See{" "}
             <Link
               href="https://github.com/karthikbadam/known-universe/blob/main/scripts/fetch/gw150914.md"
               target="_blank"
